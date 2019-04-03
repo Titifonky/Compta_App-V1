@@ -76,7 +76,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Gestion.App</StartupObject>
+    <StartupObject>Compta.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -114,7 +114,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DicIntitules.cs" />
-    <Compile Include="Objets\Adresse_Client.cs" />
+    <Compile Include="Objets\Compte.cs" />
+    <Compile Include="Objets\Banque.cs" />
     <Compile Include="Parametres.cs" />
     <Compile Include="SelectionnerBase.xaml.cs">
       <DependentUpon>SelectionnerBase.xaml</DependentUpon>
@@ -129,9 +130,6 @@
     <Compile Include="Controls\RechercherDossier.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MapiApi.cs" />
-    <Compile Include="Objets\Utilisateur.cs" />
-    <Compile Include="Objets\Devis - Impression.cs" />
-    <Compile Include="Objets\Facture - Impression.cs" />
     <Compile Include="SelectionnerClient.xaml.cs">
       <DependentUpon>SelectionnerClient.xaml</DependentUpon>
     </Compile>
@@ -149,14 +147,9 @@
     <Compile Include="Converter.cs" />
     <Compile Include="MainWindow.Evenements.cs" />
     <Compile Include="Objets\Outils.cs" />
-    <Compile Include="Objets\Achat.cs" />
-    <Compile Include="Objets\Ligne_Facture.cs" />
-    <Compile Include="Objets\Facture.cs" />
-    <Compile Include="Objets\Fournisseur.cs" />
-    <Compile Include="Objets\Heure.cs" />
-    <Compile Include="Objets\Famille.cs" />
-    <Compile Include="Objets\Ligne_Poste.cs" />
-    <Compile Include="Objets\Poste.cs" />
+    <Compile Include="Objets\Categorie.cs" />
+    <Compile Include="Objets\Ligne_Compta.cs" />
+    <Compile Include="Objets\Ligne_Banque.cs" />
     <Compile Include="Objets\Societe.cs" />
     <Compile Include="Objets\Version.cs" />
     <Compile Include="Recherche.cs" />
@@ -219,8 +212,6 @@
     </Compile>
     <Compile Include="BDD.cs" />
     <Compile Include="Objets\Attribut.cs" />
-    <Compile Include="Objets\Client.cs" />
-    <Compile Include="Objets\Devis.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

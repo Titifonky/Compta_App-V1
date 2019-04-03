@@ -9,183 +9,60 @@ namespace Compta
     {
         public Societe() { Bdd.Ajouter(this); }
 
-        private String _Statut = "";
+        private String _Nom = "";
         [Propriete]
-        public String Statut
+        public String Nom
         {
-            get { return _Statut; }
-            set { Set(ref _Statut, value, this); }
+            get { return _Nom; }
+            set { Set(ref _Nom, value, this); }
         }
 
-        private String _Denomination = "";
-        [Propriete]
-        public String Denomination
-        {
-            get { return _Denomination; }
-            set { Set(ref _Denomination, value, this); }
-        }
-
-        private String _Tel_Mobile = "";
-        [Propriete]
-        public String Tel_Mobile
-        {
-            get { return _Tel_Mobile; }
-            set { Set(ref _Tel_Mobile, value, this); }
-        }
-
-        private String _Tel_Fixe = "";
-        [Propriete]
-        public String Tel_Fixe
-        {
-            get { return _Tel_Fixe; }
-            set { Set(ref _Tel_Fixe, value, this); }
-        }
-
-        private String _Email = "";
-        [Propriete]
-        public String Email
-        {
-            get { return _Email; }
-            set { Set(ref _Email, value, this); }
-        }
-
-        private String _Adresse = "";
-        [Propriete]
-        public String Adresse
-        {
-            get { return _Adresse; }
-            set { Set(ref _Adresse, value, this); }
-        }
-
-        private String _Cp = "";
-        [Propriete]
-        public String Cp
-        {
-            get { return _Cp; }
-            set { Set(ref _Cp, value, this); }
-        }
-
-        private String _Ville = "";
-        [Propriete]
-        public String Ville
-        {
-            get { return _Ville; }
-            set { Set(ref _Ville, value, this); }
-        }
-
-        private String _Pied = "";
-        [Propriete]
-        public String Pied
-        {
-            get { return _Pied; }
-            set { Set(ref _Pied, value, this); }
-        }
-
-        public delegate void OnModifyUtilisateurEventHandler(int id);
-
-        public event OnModifyUtilisateurEventHandler OnModifyUtilisateur;
-
-        private Utilisateur _UtilisateurCourant = null;
-        public Utilisateur UtilisateurCourant
-        {
-            get { return _UtilisateurCourant; }
-            set
-            {
-                Set(ref _UtilisateurCourant, value);
-                OnModifyUtilisateur(_UtilisateurCourant.Id);
-            }
-        }
-
-        public String PrefixUtilisateurCourant
-        {
-            get { return _UtilisateurCourant.Prefix_Utilisateur; }
-        }
-
-        private ListeObservable<Client> _ListeClient = null;
-        public ListeObservable<Client> ListeClient
+        private ListeObservable<Categorie> _ListeCategorie = null;
+        public ListeObservable<Categorie> ListeCategorie
         {
             get
             {
-                if (_ListeClient == null)
-                    _ListeClient = Bdd.Enfants<Client, Societe>(this);
+                if (_ListeCategorie == null)
+                    _ListeCategorie = Bdd.Enfants<Categorie, Societe>(this);
 
-                return _ListeClient;
+                return _ListeCategorie;
             }
         }
 
-        private ListeObservable<Fournisseur> _ListeFournisseur = null;
-        public ListeObservable<Fournisseur> ListeFournisseur
+        private ListeObservable<Ligne_Banque> _ListeLigne_Banque = null;
+        public ListeObservable<Ligne_Banque> ListeLigne_Banque
         {
             get
             {
-                if (_ListeFournisseur == null)
-                    _ListeFournisseur = Bdd.Enfants<Fournisseur, Societe>(this);
+                if (_ListeLigne_Banque == null)
+                    _ListeLigne_Banque = Bdd.Enfants<Ligne_Banque, Societe>(this);
 
-                return _ListeFournisseur;
+                return _ListeLigne_Banque;
             }
         }
 
-        private ListeObservable<Famille> _ListeFamille = null;
-        public ListeObservable<Famille> ListeFamille
+        private ListeObservable<Ligne_Compta> _ListeLigne_Compta = null;
+        public ListeObservable<Ligne_Compta> ListeLigne_Compta
         {
             get
             {
-                if (_ListeFamille == null)
-                    _ListeFamille = Bdd.Enfants<Famille, Societe>(this);
+                if (_ListeLigne_Compta == null)
+                    _ListeLigne_Compta = Bdd.Enfants<Ligne_Compta, Societe>(this);
 
-                return _ListeFamille;
+                return _ListeLigne_Compta;
             }
         }
 
-        private ListeObservable<Utilisateur> _ListeUtilisateur = null;
-        public ListeObservable<Utilisateur> ListeUtilisateur
+        private ListeObservable<Banque> _ListeBanque = null;
+        public ListeObservable<Banque> ListeBanque
         {
             get
             {
-                if (_ListeUtilisateur == null)
-                    _ListeUtilisateur = Bdd.Enfants<Utilisateur, Societe>(this);
+                if (_ListeBanque == null)
+                    _ListeBanque = Bdd.Enfants<Banque, Societe>(this);
 
-                return _ListeUtilisateur;
+                return _ListeBanque;
             }
-        }
-
-        private ListeAvecTitre<ListeAvecTitre<Object>> _ListeAnalyseDevis = null;
-        public ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseDevis
-        {
-            get
-            {
-                Analyser();
-
-                return _ListeAnalyseDevis;
-            }
-        }
-
-        private ListeAvecTitre<ListeAvecTitre<Object>> _ListeAnalyseFacture = null;
-        public ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseFacture
-        {
-            get
-            {
-                Analyser();   
-
-                return _ListeAnalyseFacture;
-            }
-        }
-
-        public void Analyser()
-        {
-            if (!EstCharge) return;
-
-            if (_ListeAnalyseDevis == null)
-                _ListeAnalyseDevis = new ListeAvecTitre<ListeAvecTitre<Object>>("Devis");
-            else
-                _ListeAnalyseDevis.Clear();
-
-            if (_ListeAnalyseFacture == null)
-                _ListeAnalyseFacture = new ListeAvecTitre<ListeAvecTitre<Object>>("Facture");
-            else
-                _ListeAnalyseFacture.Clear();
-
-            Bdd.AnalyseSociete(ref _ListeAnalyseDevis, ref _ListeAnalyseFacture, Id);
         }
     }
 }

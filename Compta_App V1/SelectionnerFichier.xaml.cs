@@ -65,10 +65,7 @@ namespace Compta
 
             protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
             {
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(NomProp));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
             }
 
             #endregion

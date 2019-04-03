@@ -42,10 +42,7 @@ namespace Compta
 
         protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(NomProp));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

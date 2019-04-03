@@ -64,7 +64,7 @@ namespace Compta
 
             pSociete = Bdd.Liste<Societe>()[0];
 
-            ListeObservable<Ligne_Poste> liste = Bdd.Liste<Ligne_Poste>();
+            ListeObservable<Ligne_Compta> liste = Bdd.Liste<Ligne_Compta>();
 
             //Regex rgx = new Regex(@"\.0$");
 

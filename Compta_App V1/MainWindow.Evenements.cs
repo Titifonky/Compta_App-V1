@@ -71,7 +71,7 @@ namespace Compta
                     { EditerOnglet<Societe, Societe>(S); return; }
 
                     if (Nom == "Famille")
-                    { EditerOnglet<Famille, Societe>(S); return; }
+                    { EditerOnglet<Categorie, Societe>(S); return; }
 
                     if (Nom == "Fournisseur")
                     { EditerOnglet<Fournisseur, Societe>(S); return; }
@@ -157,7 +157,7 @@ namespace Compta
                 if (typeof(T) == typeof(Societe))
                 { Titre = "Societe"; ModeleCorps = "xOngletSocieteControlTemplate"; }
 
-                else if (typeof(T) == typeof(Famille))
+                else if (typeof(T) == typeof(Categorie))
                 { Titre = "Famille"; ModeleCorps = "xOngletFamilleControlTemplate"; }
 
                 else if (typeof(T) == typeof(Fournisseur))
@@ -333,8 +333,8 @@ namespace Compta
         private void Nettoyer(Boolean Calculer = true)
         {
             ListeObservable<Devis> ListeDevis = Bdd.Liste<Devis>();
-            ListeObservable<Poste> ListePoste = Bdd.Liste<Poste>();
-            ListeObservable<Ligne_Poste> ListeLigne_Poste = Bdd.Liste<Ligne_Poste>();
+            ListeObservable<Ligne_Banque> ListePoste = Bdd.Liste<Ligne_Banque>();
+            ListeObservable<Ligne_Compta> ListeLigne_Poste = Bdd.Liste<Ligne_Compta>();
             ListeObservable<Achat> ListeAchat = Bdd.Liste<Achat>();
 
             ListeObservable<Facture> ListeFacture = Bdd.Liste<Facture>();
@@ -374,7 +374,7 @@ namespace Compta
             Titre = "Calcul des lignes de poste : ";
             i = 1;
             tt = ListeLigne_Poste.Count();
-            foreach (Ligne_Poste Ligne_Poste in ListeLigne_Poste)
+            foreach (Ligne_Compta Ligne_Poste in ListeLigne_Poste)
             {
                 this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
 
@@ -389,11 +389,11 @@ namespace Compta
             Titre = "Calcul des postes : ";
             i = 1;
             tt = ListePoste.Count();
-            foreach (Poste Poste in ListePoste)
+            foreach (Ligne_Banque Poste in ListePoste)
             {
                 this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
 
-                if (Poste.Devis == null)
+                if (Poste.Societe == null)
                     Poste.Supprimer();
                 else if (Calculer)
                     Poste.Calculer(false);
@@ -640,8 +640,8 @@ namespace Compta
             ListeObservable<Devis> Liste = Ajouter_List<Devis, Client>(sender, e);
             foreach (Devis D in Liste)
             {
-                Poste P = new Poste(D);
-                Ligne_Poste L = new Ligne_Poste(P);
+                Ligne_Banque P = new Ligne_Banque(D);
+                Ligne_Compta L = new Ligne_Compta(P);
                 EditerOnglet<Devis>(D);
             }
         }
@@ -822,42 +822,42 @@ namespace Compta
 
         private void Ajouter_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<Poste, Devis>(sender, e);
+            Ajouter_List<Ligne_Banque, Devis>(sender, e);
         }
 
         private void Inserer_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_List<Poste, Devis>(sender, e);
+            Inserer_List<Ligne_Banque, Devis>(sender, e);
         }
 
         private void Monter_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Monter_List<Poste>(sender, e);
+            Monter_List<Ligne_Banque>(sender, e);
         }
 
         private void Descendre_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Descendre_List<Poste>(sender, e);
+            Descendre_List<Ligne_Banque>(sender, e);
         }
 
         private void Supprimer_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<Poste>(sender, e);
+            Supprimer_List<Ligne_Banque>(sender, e);
         }
 
         private void Copier_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Copier_List<Poste>(sender, e);
+            Copier_List<Ligne_Banque>(sender, e);
         }
 
         private void Coller_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Coller_List<Poste>(sender, e);
+            Coller_List<Ligne_Banque>(sender, e);
         }
 
         private void Inserer_Coller_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_Coller_List<Poste, Devis>(sender, e);
+            Inserer_Coller_List<Ligne_Banque, Devis>(sender, e);
         }
 
         #endregion
@@ -866,42 +866,42 @@ namespace Compta
 
         private void Ajouter_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<Ligne_Poste, Poste>(sender, e);
+            Ajouter_List<Ligne_Compta, Ligne_Banque>(sender, e);
         }
 
         private void Inserer_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_List<Ligne_Poste, Poste>(sender, e);
+            Inserer_List<Ligne_Compta, Ligne_Banque>(sender, e);
         }
 
         private void Monter_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Monter_List<Ligne_Poste>(sender, e);
+            Monter_List<Ligne_Compta>(sender, e);
         }
 
         private void Descendre_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Descendre_List<Ligne_Poste>(sender, e);
+            Descendre_List<Ligne_Compta>(sender, e);
         }
 
         private void Supprimer_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<Ligne_Poste>(sender, e);
+            Supprimer_List<Ligne_Compta>(sender, e);
         }
 
         private void Copier_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Copier_List<Ligne_Poste>(sender, e);
+            Copier_List<Ligne_Compta>(sender, e);
         }
 
         private void Coller_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Coller_List<Ligne_Poste>(sender, e);
+            Coller_List<Ligne_Compta>(sender, e);
         }
 
         private void Inserer_Coller_Ligne_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_Coller_List<Ligne_Poste, Poste>(sender, e);
+            Inserer_Coller_List<Ligne_Compta, Ligne_Banque>(sender, e);
         }
 
         #endregion
@@ -910,42 +910,42 @@ namespace Compta
 
         private void Ajouter_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<Famille, Societe>(sender, e);
+            Ajouter_List<Categorie, Societe>(sender, e);
         }
 
         private void Inserer_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_List<Famille, Societe>(sender, e);
+            Inserer_List<Categorie, Societe>(sender, e);
         }
 
         private void Monter_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Monter_List<Famille>(sender, e);
+            Monter_List<Categorie>(sender, e);
         }
 
         private void Descendre_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Descendre_List<Famille>(sender, e);
+            Descendre_List<Categorie>(sender, e);
         }
 
         private void Supprimer_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<Famille>(sender, e);
+            Supprimer_List<Categorie>(sender, e);
         }
 
         private void Copier_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Copier_List<Famille>(sender, e);
+            Copier_List<Categorie>(sender, e);
         }
 
         private void Coller_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Coller_List<Famille>(sender, e);
+            Coller_List<Categorie>(sender, e);
         }
 
         private void Inserer_Coller_Famille_Click(object sender, RoutedEventArgs e)
         {
-            Inserer_Coller_List<Famille, Societe>(sender, e);
+            Inserer_Coller_List<Categorie, Societe>(sender, e);
         }
 
         #endregion

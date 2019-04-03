@@ -46,22 +46,6 @@ namespace Compta
         public Boolean EstCharge
         { get { return _EstCharge; } set { _EstCharge = value; } }
 
-        protected String _Ref = "";
-        [Propriete, NePasCopier]
-        public virtual String Ref
-        {
-            get { return _Ref; }
-            set { Set(ref _Ref, value, this); }
-        }
-
-        protected String _Prefix_Utilisateur = "";
-        [Propriete, NePasCopier]
-        public virtual String Prefix_Utilisateur
-        {
-            get { return _Prefix_Utilisateur; }
-            set { Set(ref _Prefix_Utilisateur, value, this); }
-        }
-
         protected int _No = 0;
         [Propriete, Max, Tri]
         public virtual int No
@@ -73,15 +57,6 @@ namespace Compta
         public ObjetGestion()
         {
             T = this.GetType();
-        }
-
-        protected virtual void MajRef(String reference = null)
-        {
-            if(String.IsNullOrWhiteSpace(reference))
-                reference = Prefix_Utilisateur + No.ToString();
-
-            if (reference != _Ref)
-                Ref = reference;
         }
 
         public virtual Boolean Supprimer()
@@ -137,7 +112,6 @@ namespace Compta
         {
             if (EqualityComparer<U>.Default.Equals(field, value)) { return false; }
             field = value;
-            MajRef();
             OnPropertyChanged(propertyName);
             if (EstSvgDansLaBase)
                 Bdd.Maj(Objet, T, propertyName);
@@ -148,7 +122,6 @@ namespace Compta
         {
             if (EqualityComparer<U>.Default.Equals(field, value)) { return false; }
             field = value;
-            MajRef();
             OnPropertyChanged(propertyName);
             return true;
         }
@@ -157,10 +130,7 @@ namespace Compta
 
         protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(NomProp));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
         }
 
         #endregion
