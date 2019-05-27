@@ -14,14 +14,14 @@ namespace Compta
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:Gestion"
+    ///     xmlns:MyNamespace="clr-namespace:Compta"
     ///
     ///
     /// Step 1b) Using this custom control in a XAML file that exists in a different project.
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
-    ///     xmlns:MyNamespace="clr-namespace:Gestion;assembly=Gestion"
+    ///     xmlns:MyNamespace="clr-namespace:Compta;assembly=Compta"
     ///
     /// You will also need to add a project reference from the project where the XAML file lives
     /// to this project and Rebuild to avoid compilation errors:
@@ -34,7 +34,7 @@ namespace Compta
     /// Go ahead and use your control in the XAML file. Note that Intellisense in the
     /// XML editor does not currently work on custom controls and its child elements.
     ///
-    ///     <MyNamespace:Gestion/>
+    ///     <MyNamespace:Compta/>
     ///
     /// </summary>
     public class OngletSupprimable : TabItem

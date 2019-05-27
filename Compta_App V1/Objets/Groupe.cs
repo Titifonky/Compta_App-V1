@@ -3,14 +3,21 @@ using System.ComponentModel;
 
 namespace Compta
 {
-    public class Categorie : ObjetGestion
+    public class Groupe : ObjetGestion
     {
-        public Categorie() { }
+        public Groupe() { }
 
-        public Categorie(Societe s)
+        public Groupe(Societe societe)
         {
-            Societe = s;
+            Societe = societe;
             Bdd.Ajouter(this);
+        }
+
+        [Propriete, Max, Tri(Modifiable = true)]
+        public override int No
+        {
+            get { return base.No; }
+            set { base.No = value; }
         }
 
         private Societe _Societe = null;
@@ -20,23 +27,16 @@ namespace Compta
             get
             {
                 if (_Societe == null)
-                    _Societe = Bdd.Parent<Societe, Categorie>(this);
+                    _Societe = Bdd.Parent<Societe, Groupe>(this);
 
                 return _Societe;
             }
             set
             {
                 Set(ref _Societe, value, this);
-                if (_Societe.ListeCategorie != null)
-                    _Societe.ListeCategorie.Add(this);
+                if (_Societe.ListeCompte != null)
+                    _Societe.ListeCompte.Add(this);
             }
-        }
-
-        [Propriete, Max, Tri(Modifiable=true)]
-        public override int No
-        {
-            get { return base.No; }
-            set { base.No = value; }
         }
 
         private String _Nom = "";
@@ -61,7 +61,7 @@ namespace Compta
             get
             {
                 if (_ListeCompte == null)
-                    _ListeCompte = Bdd.Enfants<Compte, Categorie>(this);
+                    _ListeCompte = Bdd.Enfants<Compte, Groupe>(this);
 
                 return _ListeCompte;
             }
@@ -73,9 +73,9 @@ namespace Compta
 
             SupprimerListe(_ListeCompte);
 
-            Societe.ListeCategorie.Remove(this);
+            Societe.ListeCompte.Remove(this);
 
-            Bdd.Supprimer<Categorie>(this);
+            Bdd.Supprimer<Groupe>(this);
             return true;
         }
     }

@@ -23,45 +23,15 @@ namespace Compta.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 - Devis")]
-        public string NomDossierDevis {
-            get {
-                return ((string)(this["NomDossierDevis"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0 - Facture")]
-        public string NomDossierFacture {
-            get {
-                return ((string)(this["NomDossierFacture"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Infos.txt")]
-        public string NomFichierInfos {
-            get {
-                return ((string)(this["NomFichierInfos"]));
-            }
-            set {
-                this["NomFichierInfos"] = value;
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int IdUtilisateur {
+        public int IdBanque {
             get {
-                return ((int)(this["IdUtilisateur"]));
+                return ((int)(this["IdBanque"]));
             }
             set {
-                this["IdUtilisateur"] = value;
+                this["IdBanque"] = value;
             }
         }
     }

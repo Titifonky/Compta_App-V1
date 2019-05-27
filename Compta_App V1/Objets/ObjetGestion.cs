@@ -77,7 +77,7 @@ namespace Compta
                         Prop.SetValue(this, Prop.GetValue(ObjetBase));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.LogMethode(e);
                 return false;

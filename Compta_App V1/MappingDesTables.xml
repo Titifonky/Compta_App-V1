@@ -15,52 +15,67 @@ Seules les colonnes à modifier sont nécessaires.
   <Base version="1">
     <Structure>
       <Tables>
-        <Table name="ligne_banque">
+        <Table name="lignecompta">
           <Colonne name="no"/>
+          <Colonne name="societe" defaut="1"/>
           <Colonne name="pointer"/>
-          <Colonne name="date_valeur"/>
-          <Colonne name="categorie"/>
+          <Colonne name="unique"/>
+          <Colonne name="datevaleur"/>
+          <Colonne name="datecompta"/>
+          <Colonne name="groupe"/>
           <Colonne name="compte"/>
-          <Colonne name="libelle"/>
+          <Colonne name="description"/>
           <Colonne name="valeur"/>
-          <Colonne name="tva_pct" defaut="20"/>
+          <Colonne name="tvapct" defaut="20"/>
           <Colonne name="tva"/>
-          <Colonne name="id_banque"/>
-          <Colonne name="banque" defaut="1"/>
-          <Colonne name="societe" defaut="1"/>
         </Table>
-        <Table name="ligne_compta">
+        <Table name="lignebanque">
           <Colonne name="no"/>
+          <Colonne name="societe" defaut="1"/>
+          <Colonne name="ecriturebanque"/>
           <Colonne name="pointer"/>
-          <Colonne name="ligne_banque"/>
-          <Colonne name="date_compta"/>
-          <Colonne name="date_valeur"/>
-          <Colonne name="categorie"/>
+          <Colonne name="unique"/>
+          <Colonne name="datevaleur"/>
+          <Colonne name="datecompta"/>
+          <Colonne name="groupe"/>
           <Colonne name="compte"/>
-          <Colonne name="libelle"/>
+          <Colonne name="description"/>
           <Colonne name="valeur"/>
-          <Colonne name="tva_pct" defaut="20"/>
+          <Colonne name="tvapct" defaut="20"/>
           <Colonne name="tva"/>
-          <Colonne name="societe" defaut="1"/>
         </Table>
-        <Table name="categorie">
+        <Table name="ecriturebanque">
           <Colonne name="no"/>
-          <Colonne name="nom"/>
+          <Colonne name="banque"/>
+          <Colonne name="idbanque"/>
+          <Colonne name="datevaleur"/>
+          <Colonne name="intitule"/>
           <Colonne name="description"/>
-          <Colonne name="societe" defaut="1"/>
-        </Table>
-        <Table name="compte">
-          <Colonne name="no"/>
-          <Colonne name="categorie"/>
-          <Colonne name="nom"/>
-          <Colonne name="description"/>
-          <Colonne name="societe" defaut="1"/>
+          <Colonne name="groupe"/>
+          <Colonne name="compte"/>
+          <Colonne name="ventiler" defaut="0"/>
+          <Colonne name="unique" defaut="0"/>
+          <Colonne name="valeur"/>
         </Table>
         <Table name="banque">
           <Colonne name="no"/>
+          <Colonne name="societe" defaut="1"/>
           <Colonne name="nom"/>
           <Colonne name="solde_initial"/>
+          <Colonne name="solde"/>
+        </Table>
+        <Table name="groupe">
+          <Colonne name="no"/>
           <Colonne name="societe" defaut="1"/>
+          <Colonne name="nom"/>
+          <Colonne name="description"/>
+        </Table>
+        <Table name="compte">
+          <Colonne name="no"/>
+          <Colonne name="groupe"/>
+          <Colonne name="nom"/>
+          <Colonne name="description"/>
+          <Colonne name="solde"/>
         </Table>
         <Table name="societe">
           <Colonne name="no"/>
@@ -73,10 +88,29 @@ Seules les colonnes à modifier sont nécessaires.
     </Structure>
     <Insertion>
       <Tables>
-        <Table name="categorie">
+        <Table name="societe">
+          <Insert>
+            <Valeur name="no">1</Valeur>
+            <Valeur name="nom">MFB</Valeur>
+          </Insert>
+        </Table>
+        <Table name="banque">
+          <Insert>
+            <Valeur name="no">1</Valeur>
+            <Valeur name="nom">Cdn</Valeur>
+            <Valeur name="societe">1</Valeur>
+          </Insert>
+        </Table>
+        <Table name="groupe">
           <Insert>
             <Valeur name="no">1</Valeur>
             <Valeur name="nom">Client</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">2</Valeur>
+            <Valeur name="nom">Fournisseurs</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
           </Insert>
@@ -86,13 +120,7 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="no">1</Valeur>
             <Valeur name="nom">Arras Vds</Valeur>
             <Valeur name="description"></Valeur>
-            <Valeur name="societe">1</Valeur>
-          </Insert>
-        </Table>
-        <Table name="societe">
-          <Insert>
-            <Valeur name="no">1</Valeur>
-            <Valeur name="nom">MFB CdN</Valeur>
+            <Valeur name="groupe">1</Valeur>
           </Insert>
         </Table>
       </Tables>

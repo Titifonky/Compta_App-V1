@@ -6,8 +6,8 @@
       <Server>80.74.155.2</Server>
       <User>mfb</User>
       <Port>3306</Port>
-      <Pw>Avantiti59</Pw>
-      <DB>mfb_gestion</DB>
+      <Pw>Avantiti59!?</Pw>
+      <DB>mfb_compta</DB>
     </Connection>
   </Base>
   <Base name="MFB Mascart">
@@ -16,14 +16,14 @@
       <User>mfb</User>
       <Port>3306</Port>
       <Pw>Avantiti59</Pw>
-      <DB>mfb_gestion</DB>
+      <DB>mfb_compta</DB>
     </Connection>
     <Connection name="synology">
       <Server>le-metal.synology.me</Server>
       <User>mfb</User>
       <Port>3306</Port>
       <Pw>Avantiti59</Pw>
-      <DB>mfb_gestion</DB>
+      <DB>mfb_compta</DB>
     </Connection>
   </Base>
 </Bases>

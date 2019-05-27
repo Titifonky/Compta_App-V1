@@ -20,7 +20,7 @@ namespace Compta
 
     public static class Bdd
     {
-        private static Version VersionCourante = new Version(10);
+        private static Version VersionCourante = new Version(1);
         private static MySqlConnection _ConnexionBase = null;
 
         private static String FichierMapping = "MappingDesTables.xml";
@@ -86,7 +86,7 @@ namespace Compta
 
                 foreach (XmlNode Connexion in Base.ChildNodes)
                 {
-                    
+
                     _ConnexionBase = new MySqlConnection(ChargerInfosConnexion(Connexion));
 
                     // Deux essais de connexion
@@ -126,7 +126,6 @@ namespace Compta
 
         public static Boolean Initialiser(String NomBase)
         {
-
             if (!Connecter(NomBase))
                 return false;
 
@@ -135,177 +134,199 @@ namespace Compta
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(pChemin);
 
-            if(TableExiste(typeof(Version)))
+            Version VersionBase = null;
+            ListeObservable<Version> ListeVersion = null;
+
+            try
             {
+                if (TableExiste(typeof(Version)))
+                {
+                    ListeVersion = Liste<Version>();
 
-                ListeObservable<Version> ListeVersion = Liste<Version>();
-                Version VersionBase = ListeVersion.OrderByDescending(i => i.No).First();
+                    if ((ListeVersion != null) && (ListeVersion.Count > 0))
+                        VersionBase = ListeVersion.OrderByDescending(i => i.No).First();
+                }
 
-                if (VersionCourante.No > VersionBase.No)
+                if (VersionBase != null)
+                {
+                    if (VersionCourante.No > VersionBase.No)
+                    {
+                        foreach (XmlNode Base in xmlDoc.SelectSingleNode("/Bases").ChildNodes)
+                        {
+                            int NoBase = (int)Convert.ChangeType(Base.Attributes["version"].Value, typeof(int));
+                            if (ListeVersion.Count(x => x.No == NoBase) == 0)
+                                MettreAJourLaBase(Base);
+                        }
+
+                        Bdd.Ajouter<Version>(VersionCourante);
+                        Bdd.Enregistrer();
+                    }
+                }
+                else
                 {
                     foreach (XmlNode Base in xmlDoc.SelectSingleNode("/Bases").ChildNodes)
-                    {
-                        int NoBase = (int)Convert.ChangeType(Base.Attributes["version"].Value, typeof(int));
-                        if (ListeVersion.Count(x => x.No == NoBase) == 0)
-                            MettreAJourLaBase(Base);
-                    }
+                        MettreAJourLaBase(Base);
 
                     Bdd.Ajouter<Version>(VersionCourante);
                     Bdd.Enregistrer();
                 }
             }
-            else
+            catch
             {
-                foreach (XmlNode Base in xmlDoc.SelectSingleNode("/Bases").ChildNodes)
-                {
-                    MettreAJourLaBase(Base);
-                }
-                Bdd.Ajouter<Version>(VersionCourante);
-                Bdd.Enregistrer();
+                Log.Message("Pd d'initialisation de la base");
+                return false;
             }
+
             return true;
         }
 
         private static void MettreAJourLaBase(XmlNode Base)
         {
-
-            // On recupère la iste des tables
-            List<String> pListeNomDesTables = NomDesTables();
-            // On supprime les tables OLD_Table dans le cas ou il y a eu des plantages lors de la maj
-            pListeNomDesTables.RemoveAll(t => Regex.IsMatch(t, "^" + OLD()));
-
-            foreach (String Table in pListeNomDesTables)
+            try
             {
-                // Si la OLD_Table n'existe pas, on renome la table
-                if (!TableExiste(OLD(Table)))
+                // On recupère la iste des tables
+                List<String> pListeNomDesTables = NomDesTables();
+                // On supprime les tables OLD_Table dans le cas ou il y a eu des plantages lors de la maj
+                pListeNomDesTables.RemoveAll(t => Regex.IsMatch(t, "^" + OLD()));
+
+                foreach (String Table in pListeNomDesTables)
                 {
-                    Executer(String.Format("ALTER TABLE {0} RENAME TO {1};", Table, OLD(Table)), null);
-                }
-            }
-
-            // On récupère la liste des tables
-            pListeNomDesTables = NomDesTables();
-
-            foreach (Type Type in DicProprietes.ListeType())
-            {
-                #region MODIFICATION DE LA STRUCTURE
-
-                CreerTable(Type);
-
-                String pNomNouvelleTable = NomTable(Type);
-                String pNomAncienneTable = OLD(pNomNouvelleTable);
-
-                XmlNode pTable = Base.SelectSingleNode(String.Format("Structure/Tables/Table[@name='{0}']", pNomNouvelleTable));
-
-                // Si un ancien nom est défini, on le récupère et on le formate
-                if ((pTable != null) && (pTable.Attributes["oldname"] != null))
-                    pNomAncienneTable = OLD(pTable.Attributes["oldname"].Value);
-
-                // Si elle n'est pas dans la liste des tables, c'est une nouvelle table, donc on passe au Type suivant
-                if (pListeNomDesTables.Contains(pNomAncienneTable))
-                {
-
-                    List<String> ListeAnciennesColonnes = NomDesColonnes(pNomAncienneTable);
-
-                    List<String> pParamOldColonnes = new List<String>();
-                    List<String> pParamNewColonnes = new List<String>();
-
-                    foreach (PropertyInfo Prop in DicProprietes.ListePropriete(Type).Values)
+                    // Si la OLD_Table n'existe pas, on renome la table
+                    if (!TableExiste(OLD(Table)))
                     {
-                        String pNomNewColonne = NomChamp(Prop);
-                        String pNomOldColonne = pNomNewColonne;
-
-                        Boolean FusionDeColonnes;
-                        FusionDeColonnes = false;
-
-                        Boolean ValeurParDefaut;
-                        ValeurParDefaut = false;
-
-                        // Si il y a un parametrage pour la table, on va chercher le nom de la colonne
-                        if (pTable != null)
-                        {
-                            XmlNode Colonne = pTable.SelectSingleNode(String.Format("Colonne[@name='{0}']", pNomNewColonne));
-
-                            // Si il y a un parametrage "oldname" pour cette colonne, on recherche
-                            if ((Colonne != null) && (Colonne.Attributes["oldname"] != null))
-                                pNomOldColonne = Colonne.Attributes["oldname"].Value;
-
-                            // Si il y a un parametrage "fusion" pour cette colonne, on recherche
-                            if ((Colonne != null) && (Colonne.Attributes["fusion"] != null))
-                            {
-                                pNomOldColonne = Colonne.Attributes["fusion"].Value;
-                                FusionDeColonnes = true;
-                            }
-
-                            // Si il y a un parametrage "defaut" pour cette colonne, on recherche
-                            if ((Colonne != null) && (Colonne.Attributes["defaut"] != null))
-                            {
-                                pNomOldColonne = "(" + Colonne.Attributes["defaut"].Value + ") as " + pNomNewColonne;
-                                ValeurParDefaut = true;
-                            }
-
-                        }
-
-                        // Si la colonne existe dans l'ancienne table, on l'ajoute
-                        if (ListeAnciennesColonnes.Contains(pNomOldColonne) || FusionDeColonnes || ValeurParDefaut)
-                        {
-                            if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
-                            {
-                                pParamOldColonnes.Insert(0, pNomOldColonne);
-                                pParamNewColonnes.Insert(0, pNomNewColonne);
-                            }
-                            else
-                            {
-                                pParamOldColonnes.Add(pNomOldColonne);
-                                pParamNewColonnes.Add(pNomNewColonne);
-                            }
-                        }
-                    }
-
-                    {
-                        String pSql = String.Format("INSERT INTO {0} ({1}) SELECT {2} FROM {3};", pNomNouvelleTable, String.Join(" , ", pParamNewColonnes), String.Join(" , ", pParamOldColonnes), pNomAncienneTable);
-
-                        Executer(pSql, null);
-                    }
-
-                    {
-                        ListParametres pParams = new ListParametres();
-                        pParams.Ajouter(new MySqlParameter(Prefix + "AncienneTable", DbType.String)).Value = pNomAncienneTable;
-
-                        Executer(String.Format("DROP TABLE {0};", pNomAncienneTable), null);
+                        Executer(String.Format("ALTER TABLE {0} RENAME TO {1};", Table, OLD(Table)), null);
                     }
                 }
-                #endregion
-                #region INSERTION DES NOUVELLES VALEURS
 
-                pTable = Base.SelectSingleNode(String.Format("Insertion/Tables/Table[@name='{0}']", pNomNouvelleTable));
+                // On récupère la liste des tables
+                pListeNomDesTables = NomDesTables();
 
-                // Si la table existe, on insert les valeurs
-                if (pTable != null)
+                foreach (Type Type in DicProprietes.ListeType())
                 {
-                    foreach (XmlNode Insert in pTable.ChildNodes)
+                    #region MODIFICATION DE LA STRUCTURE
+
+                    CreerTable(Type);
+
+                    String pNomNouvelleTable = NomTable(Type);
+                    String pNomAncienneTable = OLD(pNomNouvelleTable);
+
+                    XmlNode pTable = Base.SelectSingleNode(String.Format("Structure/Tables/Table[@name='{0}']", pNomNouvelleTable));
+
+                    // Si un ancien nom est défini, on le récupère et on le formate
+                    if ((pTable != null) && (pTable.Attributes["oldname"] != null))
+                        pNomAncienneTable = OLD(pTable.Attributes["oldname"].Value);
+
+                    // Si elle n'est pas dans la liste des tables, c'est une nouvelle table, donc on passe au Type suivant
+                    if (pListeNomDesTables.Contains(pNomAncienneTable))
                     {
-                        if(Insert.Name == "Insert")
+
+                        List<String> ListeAnciennesColonnes = NomDesColonnes(pNomAncienneTable);
+
+                        List<String> pParamOldColonnes = new List<String>();
+                        List<String> pParamNewColonnes = new List<String>();
+
+                        foreach (PropertyInfo Prop in DicProprietes.ListePropriete(Type).Values)
                         {
+                            String pNomNewColonne = NomChamp(Prop);
+                            String pNomOldColonne = pNomNewColonne;
 
-                            List<String> ListeColonne = new List<String>();
-                            ListParametres pParams = new ListParametres();
+                            Boolean FusionDeColonnes;
+                            FusionDeColonnes = false;
 
-                            foreach (XmlNode Valeur in Insert.ChildNodes)
-                                if (Valeur.Name == "Valeur")
+                            Boolean ValeurParDefaut;
+                            ValeurParDefaut = false;
+
+                            // Si il y a un parametrage pour la table, on va chercher le nom de la colonne
+                            if (pTable != null)
+                            {
+                                XmlNode Colonne = pTable.SelectSingleNode(String.Format("Colonne[@name='{0}']", pNomNewColonne));
+
+                                // Si il y a un parametrage "oldname" pour cette colonne, on recherche
+                                if ((Colonne != null) && (Colonne.Attributes["oldname"] != null))
+                                    pNomOldColonne = Colonne.Attributes["oldname"].Value;
+
+                                // Si il y a un parametrage "fusion" pour cette colonne, on recherche
+                                if ((Colonne != null) && (Colonne.Attributes["fusion"] != null))
                                 {
-                                    ListeColonne.Add(Valeur.Attributes["name"].Value);
-                                    pParams.Ajouter(new MySqlParameter(Prefix + Valeur.Attributes["name"].Value, Valeur.InnerText));
+                                    pNomOldColonne = Colonne.Attributes["fusion"].Value;
+                                    FusionDeColonnes = true;
                                 }
 
+                                // Si il y a un parametrage "defaut" pour cette colonne, on recherche
+                                if ((Colonne != null) && (Colonne.Attributes["defaut"] != null))
+                                {
+                                    pNomOldColonne = "(" + Colonne.Attributes["defaut"].Value + ") as " + pNomNewColonne;
+                                    ValeurParDefaut = true;
+                                }
 
-                            String pSql = String.Format("INSERT INTO {0} ( {1} ) VALUES ( {2} );", pNomNouvelleTable, String.Join(" , ", ListeColonne), String.Join(" , ", pParams.Noms));
+                            }
 
-                            Executer(pSql, pParams);
+                            // Si la colonne existe dans l'ancienne table, on l'ajoute
+                            if (ListeAnciennesColonnes.Contains(pNomOldColonne) || FusionDeColonnes || ValeurParDefaut)
+                            {
+                                if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                                {
+                                    pParamOldColonnes.Insert(0, pNomOldColonne);
+                                    pParamNewColonnes.Insert(0, pNomNewColonne);
+                                }
+                                else
+                                {
+                                    pParamOldColonnes.Add(pNomOldColonne);
+                                    pParamNewColonnes.Add(pNomNewColonne);
+                                }
+                            }
+                        }
+
+                        {
+                            String pSql = String.Format("INSERT INTO {0} ({1}) SELECT {2} FROM {3};", pNomNouvelleTable, String.Join(" , ", pParamNewColonnes), String.Join(" , ", pParamOldColonnes), pNomAncienneTable);
+
+                            Log.Message(pSql);
+                            Executer(pSql, null);
+                        }
+
+                        {
+                            ListParametres pParams = new ListParametres();
+                            pParams.Ajouter(new MySqlParameter(Prefix + "AncienneTable", DbType.String)).Value = pNomAncienneTable;
+
+                            Executer(String.Format("DROP TABLE {0};", pNomAncienneTable), null);
                         }
                     }
+                    #endregion
+                    #region INSERTION DES NOUVELLES VALEURS
+
+                    pTable = Base.SelectSingleNode(String.Format("Insertion/Tables/Table[@name='{0}']", pNomNouvelleTable));
+
+                    // Si la table existe, on insert les valeurs
+                    if (pTable != null)
+                    {
+                        foreach (XmlNode Insert in pTable.ChildNodes)
+                        {
+                            if (Insert.Name == "Insert")
+                            {
+
+                                List<String> ListeColonne = new List<String>();
+                                ListParametres pParams = new ListParametres();
+
+                                foreach (XmlNode Valeur in Insert.ChildNodes)
+                                    if (Valeur.Name == "Valeur")
+                                    {
+                                        ListeColonne.Add(Valeur.Attributes["name"].Value);
+                                        pParams.Ajouter(new MySqlParameter(Prefix + Valeur.Attributes["name"].Value, Valeur.InnerText));
+                                    }
+
+
+                                String pSql = String.Format("INSERT INTO {0} ( {1} ) VALUES ( {2} );", pNomNouvelleTable, String.Join(" , ", ListeColonne), String.Join(" , ", pParams.Noms));
+
+                                Executer(pSql, pParams);
+                            }
+                        }
+                    }
+                    #endregion
                 }
-                #endregion
+            }
+            catch (Exception e)
+            {
+                Log.Message(e.ToString());
             }
         }
 
@@ -351,10 +372,10 @@ namespace Compta
 
         private static void CreerTable(Type T)
         {
-            if (! TableExiste(T))
+            if (!TableExiste(T))
             {
                 Dictionary<String, PropertyInfo> pDic = DicProprietes.ListePropriete(T);
-                
+
                 List<String> pDicColonnes = new List<String>();
 
                 foreach (PropertyInfo Prop in pDic.Values)
@@ -471,10 +492,10 @@ namespace Compta
             Cmde.Dispose();
 
             if ((Valeur == null) || (Valeur == System.DBNull.Value))
-            {    
+            {
                 return TypeValeur.GetDefaultValue();
             }
-            
+
             return Convert.ChangeType(Valeur, TypeValeur);
         }
 
@@ -571,12 +592,12 @@ namespace Compta
             List<PropertyInfo> pListeTri = DicProprietes.ListeTri(T);
 
             // On récupère le nom du champ
-            NomCles = pListeTri.Select(x => NomChamp(x) + 
+            NomCles = pListeTri.Select(x => NomChamp(x) +
                                             " " +
                                             DirectionTri((x.GetCustomAttributes(typeof(Tri)).First() as Tri).DirectionTri)
                                             ).ToList<String>();
 
-            if(NomCles.Count == 0)
+            if (NomCles.Count == 0)
                 NomCles.Add(NomClePrimaire(T) + " ASC");
 
             return NomCles;
@@ -620,7 +641,7 @@ namespace Compta
 
                 case TypeSQL_e.cEnum:
                     return "INTEGER";
-                
+
                 case TypeSQL_e.cSerial:
                     return "INTEGER";
 
@@ -632,12 +653,12 @@ namespace Compta
         {
             Propriete pAttProp = P.GetCustomAttributes(typeof(Propriete)).First() as Propriete;
 
-            if(pAttProp != null)
+            if (pAttProp != null)
                 return pAttProp.Contrainte;
 
             return "";
         }
-        
+
         // Renvoi l'id d'une ligne
         private static int IdLigne(DataRow Li, Type T)
         {
@@ -790,7 +811,7 @@ namespace Compta
             // on renvoi la liste vide.
             if ((Parent != null) && (!Parent.EstSvgDansLaBase))
             {
-                
+
                 Log.Methode("Bdd");
                 Log.Write("Erreur ID = -1");
                 Log.Write("Id : " + Parent.Id);
@@ -1022,16 +1043,16 @@ namespace Compta
                 pListeChamps.Add(NomChamp(Prop));
 
                 // Delegate pour l'insertion dans le dictionnaire
-                Action<MySqlDbType, Func<Object, Object>> AjouterDic = delegate(MySqlDbType t, Func<Object, Object> f)
+                Action<MySqlDbType, Func<Object, Object>> AjouterDic = delegate (MySqlDbType t, Func<Object, Object> f)
                 {
-                    Func<Object, Func<Object, Object>, Object> Valeur = delegate(Object v, Func<Object, Object> c)
+                    Func<Object, Func<Object, Object>, Object> Valeur = delegate (Object v, Func<Object, Object> c)
                     {
                         if (c == null)
                             return v;
 
                         return c(v);
                     };
-                    
+
                     if (Prop.GetValue(Objet) != null)
                         pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(Prop.GetValue(Objet), f);
                     else if (String.IsNullOrWhiteSpace(Defaut))
@@ -1045,9 +1066,10 @@ namespace Compta
                 // Si c'est un Enum, on fait la conversion
                 if (Prop.PropertyType.IsEnum)
                 {
-                    AjouterDic(MySqlDbType.Int32, o => {
+                    AjouterDic(MySqlDbType.Int32, o =>
+                    {
                         String s = o as String;
-                        if(s != null)
+                        if (s != null)
                             o = System.Enum.Parse(Prop.PropertyType, s);
 
                         return Convert.ToInt32(o);
@@ -1122,7 +1144,7 @@ namespace Compta
                     String.Join(" , ", pListeChamps),
                     String.Join(" , ", pDicValeurs.Noms)
                     );
-                
+
                 ExecuterAsync(pQuery, pDicValeurs);
             }
 
@@ -1213,352 +1235,6 @@ namespace Compta
             ExecuterAsync(pQuery, null);
         }
 
-        #region ANALYSE
-        private static String AffNb(Object Obj, String Unite = "")
-        {
-            return (Math.Round(((Double)Convert.ChangeType(Obj, typeof(Double)))).ToString() + " " + Unite).Trim();
-        }
-
-        //public static void AnalyseDevis(ref ListeAvecTitre<Object> ListeCode, ref ListeAvecTitre<Object> ListeFamille, int Id)
-        //{
-//            Dictionary<int, CodeFamille_e> pDicCode = new Dictionary<int, CodeFamille_e>();
-//            foreach (CodeFamille_e Code in Enum.GetValues(typeof(CodeFamille_e)))
-//            {
-//                if (!String.IsNullOrWhiteSpace(Code.GetEnumDescription()))
-//                    pDicCode.Add((int)Code, Code);
-//            }
-
-//            Dictionary<int, Famille> pDicFamille = new Dictionary<int, Famille>();
-//            foreach (Famille Famille in Bdd.Liste<Famille>())
-//            {
-//                if(pDicCode.ContainsValue(Famille.Code))
-//                    pDicFamille.Add(Famille.Id, Famille);
-//            }
-
-//            {
-//                String sql = String.Format(@"SELECT tmp.famille, tmp.qte, tmp.tt 
-//                                             FROM 
-//                                                (SELECT poste.devis,
-//                                                        ligne_poste.famille,
-//                                                        sum(CASE ligne_poste.prix_forfaitaire WHEN true THEN ligne_poste.qte ELSE ligne_poste.qte * poste.qte END) AS qte,
-//                                                        sum(ligne_poste.debours_unitaire * poste.qte) AS tt
-//                                                FROM ligne_poste
-//                                                JOIN poste
-//                                                ON ligne_poste.poste = poste.id
-//                                                WHERE ligne_poste.statut = true AND poste.statut = true
-//                                                GROUP BY poste.devis, ligne_poste.famille) AS tmp
-//                                            JOIN devis
-//                                            ON tmp.devis = devis.id
-//                                            WHERE devis.id = {0}
-//                                            ORDER BY tmp.famille;"
-//                                              , Id.ToString());
-//                DataTable Table = RecupererTable(sql);
-//                if (Table == null) return;
-//                foreach (DataRow Li in Table.Rows)
-//                {
-//                    int Index = (int)Convert.ChangeType(Li["famille"], typeof(int));
-
-//                    if (!pDicFamille.ContainsKey(Index))
-//                        continue;
-                    
-//                    Famille F = pDicFamille[Index];
-                    
-//                    ListeFamille.Add(new { Intitule = F.Description,
-//                                            Qte = AffNb(Li["qte"], F.Unite),
-//                                            Tt = AffNb(Li["tt"], "€")
-//                    });
-//                }
-//            }
-
-//            {
-//                String sql = String.Format(@"CREATE TEMPORARY TABLE tmp AS
-//                                             SELECT tmp.famille, tmp.qte, tmp.tt 
-//                                             FROM 
-//                                                (SELECT poste.devis,
-//                                                        ligne_poste.famille,
-//                                                        sum(CASE ligne_poste.prix_forfaitaire WHEN true THEN ligne_poste.qte ELSE ligne_poste.qte * poste.qte END) AS qte,
-//                                                        sum(ligne_poste.debours_unitaire * poste.qte) AS tt
-//                                                FROM ligne_poste
-//                                                JOIN poste
-//                                                ON ligne_poste.poste = poste.id
-//                                                WHERE ligne_poste.statut = true AND poste.statut = true
-//                                                GROUP BY poste.devis, ligne_poste.famille) AS tmp
-//                                            JOIN devis
-//                                            ON tmp.devis = devis.id
-//                                            WHERE devis.id = {0}
-//                                            ORDER BY tmp.famille;
-//
-//                                            SELECT famille.code,
-//                                                   sum(tmp.qte) AS qte,
-//                                                   sum(tmp.tt) AS tt
-//                                            FROM tmp 
-//                                            JOIN famille
-//                                            ON tmp.famille = famille.id
-//                                            GROUP BY famille.code
-//                                            ORDER BY famille.code;
-//                                            
-//                                            DROP TEMPORARY TABLE IF EXISTS tmp;"
-//                                              , Id.ToString());
-//                DataTable Table = RecupererTable(sql);
-//                if (Table == null) return;
-//                foreach (DataRow Li in Table.Rows)
-//                {
-//                    int Index = (int)Convert.ChangeType(Li["code"], typeof(int));
-//                    if (!pDicCode.ContainsKey(Index)) continue;
-//                    CodeFamille_e C = pDicCode[Index];
-//                    ListeCode.Add(new
-//                    {
-//                        Intitule = C.GetEnumDescription(),
-//                        Qte = AffNb(Li["qte"].ToString(), C.GetEnumUnite()),
-//                        Tt = AffNb(Li["tt"], "€")
-//                    });
-//                }
-//            }
-        //}
-
-        public static void AnalyseClient(ref ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseDevis, ref ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseFacture, int Id)
-        {
-            #region DEVIS
-
-            Dictionary<int, StatutDevis_e> pDicStatutDevis = new Dictionary<int, StatutDevis_e>();
-            foreach (StatutDevis_e Statut in Enum.GetValues(typeof(StatutDevis_e)))
-                pDicStatutDevis.Add((int)Statut, Statut);
-            
-            {
-                String sql = String.Format(@"SELECT statut,
-                                                    count(id) as nb,
-                                                    sum(prix_ht) as ht,
-                                                    sum(marge) as marge,
-                                                    sum(prix_tt_achat) as achat,
-                                                    sum(deja_facture_ht) as deja_facture,
-                                                    sum(reste_a_facture_ht) as reste_facture,
-                                                    year(date) AS dte
-                                             FROM devis
-                                             WHERE client = {0}
-                                             GROUP BY statut, dte
-                                             ORDER BY dte DESC, statut;"
-                                              , Id.ToString());
-                DataTable Table = RecupererTable(sql);
-                if (Table == null) return;
-
-                Dictionary<int, ListeAvecTitre<Object>> pDic = new Dictionary<int, ListeAvecTitre<Object>>();
-                foreach (DataRow Li in Table.Rows)
-                {
-                    int Index = (int)Convert.ChangeType(Li["statut"], typeof(int));
-
-                    if (!pDicStatutDevis.ContainsKey(Index))
-                        continue;
-
-                    StatutDevis_e D = pDicStatutDevis[Index];
-
-                    int Date = (int)Convert.ChangeType(Li["dte"], typeof(int));
-                    ListeAvecTitre<Object> pListe = null;
-
-                    if (pDic.ContainsKey(Date))
-                        pListe = pDic[Date];
-                    else
-                    {
-                        pListe = new ListeAvecTitre<Object>(Date.ToString());
-                        pDic.Add(Date, pListe);
-                    }
-
-                    pListe.Add(new
-                    {
-                        Intitule = D.GetEnumDescription(),
-                        Nb = AffNb(Li["nb"]),
-                        Ht = AffNb(Li["ht"], "€"),
-                        Marge = AffNb(Li["marge"], "€"),
-                        Achat = AffNb(Li["achat"], "€"),
-                        Deja_Facture = AffNb(Li["deja_facture"], "€"),
-                        Reste_Facture = AffNb(Li["reste_facture"], "€")
-                    });
-                }
-
-                ListeAnalyseDevis.Importer(pDic.Values);
-            }
-
-            #endregion
-
-            #region FACTURE
-
-            Dictionary<int, StatutFacture_e> pDicStatutFacture = new Dictionary<int, StatutFacture_e>();
-            foreach (StatutFacture_e Statut in Enum.GetValues(typeof(StatutFacture_e)))
-                pDicStatutFacture.Add((int)Statut, Statut);
-
-            {
-                String sql = String.Format(@"SELECT facture.statut,
-                                                    count(facture.id) as nb,
-                                                    sum(facture.prix_ht) as ht,
-                                                    year(facture.date) AS dte
-                                             FROM facture
-                                             INNER JOIN devis
-                                             ON facture.devis = devis.id
-                                             WHERE devis.client = {0}
-                                             GROUP BY facture.statut, dte
-                                             ORDER BY dte DESC, facture.statut;"
-                                              , Id.ToString());
-                DataTable Table = RecupererTable(sql);
-                if (Table == null) return;
-
-                Dictionary<int, ListeAvecTitre<Object>> pDic = new Dictionary<int, ListeAvecTitre<Object>>();
-                foreach (DataRow Li in Table.Rows)
-                {
-                    int Index = (int)Convert.ChangeType(Li["statut"], typeof(int));
-
-                    if (!pDicStatutFacture.ContainsKey(Index))
-                        continue;
-                    
-                    StatutFacture_e F = pDicStatutFacture[Index];
-
-                    int Date = (int)Convert.ChangeType(Li["dte"], typeof(int));
-                    ListeAvecTitre<Object> pListe = null;
-
-                    if (pDic.ContainsKey(Date))
-                        pListe = pDic[Date];
-                    else
-                    {
-                        pListe = new ListeAvecTitre<Object>(Date.ToString());
-                        pDic.Add(Date, pListe);
-                    }
-
-                    pListe.Add(new
-                    {
-                        Intitule = F.GetEnumDescription(),
-                        Nb = AffNb(Li["nb"]),
-                        Ht = AffNb(Li["ht"], "€")
-                    });
-                }
-
-                ListeAnalyseFacture.Importer(pDic.Values);
-            }
-
-            #endregion
-        }
-
-        public static void AnalyseSociete(ref ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseDevis, ref ListeAvecTitre<ListeAvecTitre<Object>> ListeAnalyseFacture, int Id)
-        {
-            #region DEVIS
-
-            Dictionary<int, StatutDevis_e> pDicStatutDevis = new Dictionary<int, StatutDevis_e>();
-            foreach (StatutDevis_e Statut in Enum.GetValues(typeof(StatutDevis_e)))
-                pDicStatutDevis.Add((int)Statut, Statut);
-
-            {
-                String sql = String.Format(@"SELECT devis.statut,
-                                                    count(devis.id) as nb,
-                                                    sum(devis.prix_ht) as ht,
-                                                    sum(devis.marge) as marge,
-                                                    sum(devis.prix_tt_achat) as achat,
-                                                    sum(devis.deja_facture_ht) as deja_facture,
-                                                    sum(devis.reste_a_facture_ht) as reste_facture,
-                                                    year(devis.date) as dte
-                                             FROM devis
-                                             INNER JOIN client
-                                             ON devis.client = client.id
-                                             WHERE client.societe = {0}
-                                             GROUP BY statut, dte
-                                             ORDER BY dte DESC, statut;"
-                                              , Id.ToString());
-                DataTable Table = RecupererTable(sql);
-                if (Table == null) return;
-
-                Dictionary<int, ListeAvecTitre<Object>> pDic = new Dictionary<int, ListeAvecTitre<Object>>();
-                foreach (DataRow Li in Table.Rows)
-                {
-                    int Index = (int)Convert.ChangeType(Li["statut"], typeof(int));
-
-                    if (!pDicStatutDevis.ContainsKey(Index))
-                        continue;
-
-                    StatutDevis_e D = pDicStatutDevis[Index];
-
-                    int Date = (int)Convert.ChangeType(Li["dte"], typeof(int));
-                    ListeAvecTitre<Object> pListe = null;
-
-                    if (pDic.ContainsKey(Date))
-                        pListe = pDic[Date];
-                    else
-                    {
-                        pListe = new ListeAvecTitre<Object>(Date.ToString());
-                        pDic.Add(Date, pListe);
-                    }
-
-                    pListe.Add(new
-                    {
-                        Intitule = D.GetEnumDescription(),
-                        Nb = AffNb(Li["nb"]),
-                        Ht = AffNb(Li["ht"], "€"),
-                        Marge = AffNb(Li["marge"], "€"),
-                        Achat = AffNb(Li["achat"], "€"),
-                        Deja_Facture = AffNb(Li["deja_facture"], "€"),
-                        Reste_Facture = AffNb(Li["reste_facture"], "€")
-                    });
-                }
-
-                ListeAnalyseDevis.Importer(pDic.Values);
-            }
-
-            #endregion
-
-            #region FACTURE
-
-            Dictionary<int, StatutFacture_e> pDicStatutFacture = new Dictionary<int, StatutFacture_e>();
-            foreach (StatutFacture_e Statut in Enum.GetValues(typeof(StatutFacture_e)))
-                pDicStatutFacture.Add((int)Statut, Statut);
-
-            {
-                String sql = String.Format(@"SELECT facture.statut,
-                                                    count(facture.id) as nb,
-                                                    sum(facture.prix_ht) as ht,
-                                                    year(facture.date) as dte
-                                             FROM ( facture
-                                             INNER JOIN devis
-                                             ON facture.devis = devis.id )
-                                             INNER JOIN client
-                                             ON devis.client = client.id
-                                             WHERE client.societe = {0}
-                                             GROUP BY facture.statut, dte
-                                             ORDER BY dte DESC, facture.statut;"
-                                              , Id.ToString());
-                DataTable Table = RecupererTable(sql);
-                if (Table == null) return;
-
-                Dictionary<int, ListeAvecTitre<Object>> pDic = new Dictionary<int, ListeAvecTitre<Object>>();
-                foreach (DataRow Li in Table.Rows)
-                {
-                    int Index = (int)Convert.ChangeType(Li["statut"], typeof(int));
-
-                    if (!pDicStatutFacture.ContainsKey(Index))
-                        continue;
-
-                    StatutFacture_e F = pDicStatutFacture[Index];
-
-                    int Date = (int)Convert.ChangeType(Li["dte"], typeof(int));
-                    ListeAvecTitre<Object> pListe = null;
-
-                    if (pDic.ContainsKey(Date))
-                        pListe = pDic[Date];
-                    else
-                    {
-                        pListe = new ListeAvecTitre<Object>(Date.ToString());
-                        pDic.Add(Date, pListe);
-                    }
-
-                    pListe.Add(new
-                    {
-                        Intitule = F.GetEnumDescription(),
-                        Nb = AffNb(Li["nb"]),
-                        Ht = AffNb(Li["ht"], "€")
-                    });
-                }
-
-                ListeAnalyseFacture.Importer(pDic.Values);
-            }
-
-            #endregion
-        }
-
-        #endregion
         // Dictionnaire des objets avec leurs propriétés et le nom du champ associé.
         // Structure :
         //              Dictionary<Type, Dictionary<String, PropertyInfo>>
@@ -1569,6 +1245,21 @@ namespace Compta
             private static Dictionary<Type, PropertyInfo> _DicClePrimaire = null;
             private static Dictionary<Type, List<PropertyInfo>> _DicTri = null;
 
+            private static Boolean TypeEstObjetGestion(Type T)
+            {
+                Type U = T;
+
+                while(U.BaseType != null)
+                {
+                    if (U.BaseType == typeof(ObjetGestion))
+                        return true;
+
+                    U = U.BaseType;
+                }
+
+                return false;
+            }
+
             static DicProprietes()
             {
                 _DicPropriete = new Dictionary<Type, Dictionary<String, PropertyInfo>>();
@@ -1576,13 +1267,13 @@ namespace Compta
                 _DicTri = new Dictionary<Type, List<PropertyInfo>>();
 
                 List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
-                
+
                 int i = 0;
-                while(i < ListeTypes.Count)
+                while (i < ListeTypes.Count)
                 {
                     Type T = ListeTypes[i];
 
-                    if (T.BaseType != typeof(ObjetGestion))
+                    if (!TypeEstObjetGestion(T))
                         ListeTypes.RemoveAt(i);
                     else
                         i++;
@@ -1619,7 +1310,7 @@ namespace Compta
 
             public static Dictionary<String, PropertyInfo> ListePropriete(Type T)
             {
-                    return _DicPropriete[T];
+                return _DicPropriete[T];
             }
 
             public static PropertyInfo ClePrimaire(Type T)
@@ -1642,7 +1333,7 @@ namespace Compta
 
             static DicObjet()
             {
-                _DicBase = new Dictionary<Type,Dictionary<int,Object>>();
+                _DicBase = new Dictionary<Type, Dictionary<int, Object>>();
                 _DicListe = new Dictionary<Type, Object>();
             }
 
@@ -1699,7 +1390,7 @@ namespace Compta
 
             public static void ReferencerListe(Object Liste, Type T)
             {
-                if(!_DicListe.ContainsKey(T))
+                if (!_DicListe.ContainsKey(T))
                     _DicListe.Add(T, Liste);
             }
 
@@ -1741,6 +1432,6 @@ namespace Compta
             }
         }
     }
-    
+
 }
 

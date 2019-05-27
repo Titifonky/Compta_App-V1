@@ -19,9 +19,8 @@ namespace Compta
     {
         public static TabItem DernierOngletActif = null;
 
-        private RechercheTexte<Client> _RechercherClient;
-        private RechercheTexte<Devis> _RechercherDevis;
-        private RechercheTexte<Facture> _RechercherFactureClient;
+        private RechercheTexte<EcritureBanque> _RechercherEcritureBanque;
+        private RechercheTexte<LigneCompta> _RechercherLigneCompta;
 
         public Societe pSociete;
 
@@ -56,64 +55,30 @@ namespace Compta
                 BaseSelectionnee = Fenetre.BaseSelectionnee;
             }
 
-
-
-            if (!Bdd.Initialiser(BaseSelectionnee)) return false;
+            if (!Bdd.Initialiser(BaseSelectionnee))
+            {
+                Log.Message("Impossible de se connecter à la base");
+                return false;
+            }
 
             xConnexionCourante.Text = BaseSelectionnee + ", connecté à l'adresse : " + Bdd.ConnexionCourante;
 
             pSociete = Bdd.Liste<Societe>()[0];
 
-            ListeObservable<Ligne_Compta> liste = Bdd.Liste<Ligne_Compta>();
-
-            //Regex rgx = new Regex(@"\.0$");
-
-            //foreach (var L in liste)
-            //{
-            //    L.Prix_Exp = rgx.Replace(L.Prix_Exp, "");
-            //    L.Qte_Exp = rgx.Replace(L.Qte_Exp, "");
-            //}
-
-            //Bdd.Enregistrer();
-
-            pSociete.OnModifyUtilisateur += new Societe.OnModifyUtilisateurEventHandler(id => { Properties.Settings.Default.IdUtilisateur = id; Properties.Settings.Default.Save(); });
-
-            ListeObservable<Utilisateur> pListeUtilisateur = pSociete.ListeUtilisateur;
-
-            Utilisateur U = null;
-
-            if (pListeUtilisateur.Count > 0)
-            {
-                try
-                {
-                    U = pListeUtilisateur.First(u => { return u.Id == Properties.Settings.Default.IdUtilisateur; });
-                }
-                catch { U = pListeUtilisateur[0]; }
-            }
-            else
-            {
-                U = new Utilisateur(pSociete);
-                U.Prefix_Utilisateur = "A";
-                Bdd.Ajouter(U);
-            }
-
-            pSociete.UtilisateurCourant = U;
-
             this.DataContext = pSociete;
 
-            TrierListe<Client>(xListeClient);
-            TrierListe<Devis>(xListeDevis);
-            TrierListe<Facture>(xListeFactureClient);
-            TrierListe<Facture>(xListeFactureDevis);
+            pSociete.OnModifyBanque += new Societe.OnModifyBanqueEventHandler(id => { Properties.Settings.Default.IdBanque = id; Properties.Settings.Default.Save(); });
 
-            _RechercherClient = new RechercheTexte<Client>(xListeClient);
-            xRechercherClient.DataContext = _RechercherClient;
+            pSociete.BanqueCourante = pSociete.ListeBanque.FirstOrDefault(b => { return b.Id == Properties.Settings.Default.IdBanque; }) ?? pSociete.ListeBanque[0];
 
-            _RechercherDevis = new RechercheTexte<Devis>(xListeDevis);
-            xRechercherDevis.DataContext = _RechercherDevis;
+            TrierListe<EcritureBanque>(xListeEcritureBanque);
+            TrierListe<LigneCompta>(xListeLigneCompta);
 
-            _RechercherFactureClient = new RechercheTexte<Facture>(xListeFactureClient);
-            xRechercherFactureClient.DataContext = _RechercherFactureClient;
+            _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque);
+            xRechercherEcritureBanque.DataContext = _RechercherEcritureBanque;
+
+            _RechercherLigneCompta = new RechercheTexte<LigneCompta>(xListeLigneCompta);
+            xRechercherLigneCompta.DataContext = _RechercherLigneCompta;
 
             return true;
         }
@@ -121,7 +86,6 @@ namespace Compta
         private void TrierListe<T>(ListBox Box)
             where T : ObjetGestion
         {
-            List<String> NomCles = new List<String>();
             List<PropertyInfo> pListeTri = Bdd.DicProprietes.ListeTri(typeof(T));
 
             foreach (PropertyInfo P in pListeTri)

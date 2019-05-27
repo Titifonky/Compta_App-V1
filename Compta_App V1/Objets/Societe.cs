@@ -7,7 +7,10 @@ namespace Compta
     [ForcerAjout]
     public class Societe : ObjetGestion
     {
-        public Societe() { Bdd.Ajouter(this); }
+        public Societe()
+        {
+            Bdd.Ajouter(this);
+        }
 
         private String _Nom = "";
         [Propriete]
@@ -17,39 +20,30 @@ namespace Compta
             set { Set(ref _Nom, value, this); }
         }
 
-        private ListeObservable<Categorie> _ListeCategorie = null;
-        public ListeObservable<Categorie> ListeCategorie
-        {
-            get
-            {
-                if (_ListeCategorie == null)
-                    _ListeCategorie = Bdd.Enfants<Categorie, Societe>(this);
+        public delegate void OnModifyBanqueEventHandler(int id);
 
-                return _ListeCategorie;
+        public event OnModifyBanqueEventHandler OnModifyBanque;
+
+        private Banque _BanqueCourante = null;
+        public Banque BanqueCourante
+        {
+            get { return _BanqueCourante; }
+            set
+            {
+                Set(ref _BanqueCourante, value);
+                OnModifyBanque(_BanqueCourante.Id);
             }
         }
 
-        private ListeObservable<Ligne_Banque> _ListeLigne_Banque = null;
-        public ListeObservable<Ligne_Banque> ListeLigne_Banque
+        private ListeObservable<LigneCompta> _ListeLigneCompta = null;
+        public ListeObservable<LigneCompta> ListeLigneCompta
         {
             get
             {
-                if (_ListeLigne_Banque == null)
-                    _ListeLigne_Banque = Bdd.Enfants<Ligne_Banque, Societe>(this);
+                if (_ListeLigneCompta == null)
+                    _ListeLigneCompta = Bdd.Enfants<LigneCompta, Societe>(this);
 
-                return _ListeLigne_Banque;
-            }
-        }
-
-        private ListeObservable<Ligne_Compta> _ListeLigne_Compta = null;
-        public ListeObservable<Ligne_Compta> ListeLigne_Compta
-        {
-            get
-            {
-                if (_ListeLigne_Compta == null)
-                    _ListeLigne_Compta = Bdd.Enfants<Ligne_Compta, Societe>(this);
-
-                return _ListeLigne_Compta;
+                return _ListeLigneCompta;
             }
         }
 
@@ -62,6 +56,18 @@ namespace Compta
                     _ListeBanque = Bdd.Enfants<Banque, Societe>(this);
 
                 return _ListeBanque;
+            }
+        }
+
+        private ListeObservable<Groupe> _ListeCompte = null;
+        public ListeObservable<Groupe> ListeCompte
+        {
+            get
+            {
+                if (_ListeCompte == null)
+                    _ListeCompte = Bdd.Enfants<Groupe, Societe>(this);
+
+                return _ListeCompte;
             }
         }
     }

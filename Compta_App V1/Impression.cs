@@ -85,7 +85,7 @@ namespace Compta
                 xpsSM.SaveAsXaml(document);
 
                 // Enregistrement du xps dans un fichier tmp
-                String tmpXpsFileName = Path.Combine(Path.GetTempPath(), "Gestion_" + DateTime.Now.Ticks + ".xps");
+                String tmpXpsFileName = Path.Combine(Path.GetTempPath(), "Compta_" + DateTime.Now.Ticks + ".xps");
                 XpsDocument xpsd = new XpsDocument(tmpXpsFileName, FileAccess.ReadWrite);
                 System.Windows.Xps.XpsDocumentWriter xw = XpsDocument.CreateXpsDocumentWriter(xpsd);
                 xw.Write(xpsDoc.GetFixedDocumentSequence());

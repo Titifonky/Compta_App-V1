@@ -14,8 +14,6 @@ using System.Windows.Media;
 
 namespace Compta
 {
-    public delegate void ModifierDevis(Client C, Devis DevisBase, ListBox Box);
-
     public partial class MainWindow : Window
     {
         private void SupprimerOnglet(object source, RoutedEventArgs args)
@@ -71,13 +69,7 @@ namespace Compta
                     { EditerOnglet<Societe, Societe>(S); return; }
 
                     if (Nom == "Famille")
-                    { EditerOnglet<Categorie, Societe>(S); return; }
-
-                    if (Nom == "Fournisseur")
-                    { EditerOnglet<Fournisseur, Societe>(S); return; }
-
-                    if (Nom == "Utilisateur")
-                    { EditerOnglet<Utilisateur, Societe>(S); return; }
+                    { EditerOnglet<Groupe, Societe>(S); return; }
                 }
 
             }
@@ -91,25 +83,25 @@ namespace Compta
                 ListBox B = ((ContextMenu)I.Parent).PlacementTarget as ListBox;
                 if (B != null)
                 {
-                    Client C = B.SelectedItem as Client;
-                    if (C != null)
-                    { EditerOnglet<Client>(C); return; }
+                    //Client C = B.SelectedItem as Client;
+                    //if (C != null)
+                    //{ EditerOnglet<Client>(C); return; }
 
-                    Devis D = B.SelectedItem as Devis;
-                    if (D != null)
-                    { EditerOnglet<Devis>(D); return; }
+                    //Devis D = B.SelectedItem as Devis;
+                    //if (D != null)
+                    //{ EditerOnglet<Devis>(D); return; }
 
-                    Facture F = B.SelectedItem as Facture;
-                    if (F != null)
-                    {EditerOnglet<Facture>(F); return; }
+                    //Facture F = B.SelectedItem as Facture;
+                    //if (F != null)
+                    //{EditerOnglet<Facture>(F); return; }
 
-                    Fournisseur Fr = B.SelectedItem as Fournisseur;
-                    if (Fr != null)
-                    {EditerOnglet<Fournisseur>(Fr); return; }
+                    //Fournisseur Fr = B.SelectedItem as Fournisseur;
+                    //if (Fr != null)
+                    //{EditerOnglet<Fournisseur>(Fr); return; }
 
-                    Utilisateur U = B.SelectedItem as Utilisateur;
-                    if (U != null)
-                    { EditerOnglet<Utilisateur>(U); return; }
+                    //Utilisateur U = B.SelectedItem as Utilisateur;
+                    //if (U != null)
+                    //{ EditerOnglet<Utilisateur>(U); return; }
                 }
             }
         }
@@ -118,25 +110,25 @@ namespace Compta
         {
             if (e.ClickCount >= 2)
             {
-                Client C = ((FrameworkElement)sender).DataContext as Client;
-                if (C != null)
-                    EditerOnglet<Client>(C);
+                //Client C = ((FrameworkElement)sender).DataContext as Client;
+                //if (C != null)
+                //    EditerOnglet<Client>(C);
 
-                Devis D = ((FrameworkElement)sender).DataContext as Devis;
-                if (D != null)
-                    EditerOnglet<Devis>(D);
+                //Devis D = ((FrameworkElement)sender).DataContext as Devis;
+                //if (D != null)
+                //    EditerOnglet<Devis>(D);
 
-                Facture F = ((FrameworkElement)sender).DataContext as Facture;
-                if (F != null)
-                    EditerOnglet<Facture>(F);
+                //Facture F = ((FrameworkElement)sender).DataContext as Facture;
+                //if (F != null)
+                //    EditerOnglet<Facture>(F);
 
-                Fournisseur Fr = ((FrameworkElement)sender).DataContext as Fournisseur;
-                if (Fr != null)
-                    EditerOnglet<Fournisseur>(Fr);
+                //Fournisseur Fr = ((FrameworkElement)sender).DataContext as Fournisseur;
+                //if (Fr != null)
+                //    EditerOnglet<Fournisseur>(Fr);
 
-                Utilisateur U = ((FrameworkElement)sender).DataContext as Utilisateur;
-                if (U != null)
-                    EditerOnglet<Utilisateur>(U);
+                //Utilisateur U = ((FrameworkElement)sender).DataContext as Utilisateur;
+                //if (U != null)
+                //    EditerOnglet<Utilisateur>(U);
             }
         }
 
@@ -150,159 +142,89 @@ namespace Compta
             where T : ObjetGestion
             where U : ObjetGestion
         {
-            String Titre = ""; String ModeleTitre = ""; String ModeleCorps = "";
+            //String Titre = ""; String ModeleTitre = ""; String ModeleCorps = "";
 
-            if (typeof(U) == typeof(Societe))
-            {
-                if (typeof(T) == typeof(Societe))
-                { Titre = "Societe"; ModeleCorps = "xOngletSocieteControlTemplate"; }
+            //if (typeof(U) == typeof(Societe))
+            //{
+            //    if (typeof(T) == typeof(Societe))
+            //    { Titre = "Societe"; ModeleCorps = "xOngletSocieteControlTemplate"; }
 
-                else if (typeof(T) == typeof(Categorie))
-                { Titre = "Famille"; ModeleCorps = "xOngletFamilleControlTemplate"; }
+            //    else if (typeof(T) == typeof(GroupeCompte))
+            //    { Titre = "Famille"; ModeleCorps = "xOngletFamilleControlTemplate"; }
 
-                else if (typeof(T) == typeof(Fournisseur))
-                { Titre = "Fournisseur"; ModeleCorps = "xOngletFournisseurControlTemplate"; }
+            //    else if (typeof(T) == typeof(Fournisseur))
+            //    { Titre = "Fournisseur"; ModeleCorps = "xOngletFournisseurControlTemplate"; }
 
-                else if (typeof(T) == typeof(Utilisateur))
-                { Titre = "Utilisateur"; ModeleCorps = "xOngletUtilisateurControlTemplate"; }
-            }
-            else if (typeof(T) == typeof(Client))
-            { ModeleTitre = "xTitreClient"; ModeleCorps = "xEditerClientControlTemplate"; }
+            //    else if (typeof(T) == typeof(Utilisateur))
+            //    { Titre = "Utilisateur"; ModeleCorps = "xOngletUtilisateurControlTemplate"; }
+            //}
+            //else if (typeof(T) == typeof(Client))
+            //{ ModeleTitre = "xTitreClient"; ModeleCorps = "xEditerClientControlTemplate"; }
 
-            else if (typeof(T) == typeof(Devis))
-            { ModeleTitre = "xTitreDevis"; ModeleCorps = "xEditerDevisControlTemplate"; }
+            //else if (typeof(T) == typeof(Devis))
+            //{ ModeleTitre = "xTitreDevis"; ModeleCorps = "xEditerDevisControlTemplate"; }
 
-            else if (typeof(T) == typeof(Facture))
-            { ModeleTitre = "xTitreFacture"; ModeleCorps = "xEditerFactureControlTemplate"; }
+            //else if (typeof(T) == typeof(Facture))
+            //{ ModeleTitre = "xTitreFacture"; ModeleCorps = "xEditerFactureControlTemplate"; }
 
-            else if (typeof(T) == typeof(Fournisseur))
-            { ModeleTitre = "xTitreFournisseur"; ModeleCorps = "xEditerFournisseurControlTemplate"; }
+            //else if (typeof(T) == typeof(Fournisseur))
+            //{ ModeleTitre = "xTitreFournisseur"; ModeleCorps = "xEditerFournisseurControlTemplate"; }
 
-            else if (typeof(T) == typeof(Utilisateur))
-            { ModeleTitre = "xTitreUtilisateur"; ModeleCorps = "xEditerUtilisateurControlTemplate"; }
+            //else if (typeof(T) == typeof(Utilisateur))
+            //{ ModeleTitre = "xTitreUtilisateur"; ModeleCorps = "xEditerUtilisateurControlTemplate"; }
 
-            if (DataContext != null)
-            {
+            //if (DataContext != null)
+            //{
 
-                OngletSupprimable Onglet = null;
+            //    OngletSupprimable Onglet = null;
 
-                foreach (TabItem pTab in xOnglets.Items)
-                {
-                    if (pTab.DataContext == (object)DataContext)
-                    {
-                        Onglet = pTab as OngletSupprimable;
-                        if (Onglet == null)
-                            continue;
-                    }
-                }
+            //    foreach (TabItem pTab in xOnglets.Items)
+            //    {
+            //        if (pTab.DataContext == (object)DataContext)
+            //        {
+            //            Onglet = pTab as OngletSupprimable;
+            //            if (Onglet == null)
+            //                continue;
+            //        }
+            //    }
 
-                if (Onglet == null)
-                {
+            //    if (Onglet == null)
+            //    {
 
-                    Onglet = new OngletSupprimable();
-                    if (String.IsNullOrWhiteSpace(Titre))
-                    {
-                        Onglet.Header = DataContext;
-                        Onglet.HeaderTemplate = (DataTemplate)this.Resources[ModeleTitre];
-                    }
-                    else
-                    {
-                        Onglet.Header = Titre;
-                    }
+            //        Onglet = new OngletSupprimable();
+            //        if (String.IsNullOrWhiteSpace(Titre))
+            //        {
+            //            Onglet.Header = DataContext;
+            //            Onglet.HeaderTemplate = (DataTemplate)this.Resources[ModeleTitre];
+            //        }
+            //        else
+            //        {
+            //            Onglet.Header = Titre;
+            //        }
 
-                    ContentControl Control = new ContentControl();
-                    Control.Template = (ControlTemplate)this.Resources[ModeleCorps];
-                    Onglet.Content = Control;
-                    xOnglets.Items.Add(Onglet);
-                    Onglet.DataContext = DataContext;
-                }
-                DernierOngletActif = xOnglets.SelectedItem as TabItem;
-                xOnglets.SelectedItem = Onglet;
-                return true;
-            }
+            //        ContentControl Control = new ContentControl();
+            //        Control.Template = (ControlTemplate)this.Resources[ModeleCorps];
+            //        Onglet.Content = Control;
+            //        xOnglets.Items.Add(Onglet);
+            //        Onglet.DataContext = DataContext;
+            //    }
+            //    DernierOngletActif = xOnglets.SelectedItem as TabItem;
+            //    xOnglets.SelectedItem = Onglet;
+            //    return true;
+            //}
 
             return false;
         }
 
         private void FermerOnglet(Object DataContext)
         {
-            Client C = DataContext as Client;
-            if (C != null)
-            { C.CreerDossier(true); return; }
+            //Client C = DataContext as Client;
+            //if (C != null)
+            //{ C.CreerDossier(true); return; }
 
-            Devis D = DataContext as Devis;
-            if (D != null)
-            { D.CreerDossier(false); return; }
-        }
-
-        private void Ouvrir_Dossier_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem I = sender as MenuItem;
-            if (I != null)
-            {
-                DirectoryInfo Dir = null;
-                ListBox B = ((ContextMenu)I.Parent).PlacementTarget as ListBox;
-                if (B != null)
-                {
-                    Client C = B.SelectedItem as Client;
-                    if (C != null)
-                        Dir = C.Dossier;
-
-                    Devis D = B.SelectedItem as Devis;
-                    if (D != null)
-                        Dir = D.Dossier;
-
-                    Facture F = B.SelectedItem as Facture;
-                    if (F != null)
-                        Dir = F.Devis.Dossier;
-                }
-                else
-                {
-                    Grid Onglet = (I.Parent as ContextMenu).PlacementTarget as Grid;
-
-                    if (Onglet != null)
-                    {
-                        Devis D = Onglet.DataContext as Devis;
-
-                        if (D != null)
-                            Dir = D.Dossier;
-                    }
-                }
-
-                if (Dir != null)
-                    System.Diagnostics.Process.Start(Dir.FullName);
-            }
-        }
-
-        private void Ouvrir_Indice_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem I = sender as MenuItem;
-            if (I != null)
-            {
-                DirectoryInfo Dir = null;
-                ListBox B = ((ContextMenu)I.Parent).PlacementTarget as ListBox;
-                if (B != null)
-                {
-                    Devis D = B.SelectedItem as Devis;
-                    if (D != null)
-                        Dir = D.DossierIndice;
-                }
-                else
-                {
-                    Grid Onglet = (I.Parent as ContextMenu).PlacementTarget as Grid;
-
-                    if (Onglet != null)
-                    {
-                        Devis D = Onglet.DataContext as Devis;
-
-                        if (D != null)
-                            Dir = D.DossierIndice;
-                    }
-                }
-
-                if (Dir != null)
-                    System.Diagnostics.Process.Start(Dir.FullName);
-            }
+            //Devis D = DataContext as Devis;
+            //if (D != null)
+            //{ D.CreerDossier(false); return; }
         }
 
         private void Enregistrer_Click(object sender, RoutedEventArgs e)
@@ -314,158 +236,6 @@ namespace Compta
             }
             else
                 xDerniereSvg.Text = "Base de donnée à jour";
-        }
-
-        private void Tout_Calculer_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (MessageBox.Show("Voulez vous tout calculer ?", "Calcul", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
-
-            String pInfo = "Calcul en cours ...";
-            String pTitre = this.Title;
-            this.Title = pInfo;
-
-            Nettoyer(true);
-
-            this.Title = pTitre;
-        }
-
-        private void Nettoyer(Boolean Calculer = true)
-        {
-            ListeObservable<Devis> ListeDevis = Bdd.Liste<Devis>();
-            ListeObservable<Ligne_Banque> ListePoste = Bdd.Liste<Ligne_Banque>();
-            ListeObservable<Ligne_Compta> ListeLigne_Poste = Bdd.Liste<Ligne_Compta>();
-            ListeObservable<Achat> ListeAchat = Bdd.Liste<Achat>();
-
-            ListeObservable<Facture> ListeFacture = Bdd.Liste<Facture>();
-            ListeObservable<Ligne_Facture> ListeLigne_Facture = Bdd.Liste<Ligne_Facture>();
-
-            String Titre = "Calcul des lignes de factures : ";
-            int i = 1;
-            int tt = ListeLigne_Facture.Count();
-
-            foreach (Ligne_Facture Ligne_Facture in ListeLigne_Facture)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if (Ligne_Facture.Facture == null)
-                    Ligne_Facture.Supprimer();
-                else if (Calculer)
-                    Ligne_Facture.Calculer(false);
-
-                i++;
-            }
-
-            Titre = "Calcul des factures : ";
-            i = 1;
-            tt = ListeFacture.Count();
-            foreach (Facture Facture in ListeFacture)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if ((Facture.Devis == null) || (Facture.ListeLigneFacture.Count == 0))
-                    Facture.Supprimer();
-                else if (Calculer)
-                    Facture.Calculer(false);
-
-                i++;
-            }
-
-            Titre = "Calcul des lignes de poste : ";
-            i = 1;
-            tt = ListeLigne_Poste.Count();
-            foreach (Ligne_Compta Ligne_Poste in ListeLigne_Poste)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if (Ligne_Poste.Poste == null)
-                    Ligne_Poste.Supprimer();
-                else if (Calculer)
-                    Ligne_Poste.Calculer(false);
-
-                i++;
-            }
-
-            Titre = "Calcul des postes : ";
-            i = 1;
-            tt = ListePoste.Count();
-            foreach (Ligne_Banque Poste in ListePoste)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if (Poste.Societe == null)
-                    Poste.Supprimer();
-                else if (Calculer)
-                    Poste.Calculer(false);
-
-                i++;
-            }
-
-            Titre = "Calcul des devis : ";
-            i = 1;
-            tt = ListeDevis.Count();
-            foreach (Devis Devis in ListeDevis)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if (Devis.Client == null)
-                    Devis.Supprimer();
-                else if (Calculer)
-                    Devis.Calculer();
-
-                i++;
-            }
-
-            Titre = "Calcul des achats : ";
-            i = 1;
-            tt = ListeAchat.Count();
-            foreach (Achat Achat in ListeAchat)
-            {
-                this.Title = Titre + " " + i.ToString() + "/" + tt.ToString();
-
-                if (Achat.Devis == null)
-                    Achat.Supprimer();
-                else if (Calculer)
-                    Achat.Calculer();
-
-                i++;
-            }
-
-        }
-
-        private BindingExpression DevisExpItem = null;
-        private BindingExpression FactureExpItem = null;
-        private void Afficher_Tout_Les_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            Svg_Binding();
-
-            ToggleButton Bt = sender as ToggleButton;
-
-            if (Bt.IsChecked == true)
-                xListeDevis.ItemsSource = Bdd.Liste<Devis>();
-            else if (Bt.IsChecked == false)
-                xListeDevis.SetBinding(ListBox.ItemsSourceProperty, DevisExpItem.ParentBindingBase);
-        }
-
-        private void Svg_Binding()
-        {
-            if(FactureExpItem == null)
-                FactureExpItem = xListeFactureClient.GetBindingExpression(ListBox.ItemsSourceProperty);
-
-            if (DevisExpItem == null)
-                DevisExpItem = xListeDevis.GetBindingExpression(ListBox.ItemsSourceProperty);
-        }
-
-        private void Afficher_Toutes_Les_Factures_Click(object sender, RoutedEventArgs e)
-        {
-            Svg_Binding();
-
-            ToggleButton Bt = sender as ToggleButton;
-
-            if (Bt.IsChecked == true)
-                xListeFactureClient.ItemsSource = Bdd.Liste<Facture>();
-            else if (Bt.IsChecked == false)
-                xListeFactureClient.SetBinding(ListBox.ItemsSourceProperty, FactureExpItem.ParentBindingBase);
         }
 
         private void EffacerTextBox_Click(object sender, RoutedEventArgs e)
@@ -481,512 +251,6 @@ namespace Compta
             BindingExpression binding = BindingOperations.GetBindingExpression(T, prop);
             if (binding != null) { binding.UpdateSource(); }
         }
-
-        #region EVENEMENT IMPRIMER
-
-        private void Apercu_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            Devis D = null;
-
-            MenuItem M = sender as MenuItem;
-            Grid Grid = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as Grid;
-            if (Grid != null)
-                D = Grid.DataContext as Devis;
-            else
-            {
-                ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-                if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-                    D = L;
-            }
-
-            DirectoryInfo pDossier = D.Dossier;
-            if (pDossier == null)
-                pDossier = D.CreerDossier(true);
-
-            ApercuAvantImpression Fenetre = new ApercuAvantImpression(D.Impression(),
-                                                                        D.Ref + " " + D.Description,
-                                                                        pDossier,
-                                                                        D.Client.Societe.UtilisateurCourant);
-            Fenetre.Show();
-        }
-
-        private void Apercu_Facture_Click(object sender, RoutedEventArgs e)
-        {
-            Facture F = null;
-
-            MenuItem M = sender as MenuItem;
-            Grid Grid = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as Grid;
-            if (Grid != null)
-                F = Grid.DataContext as Facture;
-            else
-            {
-                ListBox V; ListeObservable<Facture> Liste; List<Facture> Ls; Facture L;
-                if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-                    F = L;
-            }
-
-            DirectoryInfo pDossier = F.Devis.Dossier;
-            if (pDossier == null)
-                pDossier = F.Devis.CreerDossier(true);
-
-            ApercuAvantImpression Fenetre = new ApercuAvantImpression(F.Impression(),
-                                                                        F.Ref + " " + F.Devis.Description,
-                                                                        pDossier,
-                                                                        F.Devis.Client.Societe.UtilisateurCourant,
-                                                                        true);
-            Fenetre.Show();
-        }
-
-        private void Ouvrir_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            Devis D = null;
-
-            MenuItem M = sender as MenuItem;
-            Grid Grid = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as Grid;
-            if (Grid != null)
-                D = Grid.DataContext as Devis;
-            else
-            {
-                ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-                if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-                    D = L;
-            }
-
-            DirectoryInfo pDossier = D.Dossier;
-            if (pDossier == null) return;
-
-            new SelectionnerFichier(pDossier.GetFiles(D.Ref + " *.pdf"));
-        }
-
-        private void Ouvrir_Facture_Click(object sender, RoutedEventArgs e)
-        {
-            Facture F = null;
-
-            MenuItem M = sender as MenuItem;
-            Grid Grid = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as Grid;
-            if (Grid != null)
-                F = Grid.DataContext as Facture;
-            else
-            {
-                ListBox V; ListeObservable<Facture> Liste; List<Facture> Ls; Facture L;
-                if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-                    F = L;
-            }
-
-            DirectoryInfo pDossier = F.Devis.Dossier;
-            if (pDossier == null) return;
-
-            new SelectionnerFichier(pDossier.GetFiles(F.Ref + " *.pdf"));
-        }
-
-
-        #endregion
-
-        #region EVENEMENT CLIENT
-
-        private void Ajouter_Client_Click(object sender, RoutedEventArgs e)
-        {
-            ListeObservable<Client> Liste = Ajouter_List<Client, Societe>(sender, e);
-            foreach(Client C in Liste)
-            {
-                Adresse_Client A= new Adresse_Client(C);
-                EditerOnglet<Client>(C);
-            }
-        }
-
-        private void Supprimer_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Client>(sender, e, true);
-        }
-
-        #endregion
-
-        #region EVENEMENT FOURNISSEUR
-
-        private void Ajouter_Fournisseur_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Fournisseur, Societe>(sender, e);
-        }
-
-        private void Supprimer_Fournisseur_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Fournisseur>(sender, e, true);
-        }
-
-        #endregion
-
-        #region EVENEMENT UTILISATEUR
-
-        private void Ajouter_Utilisateur_Click(object sender, RoutedEventArgs e)
-        {
-            ListeObservable<Utilisateur> Liste = Ajouter_List<Utilisateur, Societe>(sender, e);
-            foreach (Utilisateur U in Liste)
-            {
-                EditerOnglet<Utilisateur>(U);
-            }
-        }
-
-        private void Supprimer_Utilisateur_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Utilisateur>(sender, e, true, true);
-        }
-
-        #endregion
-
-        #region EVENEMENT DEVIS
-
-        private void Ajouter_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            ListeObservable<Devis> Liste = Ajouter_List<Devis, Client>(sender, e);
-            foreach (Devis D in Liste)
-            {
-                Ligne_Banque P = new Ligne_Banque(D);
-                Ligne_Compta L = new Ligne_Compta(P);
-                EditerOnglet<Devis>(D);
-            }
-        }
-
-        private void Ajouter_Devis_Indice_Click(object sender, RoutedEventArgs e)
-        {
-            ListeObservable<Devis> pListe = Ajouter_List<Devis, Client>(sender, e);
-            if (pListe.Count == 0) return;
-
-            ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-            if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-            {
-                Devis pD = pListe[0];
-                pD.CopierAvecIndice(L);
-
-                L.Statut = StatutDevis_e.cIndice;
-
-                EditerOnglet<Devis>(pD);
-            }
-        }
-
-        private void Copier_Devis_Vers_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Modifier_Devis(sender, e, Copier_Devis_Vers_Client);
-        }
-
-        private void Deplacer_Devis_Vers_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Modifier_Devis(sender, e, Deplacer_Devis_Vers_Client);
-        }
-
-        private void Modifier_Devis(object sender, RoutedEventArgs e, ModifierDevis Dlgt)
-        {
-            ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-            if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-            {
-                SelectionnerClient Fenetre = new SelectionnerClient(L, xListeClient, Dlgt);
-                Fenetre.Show();
-
-                Fenetre.Left = System.Windows.Forms.Control.MousePosition.X;
-                Fenetre.Top = System.Windows.Forms.Control.MousePosition.Y;
-            }
-        }
-
-        private void Deplacer_Devis_Vers_Client(Client C, Devis DevisBase, ListBox Box)
-        {
-            DirectoryInfo Dossier = DevisBase.DossierIndice;
-            if(Dossier == null) Dossier = DevisBase.Dossier;
-
-            DevisBase.Client = C;
-
-            DevisBase.CreerDossier(true);
-
-            try
-            {
-                if (Dossier != null)
-                {
-                    String NomDossier = DevisBase.DossierIndice.FullName;
-
-                    foreach (FileInfo F in DevisBase.DossierIndice.GetFiles())
-                    {
-                        String Chemin = Path.Combine(Dossier.FullName, Path.GetFileName(F.FullName));
-                        if (File.Exists(Chemin))
-                        {
-                            File.Delete(Chemin);
-                            F.MoveTo(Chemin);
-                        }
-                    }
-
-                    DevisBase.DossierIndice.Delete(true);
-
-                    Dossier.MoveTo(NomDossier);
-                }
-            }
-            catch { }
-
-            Box.SelectedItem = C;
-
-            EditerOnglet<Devis>(DevisBase);
-        }
-
-        private void Copier_Devis_Vers_Client(Client C, Devis DevisBase, ListBox Box)
-        {
-            Devis D = new Devis(C);
-
-            D.Copier(DevisBase);
-
-            Box.SelectedItem = C;
-
-            EditerOnglet<Devis>(D);
-        }
-
-        private void Fusionner_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-            if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-            {
-                Devis DevisBase = L;
-
-                foreach (Devis D in Ls)
-                {
-                    if (DevisBase != D)
-                        DevisBase.Importer(D);
-                }
-
-                DevisBase.ListePoste.Numeroter();
-
-                EditerOnglet<Devis>(DevisBase);
-            }
-        }
-
-        private void Fusionner_Nouveau_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            ListBox V; ListeObservable<Devis> Liste; List<Devis> Ls; Devis L;
-            if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-            {
-                Devis DevisBase = Ajouter_List<Devis, Client>(sender, e, true).First();
-
-                foreach (Devis D in Ls)
-                {
-                    DevisBase.Importer(D);
-                    D.Statut = StatutDevis_e.cIndice;
-                    if(!String.IsNullOrWhiteSpace(D.Description))
-                        DevisBase.Description = (DevisBase.Description.Flat() + Environment.NewLine + D.Description.Flat()).Trim();
-                }
-
-                DevisBase.ListePoste.Numeroter();
-
-                EditerOnglet<Devis>(DevisBase);
-            }
-        }
-
-        private void Supprimer_Devis_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Devis>(sender, e, true);
-        }
-
-        #endregion
-
-        #region EVENEMENT FACTURE
-
-        private void Ajouter_Facture_Click(object sender, RoutedEventArgs e)
-        {
-            ListeObservable<Facture> Liste = Ajouter_List<Facture, Devis>(sender, e);
-            foreach (Facture F in Liste)
-            {
-                EditerOnglet<Facture>(F);
-            }
-        }
-
-        private void Supprimer_Facture_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Facture>(sender, e, true);
-        }
-
-        private void MajFacture_Click(object sender, RoutedEventArgs e)
-        {
-            Facture F = null;
-
-            MenuItem M = sender as MenuItem;
-            Grid Grid = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as Grid;
-            if (Grid != null)
-                F = Grid.DataContext as Facture;
-            else
-            {
-                ListBox V; ListeObservable<Facture> Liste; List<Facture> Ls; Facture L;
-                if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
-                    F = L;
-            }
-
-            F.MajLigne_Facture();
-            
-        }
-
-        #endregion
-
-        #region EVENEMENT POSTE MENU LIST
-
-        private void Ajouter_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Ligne_Banque, Devis>(sender, e);
-        }
-
-        private void Inserer_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_List<Ligne_Banque, Devis>(sender, e);
-        }
-
-        private void Monter_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Monter_List<Ligne_Banque>(sender, e);
-        }
-
-        private void Descendre_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Descendre_List<Ligne_Banque>(sender, e);
-        }
-
-        private void Supprimer_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Ligne_Banque>(sender, e);
-        }
-
-        private void Copier_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Copier_List<Ligne_Banque>(sender, e);
-        }
-
-        private void Coller_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Coller_List<Ligne_Banque>(sender, e);
-        }
-
-        private void Inserer_Coller_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_Coller_List<Ligne_Banque, Devis>(sender, e);
-        }
-
-        #endregion
-
-        #region EVENEMENT LIGNE_POSTE MENU LIST
-
-        private void Ajouter_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Ligne_Compta, Ligne_Banque>(sender, e);
-        }
-
-        private void Inserer_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_List<Ligne_Compta, Ligne_Banque>(sender, e);
-        }
-
-        private void Monter_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Monter_List<Ligne_Compta>(sender, e);
-        }
-
-        private void Descendre_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Descendre_List<Ligne_Compta>(sender, e);
-        }
-
-        private void Supprimer_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Ligne_Compta>(sender, e);
-        }
-
-        private void Copier_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Copier_List<Ligne_Compta>(sender, e);
-        }
-
-        private void Coller_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Coller_List<Ligne_Compta>(sender, e);
-        }
-
-        private void Inserer_Coller_Ligne_Poste_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_Coller_List<Ligne_Compta, Ligne_Banque>(sender, e);
-        }
-
-        #endregion
-
-        #region EVENEMENT FAMILLE MENU LIST
-
-        private void Ajouter_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Categorie, Societe>(sender, e);
-        }
-
-        private void Inserer_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_List<Categorie, Societe>(sender, e);
-        }
-
-        private void Monter_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Monter_List<Categorie>(sender, e);
-        }
-
-        private void Descendre_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Descendre_List<Categorie>(sender, e);
-        }
-
-        private void Supprimer_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Categorie>(sender, e);
-        }
-
-        private void Copier_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Copier_List<Categorie>(sender, e);
-        }
-
-        private void Coller_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Coller_List<Categorie>(sender, e);
-        }
-
-        private void Inserer_Coller_Famille_Click(object sender, RoutedEventArgs e)
-        {
-            Inserer_Coller_List<Categorie, Societe>(sender, e);
-        }
-
-        #endregion
-
-        #region EVENEMENT COMMANDE MENU LIST
-
-        private void Ajouter_Commande_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Achat, Devis>(sender, e);
-        }
-
-        private void Supprimer_Commande_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Achat>(sender, e);
-        }
-
-        #endregion
-
-        #region EVENEMENT ADRESSE_CLIENT MENU LIST
-
-        private void Ajouter_Adresse_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Ajouter_List<Adresse_Client, Client>(sender, e);
-        }
-
-        private void Monter_Adresse_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Monter_List<Adresse_Client>(sender, e);
-        }
-
-        private void Descendre_Adresse_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Descendre_List<Adresse_Client>(sender, e);
-        }
-
-        private void Supprimer_Adresse_Client_Click(object sender, RoutedEventArgs e)
-        {
-            Supprimer_List<Adresse_Client>(sender, e, true, true);
-        }
-
-        #endregion
 
         #region EVENEMENT MENU LIST
 
@@ -1170,7 +434,7 @@ namespace Compta
 
                     if (Liste.Count >= 1)
                     {
-                        if (Message && MessageBox.Show(String.Format("Voulez vous vraiement supprimer : {0} {1} ?", DicIntitules.IntituleType(typeof(T).Name), iL.Ref), "Suppression", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                        if (Message && MessageBox.Show(String.Format("Voulez vous vraiement supprimer : {0} {1} ?", DicIntitules.IntituleType(typeof(T).Name), iL.No), "Suppression", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                             Supprimer = true;
 
                         if (Supprimer)

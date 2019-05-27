@@ -42,12 +42,32 @@ namespace Compta
             set { Set(ref _Nom, value, this); }
         }
 
-        private Double _Solde_initial = 0;
+        private Double _SoldeInitial = 0;
         [Propriete]
-        public Double Solde_initial
+        public Double SoldeInitial
         {
-            get { return _Solde_initial; }
-            set { Set(ref _Solde_initial, value, this); }
+            get { return _SoldeInitial; }
+            set { Set(ref _SoldeInitial, value, this); }
+        }
+
+        private Double _Solde = 0;
+        [Propriete]
+        public Double Solde
+        {
+            get { return _Solde; }
+            set { Set(ref _Solde, value, this); }
+        }
+
+        private ListeObservable<EcritureBanque> _ListeEcritureBanque = null;
+        public ListeObservable<EcritureBanque> ListeEcritureBanque
+        {
+            get
+            {
+                if (_ListeEcritureBanque == null)
+                    _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
+
+                return _ListeEcritureBanque;
+            }
         }
     }
 }

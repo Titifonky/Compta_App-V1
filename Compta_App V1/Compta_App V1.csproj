@@ -67,7 +67,7 @@
     <ManifestCertificateThumbprint>7D1EAEBB491A7DE2A07E00BC84BF9E35BA0505EE</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Gestion_App V6_CléTemporaire.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Compta_App V1_CléTemporaire.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -114,14 +114,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DicIntitules.cs" />
+    <Compile Include="MainWindow.ImporterReleve.cs" />
     <Compile Include="Objets\Compte.cs" />
     <Compile Include="Objets\Banque.cs" />
+    <Compile Include="Objets\LigneBanque.cs" />
+    <Compile Include="Objets\LigneCompta.cs" />
+    <Compile Include="Objets\EcritureBanque.cs" />
     <Compile Include="Parametres.cs" />
     <Compile Include="SelectionnerBase.xaml.cs">
       <DependentUpon>SelectionnerBase.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SelectionnerFichier.xaml.cs">
-      <DependentUpon>SelectionnerFichier.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ToggleBouton.cs" />
     <Compile Include="GridViewColumnResize.cs" />
@@ -129,13 +130,6 @@
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\RechercherDossier.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="MapiApi.cs" />
-    <Compile Include="SelectionnerClient.xaml.cs">
-      <DependentUpon>SelectionnerClient.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ApercuAvantImpression.xaml.cs">
-      <DependentUpon>ApercuAvantImpression.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Case.cs" />
     <Compile Include="Controls\Intitule.cs" />
     <Compile Include="Controls\ListeObjet.cs" />
@@ -147,9 +141,7 @@
     <Compile Include="Converter.cs" />
     <Compile Include="MainWindow.Evenements.cs" />
     <Compile Include="Objets\Outils.cs" />
-    <Compile Include="Objets\Categorie.cs" />
-    <Compile Include="Objets\Ligne_Compta.cs" />
-    <Compile Include="Objets\Ligne_Banque.cs" />
+    <Compile Include="Objets\Groupe.cs" />
     <Compile Include="Objets\Societe.cs" />
     <Compile Include="Objets\Version.cs" />
     <Compile Include="Recherche.cs" />
@@ -158,23 +150,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SelectionnerFichier.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\RechercherDossier.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ToggleBouton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SelectionnerClient.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ApercuAvantImpression.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

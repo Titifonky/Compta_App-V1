@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace Compta
 {
@@ -7,29 +6,10 @@ namespace Compta
     {
         public Compte() { }
 
-        public Compte(Categorie c)
+        public Compte(Groupe groupe)
         {
-            Categorie = c;
+            Groupe = groupe;
             Bdd.Ajouter(this);
-        }
-
-        private Categorie _Categorie = null;
-        [CleEtrangere]
-        public Categorie Categorie
-        {
-            get
-            {
-                if (_Categorie == null)
-                    _Categorie = Bdd.Parent<Categorie, Compte>(this);
-
-                return _Categorie;
-            }
-            set
-            {
-                Set(ref _Categorie, value, this);
-                if (_Categorie.ListeCompte != null)
-                    _Categorie.ListeCompte.Add(this);
-            }
         }
 
         [Propriete, Max, Tri(Modifiable=true)]
@@ -37,6 +17,25 @@ namespace Compta
         {
             get { return base.No; }
             set { base.No = value; }
+        }
+
+        private Groupe _Groupe = null;
+        [CleEtrangere]
+        public Groupe Groupe
+        {
+            get
+            {
+                if (_Groupe == null)
+                    _Groupe = Bdd.Parent<Groupe, Compte>(this);
+
+                return _Groupe;
+            }
+            set
+            {
+                Set(ref _Groupe, value, this);
+                if (_Groupe.ListeCompte != null)
+                    _Groupe.ListeCompte.Add(this);
+            }
         }
 
         private String _Nom = "";
@@ -53,6 +52,26 @@ namespace Compta
         {
             get { return _Description; }
             set { Set(ref _Description, value, this); }
+        }
+
+        private Double _Solde = 0;
+        [Propriete]
+        public Double Solde
+        {
+            get { return _Solde; }
+            set { Set(ref _Solde, value, this); }
+        }
+
+        private ListeObservable<LigneCompta> _ListeLigneCompta = null;
+        public ListeObservable<LigneCompta> ListeLigneCompta
+        {
+            get
+            {
+                if (_ListeLigneCompta == null)
+                    _ListeLigneCompta = Bdd.Enfants<LigneCompta, Compte>(this);
+
+                return _ListeLigneCompta;
+            }
         }
 
         public override Boolean Supprimer()
