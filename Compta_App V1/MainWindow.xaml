@@ -12,7 +12,9 @@
     <Window.Resources>
         <local:MultiStringConcatConverter x:Key="MultiStringConcatConverter"/>
         <local:BooleanToVisibilityConverter x:Key="BoolToVisible"/>
+        <local:NotToBooleanToVisibilityConverter x:Key="NotBoolToVisible"/>
         <local:BooleanToCollapsedConverter x:Key="BoolToCollapsed"/>
+        <local:NotBooleanToCollapsedConverter x:Key="NotBoolToCollapsed"/>
         <local:NotBooleanConverter x:Key="NotBoolean"/>
         <local:NullStringToVisibilityConverter x:Key="NullStringToVisible"/>
         <local:NullToCollapsedConverter x:Key="NullToCollapsed"/>
@@ -25,31 +27,176 @@
             <EventSetter Event="Loaded" Handler="ListView_Loaded"/>
         </Style>
 
+        <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
         <DataTemplate x:Key="xListeEcritureBanqueTemplate">
             <DataTemplate.Resources>
                 <Style TargetType="{x:Type Border}">
-                    <Setter Property="Background" Value="LightGray"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="White"/>
+                    <!--<Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Black"/>-->
                 </Style>
             </DataTemplate.Resources>
-            <Border Margin="0,2,2,2"
-                    Padding="3,0,3,0"
+            <Border Margin="0"
+                    Padding="0"
                     MouseDown="Editer_MouseDown"
                     >
-                <Grid>
+                <Grid >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:Date Grid.Column="0" Valeur="{Binding DateValeur}" VerticalAlignment="Center"/>
-                    <local:Case Grid.Column="1" Valeur="{Binding Unique}" Editable="True" VerticalAlignment="Center"/>
-                    <local:Case Grid.Column="2" Valeur="{Binding Ventiler}" Editable="True" VerticalAlignment="Center"/>
-                    <local:Texte Grid.Column="3" Valeur="{Binding Intitule, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                    <local:Texte Grid.Column="4" Valeur="{Binding Valeur, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <Grid Grid.Column="0" Margin="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
+                                <StackPanel Grid.Column="0" Margin="0,0,3,0" VerticalAlignment="Center">
+                                    <local:Date Valeur="{Binding DateValeur}" Editable="False" HorizontalContentAlignment="Center"/>
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <local:Case Grid.Column="0" Valeur="{Binding Compta}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" IntituleDerriere="True" HorizontalContentAlignment="Center"/>
+                                        <local:Case Grid.Column="1" Valeur="{Binding Ventiler}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" IntituleDerriere="True" HorizontalContentAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Grid Grid.Column="1" Margin="1,0,0,0" VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" IsEnabled="{Binding Path=Ventiler, Converter={StaticResource NotBoolean}}"  Visibility="{Binding Ventiler, Converter={StaticResource BoolToCollapsed}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Pointer}"/>
+                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Pointer}"/>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <local:Case Grid.Column="0" Valeur="{Binding AfficherDescription}" Editable="{Binding Pointer}" Visibility="{Binding Pointer, Converter={StaticResource NotBoolToCollapsed}}"/>
+                                    <local:Texte Grid.Column="1" Valeur="{Binding Intitule}" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                </Grid>
+                                <local:Texte Grid.Row="2"  Valeur="{Binding Description}" Editable="{Binding Pointer}" Visibility="{Binding AfficherDescription, Converter={StaticResource NotBoolToCollapsed}}" Info="True" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Grid>
+                        <Border Grid.Row="1"
+                                Margin="10,0,0,0"
+                                BorderThickness="1,0,0,0"
+                                BorderBrush="Black"
+                                Visibility="{Binding Path=Ventiler, Converter={StaticResource NotBoolToCollapsed}}"
+                                HorizontalAlignment="Stretch"
+                                >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ListView Grid.Column="0"
+                                          ItemsSource="{Binding ListeLigneBanque}"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Loaded="ListView_Loaded"
+                                          Margin="0"
+                                          Padding="0"
+                                          Background="Transparent" BorderThickness="0"
+                                          >
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                        <Border BorderBrush="Black"
+                                                                                            BorderThickness="0,1,0,0"
+                                                                                            Background="{TemplateBinding Background}">
+                                                            <GridViewRowPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="Auto" Margin="0" Content="{TemplateBinding Content}"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.Resources>
+                                        <Style TargetType="local:Texte">
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                            <EventSetter Event="KeyUp" Handler="Control_KeyUp"/>
+                                        </Style>
+                                        <Style TargetType="local:ListeEnum">
+                                            <EventSetter Event="LostFocus" Handler="Control_LostFocus"/>
+                                        </Style>
+                                        <Style TargetType="local:ListeObjet">
+                                            <EventSetter Event="LostFocus" Handler="Control_LostFocus"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </ListView.Resources>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition/>
+                                                                <RowDefinition/>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid Grid.Row="0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition MinWidth="80"/>
+                                                                    <ColumnDefinition MinWidth="80"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe, Mode=TwoWay}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding EcritureBanque.Pointer}"/>
+                                                                <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte, Mode=TwoWay}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding EcritureBanque.Pointer}"/>
+                                                            </Grid>
+                                                            <local:Texte Grid.Row="1" Valeur="{Binding Description}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Visibility="{Binding Description, Converter={StaticResource NullToCollapsed}}" Editable="{Binding EcritureBanque.Pointer}" Info="True" TextWrapping="NoWrap"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <local:Texte MinWidth="60" Valeur="{Binding Valeur}" Info="True" Editable="{Binding EcritureBanque.Pointer}" TextWrapping="Wrap" HorizontalAlignment="Stretch" TextAlignment="Right"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                    <ListView.ContextMenu>
+                                        <ContextMenu Visibility="{Binding Pointer, Converter={StaticResource NotBoolToCollapsed}}">
+                                            <MenuItem Header="Ajouter" Click="Ajouter_LigneBanque_Click"/>
+                                            <MenuItem Header="Supprimer" Click="Supprimer_LigneBanque_Click"/>
+                                        </ContextMenu>
+                                    </ListView.ContextMenu>
+                                </ListView>
+                                <local:Texte Grid.Column="1" Margin="3,0,0,0"  Valeur="{Binding VerifVentilation}" Visibility="{Binding Pointer, Converter={StaticResource NotBoolToCollapsed}}" TextWrapping="NoWrap" TextAlignment="Right"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <local:Texte Grid.Column="1" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Valeur}" Info="True" TextWrapping="NoWrap" TextAlignment="Right"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -98,7 +245,7 @@
                     <MenuItem Header="_Banque" Tag="Banque"/>
                 </MenuItem>
             </Menu>
-            <Button Grid.Column="1" Content="Enregistrer" Margin="15,0,0,0" Padding="2" VerticalAlignment="Stretch"/>
+            <Button Grid.Column="1" Content="Enregistrer" Margin="15,0,0,0" Padding="2" VerticalAlignment="Stretch" Click="Enregistrer_Click"/>
             <TextBlock Grid.Column="2" Margin="15,1,1,1" Padding="2" Name="xDerniereSvg" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="3" Margin="15,1,15,1" Padding="2" Name="xConnexionCourante" VerticalAlignment="Center" HorizontalAlignment="Right"/>
         </Grid>
@@ -107,9 +254,9 @@
             <TabItem Header="Comptabilité">
                 <Grid Name="xComptabilite">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -159,18 +306,24 @@
                                 </Grid>
                                 <ListBox Name="xListeEcritureBanque"
                                          Grid.Row="1"
+                                         VerticalContentAlignment="Stretch"
                                          DataContext="{Binding BanqueCourante}"
                                          ItemsSource="{Binding ListeEcritureBanque}"
                                          ItemTemplate="{StaticResource xListeEcritureBanqueTemplate}"
                                          SelectedIndex="0"
                                          HorizontalContentAlignment="Stretch"
+                                         VerticalAlignment="Stretch"
                                          IsSynchronizedWithCurrentItem="True"
-                                         Padding="0"
+                                         Margin="0,2.5,0,2.5"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.CanContentScroll="False"
-                                         Foreground="Black"
-                                         SelectionMode="Extended" Grid.ColumnSpan="2"
-                                     >
+                                         SelectionMode="Extended"
+                                    >
+                                    <!--<ListBox.Resources>
+                                        <Style TargetType="{x:Type ListBoxItem}">
+                                            <EventSetter Event="MouseDoubleClick" Handler="Editer_MouseDoubleClick" />
+                                        </Style>
+                                    </ListBox.Resources>-->
                                 </ListBox>
                             </Grid>
                         </Border>
@@ -225,7 +378,7 @@
                                     >
                                     <ListBox.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Editer"/>
+                                            <MenuItem Header="Ajouter"/>
                                             <MenuItem Header="Supprimer"/>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>

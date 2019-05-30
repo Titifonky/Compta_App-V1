@@ -171,8 +171,9 @@ namespace Compta
                     Bdd.Enregistrer();
                 }
             }
-            catch
+            catch(Exception e)
             {
+                Log.Message(e.ToString());
                 Log.Message("Pd d'initialisation de la base");
                 return false;
             }

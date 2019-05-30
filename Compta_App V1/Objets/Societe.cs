@@ -35,6 +35,40 @@ namespace Compta
             }
         }
 
+        private Compte _CompteBase = null;
+        public Compte CompteBase
+        {
+            get
+            {
+                if (_CompteBase == null)
+                {
+                    Groupe G = null;
+                    foreach (var g in ListeGroupe)
+                    {
+                        if (g.No == 1)
+                        {
+                            G = g;
+                            break;
+                        }
+                    }
+
+                    if (G != null)
+                    {
+                        foreach (var c in G.ListeCompte)
+                        {
+                            if (c.No == 1)
+                            {
+                                _CompteBase = c;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return _CompteBase;
+            }
+        }
+
         private ListeObservable<LigneCompta> _ListeLigneCompta = null;
         public ListeObservable<LigneCompta> ListeLigneCompta
         {
@@ -44,6 +78,10 @@ namespace Compta
                     _ListeLigneCompta = Bdd.Enfants<LigneCompta, Societe>(this);
 
                 return _ListeLigneCompta;
+            }
+            set
+            {
+                Set(ref _ListeLigneCompta, value);
             }
         }
 
@@ -57,17 +95,25 @@ namespace Compta
 
                 return _ListeBanque;
             }
+            set
+            {
+                Set(ref _ListeBanque, value);
+            }
         }
 
-        private ListeObservable<Groupe> _ListeCompte = null;
-        public ListeObservable<Groupe> ListeCompte
+        private ListeObservable<Groupe> _ListeGroupe = null;
+        public ListeObservable<Groupe> ListeGroupe
         {
             get
             {
-                if (_ListeCompte == null)
-                    _ListeCompte = Bdd.Enfants<Groupe, Societe>(this);
+                if (_ListeGroupe == null)
+                    _ListeGroupe = Bdd.Enfants<Groupe, Societe>(this);
 
-                return _ListeCompte;
+                return _ListeGroupe;
+            }
+            set
+            {
+                Set(ref _ListeGroupe, value);
             }
         }
     }

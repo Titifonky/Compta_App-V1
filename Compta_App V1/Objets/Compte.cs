@@ -72,6 +72,11 @@ namespace Compta
 
                 return _ListeLigneCompta;
             }
+
+            set
+            {
+                Set(ref _ListeLigneCompta, value);
+            }
         }
 
         public override Boolean Supprimer()

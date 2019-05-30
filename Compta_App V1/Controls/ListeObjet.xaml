@@ -7,7 +7,7 @@
                    mc:Ignorable="d"
                    x:Name="parent"
                    >
-    
+
     <Grid x:Name="xBase"
           Margin="0,2,0,2"
           DataContext="{Binding ElementName=parent}"
@@ -16,7 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <TextBlock Name="xIntitule"
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"
@@ -24,14 +24,23 @@
                    />
         <ComboBox Grid.Column="1"
                   Name="xValeur"
-                  ItemsSource="{Binding ItemsSource, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding ItemsSource, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedValue="{Binding SelectedValue, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="{Binding DisplayMemberPath}"
-                  SelectedValue="{Binding SelectedValue, Mode=TwoWay}"
                   IsEditable="True"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Center"
                   BorderThickness="1"
                   BorderBrush="Black"
                   />
+        <TextBlock Grid.Column="1"
+                   Name="xValeurTexte"
+                   Text="{Binding ElementName=xValeur, Path=Text}"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Foreground="Black"
+                   TextAlignment="Left"
+                   Visibility="Collapsed"
+                   />
     </Grid>
 </local:ControlBase>

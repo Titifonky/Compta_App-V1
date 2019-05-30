@@ -16,10 +16,8 @@ Attributs possibles :
       <Propriete name="No"/>
       <Propriete name="Societe"/>
       <Propriete name="Pointer" intitule="P"/>
-      <Propriete name="Unique"/>
       <Propriete name="DateValeur" intitule="Date valeur"/>
       <Propriete name="DateCompta" intitule="Date compta"/>
-      <Propriete name="Groupe"/>
       <Propriete name="Compte"/>
       <Propriete name="Description"/>
       <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
@@ -29,13 +27,9 @@ Attributs possibles :
     <Objet name="LigneBanque">
       <Propriete name="Id"/>
       <Propriete name="No"/>
-      <Propriete name="Societe"/>
-      <Propriete name="Pointer"/>
-      <Propriete name="Unique"/>
       <Propriete name="EcritureBanque"/>
+      <Propriete name="Editer" intitule="E"/>
       <Propriete name="DateValeur" intitule="Date valeur"/>
-      <Propriete name="DateCompta" intitule="Date compta"/>
-      <Propriete name="Groupe"/>
       <Propriete name="Compte"/>
       <Propriete name="Description"/>
       <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
@@ -46,13 +40,15 @@ Attributs possibles :
       <Propriete name="Id"/>
       <Propriete name="No"/>
       <Propriete name="Banque"/>
+      <Propriete name="Pointer" intitule="P"/>
       <Propriete name="IdBanque"/>
-      <Propriete name="DateValeur"/>
+      <Propriete name="DateValeur" intitule="Date"/>
+      <Propriete name="AfficherDescription" intitule="Ajouter une description"/>
       <Propriete name="Description"/>
-      <Propriete name="Groupe"/>
       <Propriete name="Compte"/>
-      <Propriete name="Ventiler"/>
-      <Propriete name="Unique"/>
+      <Propriete name="Ventiler" intitule="V" info="Ventiler"/>
+      <Propriete name="VerifVentilation" unite="€" defaut="0"/>
+      <Propriete name="Compta" intitule="C" info="Compta"/>
       <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
     </Objet>
     <Objet name="Banque">
@@ -86,14 +82,4 @@ Attributs possibles :
       <Propriete name="No"/>
     </Objet>
   </Objets>
-  <Enums>
-    <Enum name="StatutDevis_e">
-      <Champ name="cEnCours" valeur="1" intitule="En cours"/>
-      <Champ name="cEnvoye" valeur="2" intitule="Envoyé"/>
-      <Champ name="cValide" valeur="3" intitule="Accepté"/>
-      <Champ name="cTermine" valeur="4" intitule="Terminé"/>
-      <Champ name="cRefuse" valeur="5" intitule="Refusé"/>
-      <Champ name="cIndice" valeur="6" intitule="Indicé"/>
-    </Enum>
-  </Enums>
 </Base>

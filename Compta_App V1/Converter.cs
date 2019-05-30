@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -19,12 +20,46 @@ namespace Compta
     }
 
     [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public class BooleanToEnableConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Boolean)value)
+                return Visibility.Hidden;
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
     public class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if ((Boolean)value)
+                return Visibility.Hidden;
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public class NotToBooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
             if (!(Boolean)value)
-                return Visibility.Collapsed;
+                return Visibility.Hidden;
 
             return Visibility.Visible;
         }
@@ -44,6 +79,25 @@ namespace Compta
                 return Visibility.Collapsed;
 
             return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
+    [ValueConversion(typeof(Boolean), typeof(Visibility))]
+    public class NotBooleanToCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Visibility r = Visibility.Visible;
+
+            if (!(Boolean)value)
+                r = Visibility.Collapsed;
+
+            return r;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

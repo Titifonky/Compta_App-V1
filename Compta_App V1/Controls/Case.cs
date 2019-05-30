@@ -62,9 +62,35 @@ namespace Compta
         public static readonly DependencyProperty ValeurDP =
             DependencyProperty.Register("Valeur", typeof(object),
               typeof(Case), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        
+
+        private void ApplyEditable()
+        {
+            if (Editable == true)
+            {
+                xBase.Visibility = Visibility.Visible;
+
+                xValeur.Visibility = Visibility.Visible;
+                xValeur.IsHitTestVisible = true;
+            }
+            else
+            {
+                xValeur.Visibility = Visibility.Visible;
+                xValeur.IsHitTestVisible = false;
+                xValeur.ToolTip = null;
+
+                if (!(xValeur.IsChecked == true))
+                    xBase.Visibility = Visibility.Collapsed;
+            }
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
+            if (e.Property == EditableDP)
+            {
+                ApplyEditable();
+                (this as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
+            }
+
             if (e.Property == IntituleDerriereDP)
             {
                 String Objet = "";
@@ -83,17 +109,8 @@ namespace Compta
 
             if (e.Property == ValeurDP)
             {
-                if (Editable == true)
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.IsHitTestVisible = true;
-                }
-                else
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.IsHitTestVisible = false;
-                    xValeur.ToolTip = null;
-                }
+
+                ApplyEditable();
 
                 if (Intitule == true)
                     xIntitule.Visibility = System.Windows.Visibility.Visible;

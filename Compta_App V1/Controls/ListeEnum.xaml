@@ -35,5 +35,14 @@
                   BorderThickness="1"
                   BorderBrush="Black"
                   />
+        <TextBlock Grid.Column="1"
+                   Name="xValeurTexte"
+                   Text="{Binding ElementName=xValeur, Path=Text}"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Foreground="Black"
+                   TextAlignment="Left"
+                   Visibility="Collapsed"
+                   />
     </Grid>
 </local:ControlBase>

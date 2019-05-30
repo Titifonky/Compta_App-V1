@@ -11,6 +11,9 @@ namespace Compta
         {
             Societe = societe;
             Bdd.Ajouter(this);
+
+            Compte C = new Compte(this);
+            C.Nom = "-";
         }
 
         [Propriete, Max, Tri(Modifiable = true)]
@@ -34,8 +37,8 @@ namespace Compta
             set
             {
                 Set(ref _Societe, value, this);
-                if (_Societe.ListeCompte != null)
-                    _Societe.ListeCompte.Add(this);
+                if (_Societe.ListeGroupe != null)
+                    _Societe.ListeGroupe.Add(this);
             }
         }
 
@@ -65,6 +68,10 @@ namespace Compta
 
                 return _ListeCompte;
             }
+            set
+            {
+                Set(ref _ListeCompte, value);
+            }
         }
 
         public override Boolean Supprimer()
@@ -73,7 +80,7 @@ namespace Compta
 
             SupprimerListe(_ListeCompte);
 
-            Societe.ListeCompte.Remove(this);
+            Societe.ListeGroupe.Remove(this);
 
             Bdd.Supprimer<Groupe>(this);
             return true;

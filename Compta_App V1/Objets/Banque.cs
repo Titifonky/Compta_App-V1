@@ -68,6 +68,11 @@ namespace Compta
 
                 return _ListeEcritureBanque;
             }
+
+            set
+            {
+                Set(ref _ListeEcritureBanque, value);
+            }
         }
     }
 }

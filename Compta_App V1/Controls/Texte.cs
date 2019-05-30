@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -161,94 +162,114 @@ namespace Compta
                 Texte = _Unite + (String)SuffixConcat + (String)Suffix;
 
             if (!String.IsNullOrWhiteSpace(Texte))
-                xUnite.Visibility = System.Windows.Visibility.Visible;
+                xUnite.Visibility = Visibility.Visible;
             else
-                xUnite.Visibility = System.Windows.Visibility.Collapsed;
+                xUnite.Visibility = Visibility.Collapsed;
 
             xUnite.Text = Texte;
         }
 
+        private void ApplyEditable()
+        {
+            if (Editable)
+            {
+                xBase.Visibility = Visibility.Visible;
+                xValeur.Visibility = Visibility.Visible;
+                xValeur.Background = Brushes.White;
+                xValeur.BorderThickness = new Thickness(1);
+                xValeur.IsHitTestVisible = true;
+                if (Unite)
+                    xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+            }
+            else
+            {
+                if (String.IsNullOrWhiteSpace(Valeur.ToString()))
+                    xBase.Visibility = Visibility.Collapsed;
+
+                
+                xValeur.Background = Brushes.Transparent;
+                xValeur.TextWrapping = TextWrapping;
+                xValeur.BorderThickness = new Thickness(0);
+                xValeur.IsHitTestVisible = false;
+                if (Unite)
+                    xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+            }
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-
-            if (e.Property == SuffixDP)
+            try
             {
-                MajSuffix();
-            }
-
-            if (e.Property == SuffixConcatDP)
-            {
-                MajSuffix();
-            }
-
-            if (e.Property == ValeurDP)
-            {
-                if (Editable)
+                if (e.Property == SuffixDP)
                 {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.Background = Brushes.White;
-                    xValeur.IsHitTestVisible = true;
-                }
-                else
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.Background = Brushes.Transparent;
-                    xValeur.TextWrapping = TextWrapping;
-                    //xValeur.IsReadOnly = true;
-                    xValeur.BorderThickness = new Thickness(0);
-                    xValeur.IsHitTestVisible = false;
-                    if (Unite)
-                        xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
-                }
-
-                if (Orientation == System.Windows.Controls.Orientation.Horizontal)
-                    DockPanel.SetDock(xIntitule, Dock.Left);
-                else
-                {
-                    DockPanel.SetDock(xIntitule, Dock.Top);
-                    xIntitule.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                }
-
-                if (Intitule)
-                    xIntitule.Visibility = System.Windows.Visibility.Visible;
-                else
-                    xIntitule.Visibility = System.Windows.Visibility.Collapsed;
-
-                if (Unite)
-                    xUnite.Visibility = System.Windows.Visibility.Visible;
-                else
-                    xUnite.Visibility = System.Windows.Visibility.Collapsed;
-
-                String Objet = "";
-                String Propriete = "";
-                String TypePropriete = "";
-
-                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
-                {
-                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                    xIntitule.Text = pIntitule + " :";
-                    
-                    if (Unite)
-                    {
-                        _Unite = DicIntitules.Unite(Objet, Propriete);
-                        xUnite.Text = _Unite;
-                    }
-
                     MajSuffix();
+                }
 
-                    if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
-                        xBase.Visibility = System.Windows.Visibility.Collapsed;
+                if (e.Property == SuffixConcatDP)
+                {
+                    MajSuffix();
+                }
 
-                    String ToolTip = DicIntitules.Info(Objet, Propriete);
-                    if (!String.IsNullOrWhiteSpace(ToolTip))
-                        xBase.ToolTip = ToolTip;
+                if (e.Property == EditableDP)
+                {
+                    ApplyEditable();
+                }
 
-                    if (IntituleSeul)
+                if (e.Property == ValeurDP)
+                {
+                    ApplyEditable();
+
+                    if (Orientation == Orientation.Horizontal)
+                        DockPanel.SetDock(xIntitule, Dock.Left);
+                    else
                     {
-                        xGrille.Visibility = System.Windows.Visibility.Collapsed;
+                        DockPanel.SetDock(xIntitule, Dock.Top);
+                        xIntitule.HorizontalAlignment = HorizontalAlignment.Left;
+                    }
+
+                    if (Intitule)
+                        xIntitule.Visibility = Visibility.Visible;
+                    else
+                        xIntitule.Visibility = Visibility.Collapsed;
+
+                    if (Unite)
+                        xUnite.Visibility = Visibility.Visible;
+                    else
+                        xUnite.Visibility = Visibility.Collapsed;
+
+                    String Objet = "";
+                    String Propriete = "";
+                    String TypePropriete = "";
+
+                    if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
+                    {
+                        String pIntitule = DicIntitules.Intitule(Objet, Propriete);
+                        xIntitule.Text = pIntitule + " :";
+
+                        if (Unite)
+                        {
+                            _Unite = DicIntitules.Unite(Objet, Propriete);
+                            xUnite.Text = _Unite;
+                        }
+
+                        MajSuffix();
+
+                        if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
+                            xBase.Visibility = Visibility.Collapsed;
+
+                        String ToolTip = DicIntitules.Info(Objet, Propriete);
+                        if (!String.IsNullOrWhiteSpace(ToolTip))
+                            xBase.ToolTip = ToolTip;
+
+                        if (IntituleSeul)
+                        {
+                            xGrille.Visibility = Visibility.Collapsed;
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            { Log.Message(ex.ToString()); }
 
             base.OnPropertyChanged(e);
         }

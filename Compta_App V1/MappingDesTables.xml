@@ -19,10 +19,8 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="no"/>
           <Colonne name="societe" defaut="1"/>
           <Colonne name="pointer"/>
-          <Colonne name="unique"/>
           <Colonne name="datevaleur"/>
           <Colonne name="datecompta"/>
-          <Colonne name="groupe"/>
           <Colonne name="compte"/>
           <Colonne name="description"/>
           <Colonne name="valeur"/>
@@ -31,13 +29,9 @@ Seules les colonnes à modifier sont nécessaires.
         </Table>
         <Table name="lignebanque">
           <Colonne name="no"/>
-          <Colonne name="societe" defaut="1"/>
           <Colonne name="ecriturebanque"/>
-          <Colonne name="pointer"/>
-          <Colonne name="unique"/>
+          <Colonne name="editer"/>
           <Colonne name="datevaleur"/>
-          <Colonne name="datecompta"/>
-          <Colonne name="groupe"/>
           <Colonne name="compte"/>
           <Colonne name="description"/>
           <Colonne name="valeur"/>
@@ -47,14 +41,14 @@ Seules les colonnes à modifier sont nécessaires.
         <Table name="ecriturebanque">
           <Colonne name="no"/>
           <Colonne name="banque"/>
+          <Colonne name="pointer"/>
           <Colonne name="idbanque"/>
           <Colonne name="datevaleur"/>
           <Colonne name="intitule"/>
           <Colonne name="description"/>
-          <Colonne name="groupe"/>
           <Colonne name="compte"/>
           <Colonne name="ventiler" defaut="0"/>
-          <Colonne name="unique" defaut="0"/>
+          <Colonne name="compta" defaut="0"/>
           <Colonne name="valeur"/>
         </Table>
         <Table name="banque">
@@ -104,12 +98,18 @@ Seules les colonnes à modifier sont nécessaires.
         <Table name="groupe">
           <Insert>
             <Valeur name="no">1</Valeur>
-            <Valeur name="nom">Client</Valeur>
+            <Valeur name="nom">Divers</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">2</Valeur>
+            <Valeur name="nom">Client</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">3</Valeur>
             <Valeur name="nom">Fournisseurs</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
@@ -118,9 +118,27 @@ Seules les colonnes à modifier sont nécessaires.
         <Table name="compte">
           <Insert>
             <Valeur name="no">1</Valeur>
-            <Valeur name="nom">Arras Vds</Valeur>
+            <Valeur name="nom">-</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="groupe">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">2</Valeur>
+            <Valeur name="nom">-</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="groupe">2</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">3</Valeur>
+            <Valeur name="nom">-</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="groupe">3</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">4</Valeur>
+            <Valeur name="nom">Arras Vds</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="groupe">2</Valeur>
           </Insert>
         </Table>
       </Tables>

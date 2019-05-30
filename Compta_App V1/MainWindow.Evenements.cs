@@ -110,26 +110,17 @@ namespace Compta
         {
             if (e.ClickCount >= 2)
             {
-                //Client C = ((FrameworkElement)sender).DataContext as Client;
-                //if (C != null)
-                //    EditerOnglet<Client>(C);
-
-                //Devis D = ((FrameworkElement)sender).DataContext as Devis;
-                //if (D != null)
-                //    EditerOnglet<Devis>(D);
-
-                //Facture F = ((FrameworkElement)sender).DataContext as Facture;
-                //if (F != null)
-                //    EditerOnglet<Facture>(F);
-
-                //Fournisseur Fr = ((FrameworkElement)sender).DataContext as Fournisseur;
-                //if (Fr != null)
-                //    EditerOnglet<Fournisseur>(Fr);
-
-                //Utilisateur U = ((FrameworkElement)sender).DataContext as Utilisateur;
-                //if (U != null)
-                //    EditerOnglet<Utilisateur>(U);
+                EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
+                if (EC != null)
+                    EC.Pointer = !EC.Pointer;
             }
+        }
+
+        private void Editer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+                EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
+                if (EC != null)
+                    EC.Pointer = !EC.Pointer;
         }
 
         private Boolean EditerOnglet<T>(T DataContext)
@@ -251,6 +242,18 @@ namespace Compta
             BindingExpression binding = BindingOperations.GetBindingExpression(T, prop);
             if (binding != null) { binding.UpdateSource(); }
         }
+
+        //void ListViewItem_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    //xListeEcritureBanque.Ajuster_Colonnes();
+
+        //    EcritureBanque item = ((FrameworkElement)e.OriginalSource).DataContext as EcritureBanque;
+        //    if (item != null)
+        //    {
+        //        Log.Message(item.Description);
+        //        item.Pointer = !item.Pointer;
+        //    }
+        //}
 
         #region EVENEMENT MENU LIST
 
@@ -428,24 +431,19 @@ namespace Compta
             ListBox V; ListeObservable<T> Liste; List<T> Ls; T L;
             if (Info(sender as MenuItem, out V, out Liste, out Ls, out L))
             {
+                int mini = UnItemMini ? 1 : 0;
+
                 foreach (T iL in Ls)
                 {
                     Boolean Supprimer = !Message;
 
-                    if (Liste.Count >= 1)
+                    if (Liste.Count > mini)
                     {
                         if (Message && MessageBox.Show(String.Format("Voulez vous vraiement supprimer : {0} {1} ?", DicIntitules.IntituleType(typeof(T).Name), iL.No), "Suppression", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                             Supprimer = true;
 
-                        if (Supprimer)
-                        {
-                            if (UnItemMini == false)
-                            {
-                                if (iL.Supprimer())
-                                    Liste.Remove(iL);
-                            }
-
-                        }
+                        if (Supprimer && iL.Supprimer())
+                                Liste.Remove(iL);
                     }
                 }
                 Liste.Numeroter();
@@ -536,7 +534,7 @@ namespace Compta
                     Obj.Copier(iL);
 
                     // Si la liste contient des lignes, on la déplace
-                    if(L != null)
+                    if (L != null)
                         Liste.Move(Liste.IndexOf(Obj), Liste.IndexOf(L));
                 }
 
@@ -547,62 +545,50 @@ namespace Compta
 
         #endregion
 
-        #region LISTVIEW
+        #region EVENEMENT LigneBanque
 
-        private void Ajuster_Colonnes(ListView L)
+        private void Ajouter_LigneBanque_Click(object sender, RoutedEventArgs e)
         {
-            GridView G = L.View as GridView;
-            if (G != null)
-            {
-                foreach (GridViewColumn C in G.Columns)
-                {
-                    C.Width = C.ActualWidth;
-
-                    C.Width = double.NaN;
-                }
-            }
+            Ajouter_List<LigneBanque, EcritureBanque>(sender, e);
         }
+
+        private void Supprimer_LigneBanque_Click(object sender, RoutedEventArgs e)
+        {
+            Supprimer_List<LigneBanque>(sender, e, false, true);
+        }
+
+        #endregion
+
+        #region LISTVIEW
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         private void ComboBox_TargetUpdated(object sender, DataTransferEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         private void TextBlock_TargetUpdated(object sender, DataTransferEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
-        }
-
-        public static T FindVisualParent<T>(UIElement element) where T : UIElement
-        {
-            UIElement parent = element; while (parent != null)
-            {
-                T correctlyTyped = parent as T; if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            } return null;
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         private void Control_KeyUp(object sender, KeyEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         private void Control_LostFocus(object sender, RoutedEventArgs e)
         {
-            Ajuster_Colonnes(FindVisualParent<ListView>(sender as UIElement));
+            (sender as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
         }
 
         // Fontion pour eviter le freezz du scroll quand la souris est sur une listview contenue dans une listbox

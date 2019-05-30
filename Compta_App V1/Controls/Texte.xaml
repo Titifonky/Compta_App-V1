@@ -19,11 +19,12 @@
                        VerticalAlignment="Center"
                        Foreground="Black"
                        TextAlignment="Right"
+                       HorizontalAlignment="Right"
                        Width="Auto"
                        />
             <Grid Name="xGrille">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"
@@ -37,7 +38,7 @@
                          TextWrapping="{Binding TextWrapping}"
                          AcceptsReturn="{Binding AcceptsReturn}"
                          TextAlignment="{Binding TextAlignment}"
-                         Visibility="Hidden"
+                         HorizontalAlignment="Stretch"
                          />
                 <TextBlock Grid.Column="1"
                            Name="xUnite"
@@ -46,6 +47,7 @@
                            Margin="1,0,0,0"
                            Foreground="Black"
                            TextAlignment="Left"
+                           TextWrapping="{Binding TextWrapping}"
                            />
             </Grid>
         </DockPanel>

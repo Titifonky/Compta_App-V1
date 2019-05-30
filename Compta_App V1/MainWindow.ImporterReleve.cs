@@ -139,7 +139,7 @@ namespace Compta
                             }
 
                             if (!EnregistrementsExistants.Contains(E.Ref))
-                                ListeEcritureBanque.Add(new EcritureBanque(pSociete.BanqueCourante, E.Ref, E.DateValeur, E.Lib1 + " / " + E.Lib2, E.Valeur));
+                                ListeEcritureBanque.Add(new EcritureBanque(pSociete.BanqueCourante, E.Ref, E.DateValeur, E.Lib1 + (String.IsNullOrWhiteSpace(E.Lib2) ? "" : " / " + E.Lib2), E.Valeur));
                         }
                     }
                 };

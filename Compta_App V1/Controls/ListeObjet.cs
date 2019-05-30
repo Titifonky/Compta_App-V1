@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -69,30 +70,46 @@ namespace Compta
 
         public static readonly DependencyProperty ItemsSourceDP =
             DependencyProperty.Register("ItemsSource", typeof(object),
-              typeof(ListeObjet), new FrameworkPropertyMetadata(null));
+              typeof(ListeObjet), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         
+        private void ApplyEditable()
+        {
+            if (Editable == true)
+            {
+                xBase.Visibility = Visibility.Visible;
+                xValeur.Visibility = Visibility.Visible;
+                xValeur.IsHitTestVisible = true;
+                xValeur.Background = Brushes.White;
+                xValeur.BorderThickness = new Thickness(1);
+                xValeurTexte.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                xValeur.Visibility = Visibility.Collapsed;
+                xValeur.IsHitTestVisible = false;
+                xValeur.ToolTip = null;
+                xValeur.Background = Brushes.Transparent;
+                xValeur.BorderThickness = new Thickness(0);
+                xValeurTexte.Visibility = Visibility.Visible;
+            }
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
+            if (e.Property == EditableDP)
+            {
+                ApplyEditable();
+                //(this as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
+            }
 
             if (e.Property == SelectedValueDP)
             {
-                if (Editable == true)
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.IsHitTestVisible = true;
-                    xValeur.Background = Brushes.White;
-                }
-                else
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.IsHitTestVisible = false;
-                    xValeur.ToolTip = null;
-                }
+                ApplyEditable();
 
                 if (Intitule == true)
-                    xIntitule.Visibility = System.Windows.Visibility.Visible;
+                    xIntitule.Visibility = Visibility.Visible;
                 else
-                    xIntitule.Visibility = System.Windows.Visibility.Collapsed;
+                    xIntitule.Visibility = Visibility.Collapsed;
 
                 String Objet = "";
                 String Propriete = "";
@@ -104,7 +121,7 @@ namespace Compta
                     xIntitule.Text = pIntitule + " :";
 
                     if (String.IsNullOrWhiteSpace(SelectedValue.ToString()) && (Editable == false))
-                        xBase.Visibility = System.Windows.Visibility.Collapsed;
+                        xBase.Visibility = Visibility.Collapsed;
 
                     String ToolTip = DicIntitules.Info(Objet, Propriete);
                     if (!String.IsNullOrWhiteSpace(ToolTip))
@@ -120,9 +137,9 @@ namespace Compta
             InitializeComponent();
 
             if (Intitule == true)
-                xIntitule.Visibility = System.Windows.Visibility.Visible;
+                xIntitule.Visibility = Visibility.Visible;
             else
-                xIntitule.Visibility = System.Windows.Visibility.Collapsed;
+                xIntitule.Visibility = Visibility.Collapsed;
 
             if (Editable == true)
                 xValeur.IsHitTestVisible = true;

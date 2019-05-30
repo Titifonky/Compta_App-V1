@@ -118,14 +118,15 @@
     <Compile Include="Objets\Compte.cs" />
     <Compile Include="Objets\Banque.cs" />
     <Compile Include="Objets\LigneBanque.cs" />
+    <Compile Include="Objets\Ligne.cs" />
     <Compile Include="Objets\LigneCompta.cs" />
     <Compile Include="Objets\EcritureBanque.cs" />
+    <Compile Include="OutilsXaml.cs" />
     <Compile Include="Parametres.cs" />
     <Compile Include="SelectionnerBase.xaml.cs">
       <DependentUpon>SelectionnerBase.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ToggleBouton.cs" />
-    <Compile Include="GridViewColumnResize.cs" />
     <Compile Include="Impression.cs" />
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\RechercherDossier.cs" />

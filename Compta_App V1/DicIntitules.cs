@@ -1,19 +1,8 @@
 ﻿using LogDebugging;
-using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace Compta
@@ -58,42 +47,45 @@ namespace Compta
                 return "";
             };
 
-
-            foreach (XmlNode Objet in xmlDoc.DocumentElement.SelectSingleNode("/Base/Objets").ChildNodes)
+            if (xmlDoc.DocumentElement.SelectSingleNode("/Base/Objets") != null)
             {
-                String pNomObjet = Objet.Attributes["name"].Value;
-
-                Dictionary<String, Data> _DicPropriete = new Dictionary<String, Data>();
-
-                foreach (XmlNode Propriete in Objet.ChildNodes)
+                foreach (XmlNode Objet in xmlDoc.DocumentElement.SelectSingleNode("/Base/Objets").ChildNodes)
                 {
-                    String pNomPropriete = Valeur(Propriete, "name", "");
-                    _DicPropriete.Add(pNomPropriete, new Data(Propriete));
-                }
+                    String pNomObjet = Objet.Attributes["name"].Value;
 
-                _DicIntituleType.Add(pNomObjet, new Data(Objet));
-                _DicType.Add(pNomObjet, _DicPropriete);
+                    Dictionary<String, Data> _DicPropriete = new Dictionary<String, Data>();
+
+                    foreach (XmlNode Propriete in Objet.ChildNodes)
+                    {
+                        String pNomPropriete = Valeur(Propriete, "name", "");
+                        _DicPropriete.Add(pNomPropriete, new Data(Propriete));
+                    }
+
+                    _DicIntituleType.Add(pNomObjet, new Data(Objet));
+                    _DicType.Add(pNomObjet, _DicPropriete);
+                }
             }
 
             _DicEnum = new Dictionary<string, Dictionary<int, string>>();
 
-            foreach (XmlNode Enum in xmlDoc.DocumentElement.SelectSingleNode("/Base/Enums").ChildNodes)
+            if (xmlDoc.DocumentElement.SelectSingleNode("/Base/Enums") != null)
             {
-                String pNomEnum = Enum.Attributes["name"].Value;
-
-                Dictionary<int, String> pEnum = new Dictionary<int, string>();
-
-                foreach (XmlNode Champ in Enum.ChildNodes)
+                foreach (XmlNode Enum in xmlDoc.DocumentElement.SelectSingleNode("/Base/Enums").ChildNodes)
                 {
-                    int pValeur = (int)Convert.ChangeType(Champ.Attributes["valeur"].Value, typeof(int));
-                    String pIntitule = Champ.Attributes["intitule"].Value;
-                    pEnum.Add(pValeur, pIntitule);
+                    String pNomEnum = Enum.Attributes["name"].Value;
+
+                    Dictionary<int, String> pEnum = new Dictionary<int, string>();
+
+                    foreach (XmlNode Champ in Enum.ChildNodes)
+                    {
+                        int pValeur = (int)Convert.ChangeType(Champ.Attributes["valeur"].Value, typeof(int));
+                        String pIntitule = Champ.Attributes["intitule"].Value;
+                        pEnum.Add(pValeur, pIntitule);
+                    }
+
+                    _DicEnum.Add(pNomEnum, pEnum);
                 }
-
-                _DicEnum.Add(pNomEnum, pEnum);
             }
-
-            
         }
 
         private static Data Donnees(String Objet, String Propriete)
