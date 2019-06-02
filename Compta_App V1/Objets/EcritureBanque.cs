@@ -204,6 +204,28 @@ namespace Compta
             set { Set(ref _Valeur, value, this); }
         }
 
+        protected Double _Solde = Double.NaN;
+        public Double Solde
+        {
+            get
+            {
+                if (Double.IsNaN(_Solde))
+                {
+                    var index = Banque.ListeEcritureBanque.IndexOf(this);
+                    if (index > 0)
+                        _Solde = Banque.ListeEcritureBanque[index - 1].Solde + Valeur;
+                    else
+                        _Solde = Banque.Solde + Valeur;
+                }
+
+                return _Solde;
+            }
+            set
+            {
+                //Set(ref _Solde, value, this);
+            }
+        }
+
         protected Boolean _Ventiler = false;
         [Propriete]
         public Boolean Ventiler

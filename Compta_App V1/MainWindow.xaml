@@ -196,7 +196,14 @@
                             </Grid>
                         </Border>
                     </Grid>
-                    <local:Texte Grid.Column="1" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Valeur}" Info="True" TextWrapping="NoWrap" TextAlignment="Right"/>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <local:Texte Grid.Row="0" Margin="5,0,10,0" MinWidth="70" Valeur="{Binding Valeur}" Info="True" TextWrapping="NoWrap" TextAlignment="Right"/>
+                        <local:Texte Grid.Row="1" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right"/>
+                    </Grid>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -286,6 +293,7 @@
                             <Grid Name="xReleve" Width="Auto">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" Margin="0,0,0,5">
@@ -304,8 +312,9 @@
                                              KeyUp="TextBox_KeyEnterUpdate"/>
                                     <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherEcritureBanque}" HorizontalContentAlignment="Center"/>
                                 </Grid>
+                                <local:Texte Grid.Row="1" MinWidth="60" Valeur="{Binding BanqueCourante.Solde}" Intitule="True" Info="True" Editable="True" TextWrapping="Wrap" HorizontalAlignment="Stretch" TextAlignment="Right"/>
                                 <ListBox Name="xListeEcritureBanque"
-                                         Grid.Row="1"
+                                         Grid.Row="2"
                                          VerticalContentAlignment="Stretch"
                                          DataContext="{Binding BanqueCourante}"
                                          ItemsSource="{Binding ListeEcritureBanque}"

@@ -55,7 +55,17 @@ namespace Compta
         public Double Solde
         {
             get { return _Solde; }
-            set { Set(ref _Solde, value, this); }
+            set
+            {
+                Set(ref _Solde, value, this);
+            }
+        }
+
+        protected Boolean _Editer = false;
+        public Boolean Editer
+        {
+            get { return _Editer; }
+            set { Set(ref _Editer, value, this); }
         }
 
         private ListeObservable<EcritureBanque> _ListeEcritureBanque = null;
