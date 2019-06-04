@@ -54,6 +54,14 @@ namespace Compta
             set { Set(ref _Description, value, this); }
         }
 
+        private Double _SoldeInitial = 0;
+        [Propriete]
+        public Double SoldeInitial
+        {
+            get { return _SoldeInitial; }
+            set { Set(ref _SoldeInitial, value, this); }
+        }
+
         private Double _Solde = 0;
         [Propriete]
         public Double Solde

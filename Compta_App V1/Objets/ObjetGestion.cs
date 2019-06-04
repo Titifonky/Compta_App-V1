@@ -44,7 +44,10 @@ namespace Compta
         }
 
         public Boolean EstCharge
-        { get { return _EstCharge; } set { _EstCharge = value; } }
+        {
+            get { return _EstCharge; }
+            set { _EstCharge = value; }
+        }
 
         protected int _No = 0;
         [Propriete, Max, Tri]

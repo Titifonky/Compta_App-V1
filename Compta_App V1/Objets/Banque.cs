@@ -47,14 +47,28 @@ namespace Compta
         public Double SoldeInitial
         {
             get { return _SoldeInitial; }
-            set { Set(ref _SoldeInitial, value, this); }
+            set
+            {
+                Set(ref _SoldeInitial, value, this);
+                if (EstCharge)
+                    CalculerSolde();
+            }
+        }
+
+        public void CalculerSolde()
+        {
+            foreach (var ec in ListeEcritureBanque)
+                ec.CalculerSolde(true);
         }
 
         private Double _Solde = 0;
         [Propriete]
         public Double Solde
         {
-            get { return _Solde; }
+            get
+            {
+                return _Solde;
+            }
             set
             {
                 Set(ref _Solde, value, this);

@@ -76,7 +76,7 @@ namespace Compta
         }
 
         protected DateTime _DateValeur = DateTime.Now;
-        [Propriete, Tri]
+        [Propriete, Tri(DirectionTri = System.ComponentModel.ListSortDirection.Ascending)]
         public DateTime DateValeur
         {
             get { return _DateValeur; }
@@ -205,25 +205,40 @@ namespace Compta
         }
 
         protected Double _Solde = Double.NaN;
+        [Propriete]
         public Double Solde
         {
             get
             {
                 if (Double.IsNaN(_Solde))
-                {
-                    var index = Banque.ListeEcritureBanque.IndexOf(this);
-                    if (index > 0)
-                        _Solde = Banque.ListeEcritureBanque[index - 1].Solde + Valeur;
-                    else
-                        _Solde = Banque.Solde + Valeur;
-                }
+                    CalculerSolde();
 
                 return _Solde;
             }
             set
             {
-                //Set(ref _Solde, value, this);
+                Set(ref _Solde, value, this);
             }
+        }
+
+        public void CalculerSolde(Boolean MajProp = false)
+        {
+            Double Val = Double.NaN;
+            var index = Banque.ListeEcritureBanque.IndexOf(this);
+            if (index > 0)
+                Val = Banque.ListeEcritureBanque[index - 1].Solde + Valeur;
+            else
+                Val = Banque.SoldeInitial + Valeur;
+
+            Val = ArrondiEuro(Val);
+
+            if (MajProp)
+                Solde = Val;
+            else
+                _Solde = Val;
+
+            if (index == (Banque.ListeEcritureBanque.Count - 1))
+                Banque.Solde = Val;
         }
 
         protected Boolean _Ventiler = false;

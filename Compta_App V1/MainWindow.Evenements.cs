@@ -106,7 +106,7 @@ namespace Compta
             }
         }
 
-        private void Editer_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Editer_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount >= 2)
             {
@@ -116,11 +116,24 @@ namespace Compta
             }
         }
 
-        private void Editer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Editer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-                EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
-                if (EC != null)
-                    EC.Pointer = !EC.Pointer;
+            TextBox fe = e.Source as TextBox;
+            if (fe != null) return;
+
+            EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
+            if (EC != null)
+            {
+                EC.Pointer = !EC.Pointer;
+                return;
+            }
+
+            Banque B = ((FrameworkElement)sender).DataContext as Banque;
+            if (B != null)
+            {
+                B.Editer = !B.Editer;
+                return;
+            }
         }
 
         private Boolean EditerOnglet<T>(T DataContext)
@@ -443,7 +456,7 @@ namespace Compta
                             Supprimer = true;
 
                         if (Supprimer && iL.Supprimer())
-                                Liste.Remove(iL);
+                            Liste.Remove(iL);
                     }
                 }
                 Liste.Numeroter();

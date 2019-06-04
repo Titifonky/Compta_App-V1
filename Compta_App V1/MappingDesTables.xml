@@ -47,6 +47,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="intitule"/>
           <Colonne name="description"/>
           <Colonne name="compte"/>
+          <Colonne name="solde"/>
           <Colonne name="ventiler" defaut="0"/>
           <Colonne name="compta" defaut="0"/>
           <Colonne name="valeur"/>
@@ -55,7 +56,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="no"/>
           <Colonne name="societe" defaut="1"/>
           <Colonne name="nom"/>
-          <Colonne name="solde_initial"/>
+          <Colonne name="soldeinitial"/>
           <Colonne name="solde"/>
         </Table>
         <Table name="groupe">
@@ -69,6 +70,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="groupe"/>
           <Colonne name="nom"/>
           <Colonne name="description"/>
+          <Colonne name="soldeinitial"/>
           <Colonne name="solde"/>
         </Table>
         <Table name="societe">
@@ -93,6 +95,7 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="no">1</Valeur>
             <Valeur name="nom">Cdn</Valeur>
             <Valeur name="societe">1</Valeur>
+            <Valeur name="soldeinitial">1000</Valeur>
           </Insert>
         </Table>
         <Table name="groupe">
