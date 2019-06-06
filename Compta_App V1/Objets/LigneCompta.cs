@@ -123,6 +123,13 @@ namespace Compta
             }
         }
 
+        protected Boolean _Editer = false;
+        public Boolean Editer
+        {
+            get { return _Editer; }
+            set { Set(ref _Editer, value, this); }
+        }
+
         public override Boolean Supprimer()
         {
             if (!EstCharge) return false;

@@ -31,7 +31,7 @@ namespace Compta
 
         public static readonly DependencyProperty EditableDP =
             DependencyProperty.Register("Editable", typeof(Boolean),
-              typeof(Texte), new PropertyMetadata(null));
+              typeof(Texte), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Intitule
         {
@@ -41,7 +41,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleDP =
             DependencyProperty.Register("Intitule", typeof(Boolean),
-              typeof(Texte), new PropertyMetadata(null));
+              typeof(Texte), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Unite
         {
@@ -51,7 +51,7 @@ namespace Compta
 
         public static readonly DependencyProperty UniteDP =
             DependencyProperty.Register("Unite", typeof(Boolean),
-              typeof(Texte), new PropertyMetadata(null));
+              typeof(Texte), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean AcceptsReturn
         {
@@ -61,7 +61,7 @@ namespace Compta
 
         public static readonly DependencyProperty AcceptsReturnDP =
             DependencyProperty.Register("AcceptsReturn", typeof(Boolean),
-              typeof(Texte), new PropertyMetadata(null));
+              typeof(Texte), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public TextWrapping TextWrapping
         {
@@ -71,7 +71,7 @@ namespace Compta
 
         public static readonly DependencyProperty TextWrappingDP =
             DependencyProperty.Register("TextWrapping", typeof(TextWrapping),
-              typeof(Texte), new FrameworkPropertyMetadata(TextWrapping.WrapWithOverflow));
+              typeof(Texte), new FrameworkPropertyMetadata(TextWrapping.WrapWithOverflow, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public TextAlignment TextAlignment
         {
@@ -81,7 +81,7 @@ namespace Compta
 
         public static readonly DependencyProperty TextAlignmentDP =
             DependencyProperty.Register("TextAlignment", typeof(TextAlignment),
-              typeof(Texte), new FrameworkPropertyMetadata(TextAlignment.Left));
+              typeof(Texte), new FrameworkPropertyMetadata(TextAlignment.Left, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Orientation Orientation
         {
@@ -91,7 +91,7 @@ namespace Compta
 
         public static readonly DependencyProperty OrientationDP =
             DependencyProperty.Register("Orientation", typeof(Orientation),
-              typeof(Texte), new FrameworkPropertyMetadata(Orientation.Horizontal));
+              typeof(Texte), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Info
         {
@@ -101,7 +101,7 @@ namespace Compta
 
         public static readonly DependencyProperty InfosDP =
             DependencyProperty.Register("Info", typeof(Boolean),
-              typeof(Texte), new FrameworkPropertyMetadata(true));
+              typeof(Texte), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean IntituleSeul
         {
@@ -111,7 +111,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleSeulDP =
             DependencyProperty.Register("IntituleSeul", typeof(Boolean),
-              typeof(Texte), new FrameworkPropertyMetadata(false));
+              typeof(Texte), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Thickness MargeInterne
         {
@@ -121,7 +121,7 @@ namespace Compta
 
         public static readonly DependencyProperty MargeInterneDP =
             DependencyProperty.Register("MargeInterne", typeof(Thickness),
-              typeof(Texte), new FrameworkPropertyMetadata(new Thickness(0,2,0,2)));
+              typeof(Texte), new FrameworkPropertyMetadata(new Thickness(0, 2, 0, 2)));
 
         public object Valeur
         {
@@ -171,35 +171,40 @@ namespace Compta
 
         private void ApplyEditable()
         {
-            if (Editable)
+            try
             {
-                xBase.Visibility = Visibility.Visible;
-                xValeur.Visibility = Visibility.Visible;
-                xValeur.Background = Brushes.White;
-                xValeur.BorderThickness = new Thickness(1);
-                xValeur.IsHitTestVisible = true;
-                if (Unite)
-                    xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
-            }
-            else
-            {
-                if (String.IsNullOrWhiteSpace(Valeur.ToString()))
-                    xBase.Visibility = Visibility.Collapsed;
+                if (Editable)
+                {
+                    xBase.Visibility = Visibility.Visible;
+                    xValeur.Visibility = Visibility.Visible;
+                    xValeur.Background = Brushes.White;
+                    xValeur.BorderThickness = new Thickness(1);
+                    xValeur.IsHitTestVisible = true;
+                    if (Unite)
+                        xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+                }
+                else
+                {
+                    if (String.IsNullOrWhiteSpace(Valeur.ToString()))
+                        xBase.Visibility = Visibility.Collapsed;
 
-                
-                xValeur.Background = Brushes.Transparent;
-                xValeur.TextWrapping = TextWrapping;
-                xValeur.BorderThickness = new Thickness(0);
-                xValeur.IsHitTestVisible = false;
-                if (Unite)
-                    xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+                    xValeur.Background = Brushes.Transparent;
+                    xValeur.TextWrapping = TextWrapping;
+                    xValeur.BorderThickness = new Thickness(0);
+                    xValeur.IsHitTestVisible = false;
+                    if (Unite)
+                        xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+                }
             }
+            catch { }
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             try
             {
+                ApplyEditable();
+
                 if (e.Property == SuffixDP)
                 {
                     MajSuffix();
@@ -210,15 +215,8 @@ namespace Compta
                     MajSuffix();
                 }
 
-                if (e.Property == EditableDP)
-                {
-                    ApplyEditable();
-                }
-
                 if (e.Property == ValeurDP)
                 {
-                    ApplyEditable();
-
                     if (Orientation == Orientation.Horizontal)
                         DockPanel.SetDock(xIntitule, Dock.Left);
                     else
@@ -253,9 +251,6 @@ namespace Compta
                         }
 
                         MajSuffix();
-
-                        if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
-                            xBase.Visibility = Visibility.Collapsed;
 
                         String ToolTip = DicIntitules.Info(Objet, Propriete);
                         if (!String.IsNullOrWhiteSpace(ToolTip))

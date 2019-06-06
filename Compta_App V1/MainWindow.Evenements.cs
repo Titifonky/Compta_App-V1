@@ -127,7 +127,7 @@ namespace Compta
                 LigneCompta LC = ((FrameworkElement)sender).DataContext as LigneCompta;
                 if (LC != null)
                 {
-                    LC.Pointer = !LC.Pointer;
+                    LC.Editer = !LC.Editer;
                     return;
                 }
             }

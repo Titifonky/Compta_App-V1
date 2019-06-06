@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -11,18 +12,6 @@ namespace Compta
 {
     public partial class Case : ControlBase
     {
-        protected void TextBox_KeyEnterUpdate(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                TextBox tBox = (TextBox)sender;
-                DependencyProperty prop = TextBox.TextProperty;
-
-                BindingExpression binding = BindingOperations.GetBindingExpression(tBox, prop);
-                if (binding != null) { binding.UpdateSource(); }
-            }
-        }
-
         public Boolean Editable
         {
             get { return (Boolean)GetValue(EditableDP); }
@@ -31,7 +20,7 @@ namespace Compta
 
         public static readonly DependencyProperty EditableDP =
             DependencyProperty.Register("Editable", typeof(Boolean),
-              typeof(Case), new PropertyMetadata(null));
+              typeof(Case), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Intitule
         {
@@ -41,7 +30,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleDP =
             DependencyProperty.Register("Intitule", typeof(Boolean),
-              typeof(Case), new PropertyMetadata(null));
+              typeof(Case), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean IntituleDerriere
         {
@@ -51,7 +40,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleDerriereDP =
             DependencyProperty.Register("IntituleDerriere", typeof(Boolean),
-              typeof(Case), new FrameworkPropertyMetadata(false));
+              typeof(Case), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public object Valeur
         {
@@ -65,31 +54,29 @@ namespace Compta
 
         private void ApplyEditable()
         {
-            if (Editable == true)
+            try
             {
-                xBase.Visibility = Visibility.Visible;
+                if (Editable == true)
+                {
+                    xBase.Visibility = Visibility.Visible;
+                    xValeur.Visibility = Visibility.Visible;
+                    xValeur.IsHitTestVisible = true;
+                }
+                else
+                {
+                    xValeur.Visibility = Visibility.Visible;
+                    xValeur.IsHitTestVisible = false;
 
-                xValeur.Visibility = Visibility.Visible;
-                xValeur.IsHitTestVisible = true;
+                    if (xValeur.IsChecked == false)
+                        xBase.Visibility = Visibility.Collapsed;
+                }
             }
-            else
-            {
-                xValeur.Visibility = Visibility.Visible;
-                xValeur.IsHitTestVisible = false;
-                xValeur.ToolTip = null;
-
-                if (!(xValeur.IsChecked == true))
-                    xBase.Visibility = Visibility.Collapsed;
-            }
+            catch { }
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (e.Property == EditableDP)
-            {
-                ApplyEditable();
-                (this as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
-            }
+            ApplyEditable();
 
             if (e.Property == IntituleDerriereDP)
             {
@@ -109,15 +96,12 @@ namespace Compta
 
             if (e.Property == ValeurDP)
             {
-
-                ApplyEditable();
-
                 if (Intitule == true)
-                    xIntitule.Visibility = System.Windows.Visibility.Visible;
+                    xIntitule.Visibility = Visibility.Visible;
                 else
-                    xIntitule.Visibility = System.Windows.Visibility.Collapsed;
+                    xIntitule.Visibility = Visibility.Collapsed;
 
-                if(IntituleDerriere == true)
+                if (IntituleDerriere == true)
                 {
                     Grid.SetColumn(xIntitule, 1);
                     Grid.SetColumn(xValeur, 0);
@@ -135,10 +119,6 @@ namespace Compta
                         pIntitule = pIntitule + " :";
 
                     xIntitule.Text = pIntitule;
-
-                    if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
-                        xBase.Visibility = System.Windows.Visibility.Collapsed;
-
 
                     String ToolTip = DicIntitules.Info(Objet, Propriete);
                     if (!String.IsNullOrWhiteSpace(ToolTip))

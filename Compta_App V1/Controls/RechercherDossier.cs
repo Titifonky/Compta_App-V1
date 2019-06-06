@@ -29,7 +29,7 @@ namespace Compta
 
         public static readonly DependencyProperty EditableDP =
             DependencyProperty.Register("Editable", typeof(Boolean),
-              typeof(RechercherDossier), new PropertyMetadata(null));
+              typeof(RechercherDossier), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Intitule
         {
@@ -39,7 +39,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleDP =
             DependencyProperty.Register("Intitule", typeof(Boolean),
-              typeof(RechercherDossier), new PropertyMetadata(null));
+              typeof(RechercherDossier), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public TextAlignment TextAlignment
         {
@@ -49,7 +49,7 @@ namespace Compta
 
         public static readonly DependencyProperty TextAlignmentDP =
             DependencyProperty.Register("TextAlignment", typeof(TextAlignment),
-              typeof(RechercherDossier), new FrameworkPropertyMetadata(TextAlignment.Left));
+              typeof(RechercherDossier), new FrameworkPropertyMetadata(TextAlignment.Left, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Orientation Orientation
         {
@@ -59,7 +59,7 @@ namespace Compta
 
         public static readonly DependencyProperty OrientationDP =
             DependencyProperty.Register("Orientation", typeof(Orientation),
-              typeof(RechercherDossier), new FrameworkPropertyMetadata(Orientation.Horizontal));
+              typeof(RechercherDossier), new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Info
         {
@@ -69,7 +69,7 @@ namespace Compta
 
         public static readonly DependencyProperty InfosDP =
             DependencyProperty.Register("Info", typeof(Boolean),
-              typeof(RechercherDossier), new FrameworkPropertyMetadata(true));
+              typeof(RechercherDossier), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public object Valeur
         {

@@ -20,7 +20,7 @@ namespace Compta
 
         public static readonly DependencyProperty ValeurDP =
             DependencyProperty.Register("Valeur", typeof(object),
-              typeof(Intitule), new FrameworkPropertyMetadata(null));
+              typeof(Intitule), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {

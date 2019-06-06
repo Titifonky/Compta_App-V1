@@ -7,8 +7,6 @@
                    mc:Ignorable="d"
                    x:Name="parent"
                    >
-
-
     <Grid x:Name="xBase"
           DataContext="{Binding ElementName=parent}"
           Margin="0,2,0,2"
@@ -17,7 +15,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <TextBlock Name="xIntitule"
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"
@@ -31,5 +29,5 @@
                   HorizontalAlignment="Left"
                   Grid.Column="1"
                   />
-        </Grid>
+    </Grid>
 </local:ControlBase>

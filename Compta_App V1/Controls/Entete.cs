@@ -15,7 +15,7 @@ namespace Compta
 
         public static readonly DependencyProperty NomProprieteDP =
             DependencyProperty.Register("NomPropriete", typeof(String),
-              typeof(Entete), new FrameworkPropertyMetadata(null));
+              typeof(Entete), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Dictionary<String, String> Liste
         {
@@ -25,7 +25,7 @@ namespace Compta
 
         public static readonly DependencyProperty ListeProp =
             DependencyProperty.Register("Liste", typeof(Dictionary<String, String>),
-              typeof(Entete), new FrameworkPropertyMetadata(null));
+              typeof(Entete), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {

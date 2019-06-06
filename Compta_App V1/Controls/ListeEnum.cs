@@ -54,7 +54,7 @@ namespace Compta
 
         public static readonly DependencyProperty EditableDP =
             DependencyProperty.Register("Editable", typeof(Boolean),
-              typeof(ListeEnum), new PropertyMetadata(null));
+              typeof(ListeEnum), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Boolean Intitule
         {
@@ -64,7 +64,7 @@ namespace Compta
 
         public static readonly DependencyProperty IntituleDP =
             DependencyProperty.Register("Intitule", typeof(Boolean),
-              typeof(ListeEnum), new PropertyMetadata(null));
+              typeof(ListeEnum), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public object Valeur
         {
@@ -78,37 +78,38 @@ namespace Compta
 
         private void ApplyEditable()
         {
-            if (Editable == true)
+            try
             {
-                xValeur.Visibility = Visibility.Visible;
-                xValeur.IsHitTestVisible = true;
-                xValeur.Background = Brushes.White;
-                xValeur.BorderThickness = new Thickness(1);
-                xValeurTexte.Visibility = Visibility.Collapsed;
+                if (Editable == true)
+                {
+                    xValeur.Visibility = Visibility.Visible;
+                    xValeur.IsHitTestVisible = true;
+                    xValeur.Background = Brushes.White;
+                    xValeur.BorderThickness = new Thickness(1);
+                    xValeurTexte.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    if (String.IsNullOrWhiteSpace(Valeur.ToString()))
+                        xBase.Visibility = Visibility.Collapsed;
+
+                    xValeur.Visibility = Visibility.Collapsed;
+                    xValeur.IsHitTestVisible = false;
+                    xValeur.ToolTip = null;
+                    xValeur.Background = Brushes.Transparent;
+                    xValeur.BorderThickness = new Thickness(0);
+                    xValeurTexte.Visibility = Visibility.Visible;
+                }
             }
-            else
-            {
-                xValeur.Visibility = Visibility.Collapsed;
-                xValeur.IsHitTestVisible = false;
-                xValeur.ToolTip = null;
-                xValeur.Background = Brushes.Transparent;
-                xValeur.BorderThickness = new Thickness(0);
-                xValeurTexte.Visibility = Visibility.Visible;
-            }
+            catch { }
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (e.Property == EditableDP)
-            {
                 ApplyEditable();
-                //(this as UIElement).FindVisualParent<ListView>().Ajuster_Colonnes();
-            }
 
             if (e.Property == ValeurDP)
             {
-                ApplyEditable();
-
                 if (Intitule == true)
                     xIntitule.Visibility = Visibility.Visible;
                 else
@@ -123,9 +124,6 @@ namespace Compta
                     String pIntitule = DicIntitules.Intitule(Objet, Propriete);
                     xIntitule.Text = pIntitule + " :";
                     xValeur.ItemsSource = DicIntitules.Enum(TypePropriete);
-
-                    if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
-                        xBase.Visibility = Visibility.Collapsed;
 
                     String ToolTip = DicIntitules.Info(Objet, Propriete);
                     if (!String.IsNullOrWhiteSpace(ToolTip))
