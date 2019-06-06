@@ -29,7 +29,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"
                          Name="xValeur"
-                         Text="{Binding Valeur, Mode=TwoWay}"
+                         Text="{Binding Valeur, Mode=TwoWay, StringFormat=\{0:F2\}}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"
                          KeyUp="TextBox_ToucheEntreeUpdate"

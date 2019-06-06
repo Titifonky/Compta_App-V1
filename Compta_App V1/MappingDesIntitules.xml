@@ -32,6 +32,7 @@ Attributs possibles :
       <Propriete name="DateValeur" intitule="Date valeur"/>
       <Propriete name="Compte"/>
       <Propriete name="Description"/>
+      <Propriete name="Compta" intitule="C" info="Compta"/>
       <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
       <Propriete name="Tva_Pct" intitule="Tva" unite="%" defaut="20"/>
       <Propriete name="Tva" unite="€" defaut="0"/>

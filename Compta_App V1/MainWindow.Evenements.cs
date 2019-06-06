@@ -112,15 +112,29 @@ namespace Compta
             {
                 EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
                 if (EC != null)
+                {
                     EC.Pointer = !EC.Pointer;
+                    return;
+                }
+
+                Banque B = ((FrameworkElement)sender).DataContext as Banque;
+                if (B != null)
+                {
+                    B.Editer = !B.Editer;
+                    return;
+                }
+
+                LigneCompta LC = ((FrameworkElement)sender).DataContext as LigneCompta;
+                if (LC != null)
+                {
+                    LC.Pointer = !LC.Pointer;
+                    return;
+                }
             }
         }
 
         private void Editer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TextBox fe = e.Source as TextBox;
-            if (fe != null) return;
-
             EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
             if (EC != null)
             {
@@ -568,6 +582,34 @@ namespace Compta
         private void Supprimer_LigneBanque_Click(object sender, RoutedEventArgs e)
         {
             Supprimer_List<LigneBanque>(sender, e, false, true);
+        }
+
+        #endregion
+
+        #region EVENEMENT LigneCompta
+
+        private void Ajouter_LigneCompta_Click(object sender, RoutedEventArgs e)
+        {
+            Ajouter_List<LigneCompta, Societe>(sender, e);
+        }
+
+        private void Supprimer_LigneCompta_Click(object sender, RoutedEventArgs e)
+        {
+            Supprimer_List<LigneCompta>(sender, e, false, false);
+        }
+
+        #endregion
+
+        #region EVENEMENT Banque
+
+        private void Ajouter_Banque_Click(object sender, RoutedEventArgs e)
+        {
+            Ajouter_List<Banque, Societe>(sender, e);
+        }
+
+        private void Supprimer_Banque_Click(object sender, RoutedEventArgs e)
+        {
+            Supprimer_List<Banque>(sender, e, false, false);
         }
 
         #endregion

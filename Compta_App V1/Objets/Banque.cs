@@ -98,5 +98,20 @@ namespace Compta
                 Set(ref _ListeEcritureBanque, value);
             }
         }
+
+        public override Boolean Supprimer()
+        {
+            if (!EstCharge) return false;
+
+            while (ListeEcritureBanque.Count > 0)
+                ListeEcritureBanque[0].Supprimer();
+
+            if (Societe != null)
+                Societe.ListeBanque.Remove(this);
+
+            Bdd.Supprimer(this);
+
+            return true;
+        }
     }
 }

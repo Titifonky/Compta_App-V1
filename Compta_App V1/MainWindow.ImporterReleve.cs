@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace Compta
@@ -150,7 +151,8 @@ namespace Compta
 
                 MessageBox.Show(String.Format("{0} ligne(s) importée(s)", NbImport));
 
-                Banque.CalculerSolde();
+                if (NbImport > 0)
+                    Banque.CalculerSolde();
             }
         }
     }

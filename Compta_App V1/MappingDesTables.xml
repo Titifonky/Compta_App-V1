@@ -35,6 +35,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="compte"/>
           <Colonne name="description"/>
           <Colonne name="valeur"/>
+          <Colonne name="compta" defaut="0"/>
           <Colonne name="tvapct" defaut="20"/>
           <Colonne name="tva"/>
         </Table>
@@ -95,7 +96,7 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="no">1</Valeur>
             <Valeur name="nom">Cdn</Valeur>
             <Valeur name="societe">1</Valeur>
-            <Valeur name="soldeinitial">1000</Valeur>
+            <Valeur name="soldeinitial">0</Valeur>
           </Insert>
         </Table>
         <Table name="groupe">

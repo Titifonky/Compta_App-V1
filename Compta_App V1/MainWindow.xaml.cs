@@ -71,10 +71,10 @@ namespace Compta
 
             pSociete.BanqueCourante = pSociete.ListeBanque.FirstOrDefault(b => { return b.Id == Properties.Settings.Default.IdBanque; }) ?? pSociete.ListeBanque[0];
 
-            TrierListe<EcritureBanque>(xListeEcritureBanque);
-            TrierListe<LigneCompta>(xListeLigneCompta);
+            //TrierListe<EcritureBanque>(xListeEcritureBanque);
+            //TrierListe<LigneCompta>(xListeLigneCompta);
 
-            _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque);
+            _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque, true);
             xRechercherEcritureBanque.DataContext = _RechercherEcritureBanque;
 
             _RechercherLigneCompta = new RechercheTexte<LigneCompta>(xListeLigneCompta);
@@ -90,8 +90,15 @@ namespace Compta
 
             foreach (PropertyInfo P in pListeTri)
             {
-                ListSortDirection Dir = (P.GetCustomAttributes(typeof(Tri)).First() as Tri).DirectionTri;
-                Box.Items.SortDescriptions.Add(new SortDescription(P.Name, Dir));
+                // On veut récupérer les attributs des propriétés déclarées dans l'objet.
+                // Si la propriété est un héritage, on récupère les attributs de l'héritage.
+                // Si c'est un override, on récupère seulement les attributs de l'objet enfant
+                Tri[] tab = P.GetCustomAttributes(typeof(Tri), P.DeclaringType != typeof(T)) as Tri[];
+                if (tab.Length > 0)
+                {
+                    Tri AttTri = tab[0] as Tri;
+                    Box.Items.SortDescriptions.Add(new SortDescription(P.Name, AttTri.DirectionTri));
+                }
             }
             Box.Items.IsLiveSorting = true;
         }

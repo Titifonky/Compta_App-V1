@@ -1,6 +1,9 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -18,6 +21,7 @@ namespace Compta
         private CollectionView _Vue = null;
         private List<CollectionView> _ListeVue = null;
         private Predicate<Object> _Methode = null;
+        private Boolean _SousListe = false;
 
         public String Valeur
         {
@@ -66,16 +70,18 @@ namespace Compta
             }
         }
 
-        public RechercheTexte(Selector Box)
+        public RechercheTexte(Selector Box, Boolean sousListe = false)
         {
             _Box = Box;
             _Methode = new Predicate<object>(Filtre);
+            _SousListe = sousListe;
         }
 
-        public RechercheTexte(List<Selector> ListeBox)
+        public RechercheTexte(List<Selector> ListeBox, Boolean sousListe = false)
         {
             _ListeBox = ListeBox;
             _Methode = new Predicate<object>(Filtre);
+            _SousListe = sousListe;
         }
 
         private Boolean Filtre(object Source)
@@ -90,24 +96,45 @@ namespace Compta
                 if (Obj != null)
                 {
                     String Chaine_Recherche = Valeur;
-                    String Chaine_Prop = @"^.*";
 
-                    if (Regex.IsMatch(Valeur, @"^\[.*\].*"))
-                    {
-                        Chaine_Recherche = Regex.Replace(Valeur, @"(^\[)(.*)(\])(.*)", "$4");
-                        Chaine_Prop = Regex.Replace(Valeur, @"(^\[)(.*)(\])(.*)", "$2");
-                    }
-                    
                     foreach (PropertyInfo Prop in Bdd.DicProprietes.ListePropriete(typeof(T)).Values)
                     {
-                        if (Regex.IsMatch(Prop.Name.ToLower(), Chaine_Prop.ToLower()))
-                            if (Regex.IsMatch(Prop.GetValue(Obj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
-                                return true;
+                        if (Regex.IsMatch(Prop.GetValue(Obj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
+                            return true;
+                    }
+
+                    if (_SousListe)
+                    {
+                        foreach (PropertyInfo PropObj in typeof(T).GetProperties())
+                        {
+                            Type PropType = PropObj.PropertyType;
+                            if (PropType.IsGenericType && (PropType.GetGenericTypeDefinition() == typeof(ListeObservable<>)))
+                            {
+                                Type TypeListe = PropType.GetGenericArguments()[0];
+                                Object Liste = PropObj.GetValue(Obj);
+
+                                int n = (int)PropType.GetProperty("Count").GetValue(Liste);
+
+                                for (int i = 0; i < n; i++)
+                                {
+                                    // Get the list element as type object  
+                                    object[] index = { i };
+                                    object sObj = PropType.GetProperty("Item").GetValue(Liste, index);
+
+                                    foreach (PropertyInfo Prop in Bdd.DicProprietes.ListePropriete(TypeListe).Values)
+                                    {
+                                        if (Regex.IsMatch(Prop.GetValue(sObj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
+                                            return true;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
+                Log.Message(e.ToString());
                 return true;
             }
 

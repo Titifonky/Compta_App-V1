@@ -51,34 +51,49 @@ namespace Compta
             DependencyProperty.Register("Valeur", typeof(object),
               typeof(Date), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        private void ApplyEditable()
+        {
+            if (Editable)
+            {
+                xBase.Visibility = Visibility.Visible;
+                xValeur.Visibility = Visibility.Visible;
+                xValeur.Background = Brushes.White;
+                xValeur.BorderThickness = new Thickness(1);
+                xValeur.IsHitTestVisible = true;
+                xAfficher.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                if (String.IsNullOrWhiteSpace(Valeur.ToString()))
+                    xBase.Visibility = Visibility.Collapsed;
+
+                xValeur.Background = Brushes.Transparent;
+                xValeur.BorderThickness = new Thickness(0);
+                xValeur.Visibility = Visibility.Collapsed;
+                xValeur.IsHitTestVisible = false;
+
+                xAfficher.Visibility = Visibility.Visible;
+                xAfficher.Background = Brushes.Transparent;
+                xAfficher.BorderThickness = new Thickness(0);
+                xAfficher.IsHitTestVisible = false;
+            }
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
+            if (e.Property == EditableDP)
+            {
+                ApplyEditable();
+            }
+
             if (e.Property == ValeurDP)
             {
-                if (Editable == true)
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Visible;
-                    xValeur.Background = Brushes.White;
-                    xValeur.IsHitTestVisible = true;
-                    xAfficher.Visibility = System.Windows.Visibility.Collapsed;
-                }
-                else
-                {
-                    xValeur.Visibility = System.Windows.Visibility.Collapsed;
-                    xValeur.Background = Brushes.Transparent;
-                    xValeur.BorderThickness = new Thickness(0);
-                    xValeur.IsHitTestVisible = false;
-
-                    xAfficher.Visibility = System.Windows.Visibility.Visible;
-                    xAfficher.Background = Brushes.Transparent;
-                    xAfficher.BorderThickness = new Thickness(0);
-                    xAfficher.IsHitTestVisible = false;
-                }
+                ApplyEditable();
 
                 if (Intitule == true)
-                    xIntitule.Visibility = System.Windows.Visibility.Visible;
+                    xIntitule.Visibility = Visibility.Visible;
                 else
-                    xIntitule.Visibility = System.Windows.Visibility.Collapsed;
+                    xIntitule.Visibility = Visibility.Collapsed;
 
                 String Objet = "";
                 String Propriete = "";
@@ -90,7 +105,7 @@ namespace Compta
                     xIntitule.Text = pIntitule + " :";
 
                     if (String.IsNullOrWhiteSpace(Valeur.ToString()) && (Editable == false))
-                        xBase.Visibility = System.Windows.Visibility.Collapsed;
+                        xBase.Visibility = Visibility.Collapsed;
 
                     String ToolTip = DicIntitules.Info(Objet, Propriete);
                     if (!String.IsNullOrWhiteSpace(ToolTip) && (Info == true))

@@ -46,8 +46,6 @@
             <DataTemplate.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="Background" Value="White"/>
-                    <!--<Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="BorderBrush" Value="Black"/>-->
                 </Style>
             </DataTemplate.Resources>
             <Border Margin="0"
@@ -70,16 +68,16 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Border BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
-                                <StackPanel Grid.Column="0" Margin="0,0,3,0" VerticalAlignment="Center">
+                            <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
+                                <StackPanel Margin="0,0,3,0" VerticalAlignment="Center">
                                     <local:Date Valeur="{Binding DateValeur}" Editable="False" HorizontalContentAlignment="Center"/>
                                     <Grid >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*"/>
                                             <ColumnDefinition Width="1*"/>
                                         </Grid.ColumnDefinitions>
-                                        <local:Case Grid.Column="0" Valeur="{Binding Compta}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" IntituleDerriere="True" HorizontalContentAlignment="Center"/>
-                                        <local:Case Grid.Column="1" Valeur="{Binding Ventiler}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" IntituleDerriere="True" HorizontalContentAlignment="Center"/>
+                                        <local:Case Grid.Column="0" Valeur="{Binding Compta}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" HorizontalContentAlignment="Center"/>
+                                        <local:Case Grid.Column="1" Valeur="{Binding Ventiler}" Margin="2,0,2,0" Editable="{Binding Pointer}" Intitule="True" HorizontalContentAlignment="Center"/>
                                     </Grid>
                                 </StackPanel>
                             </Border>
@@ -170,6 +168,15 @@
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Grid>
+                                                            <local:Case Valeur="{Binding Compta}" Margin="2,0,2,0" Editable="{Binding EcritureBanque.Pointer}" Intitule="True" HorizontalContentAlignment="Center"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition/>
                                                                 <RowDefinition/>
@@ -222,22 +229,81 @@
         <DataTemplate x:Key="xListeLigneComptaTemplate">
             <DataTemplate.Resources>
                 <Style TargetType="{x:Type Border}">
-                    <Setter Property="Background" Value="LightGray"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="White"/>
                 </Style>
             </DataTemplate.Resources>
-            <Border Margin="0,2,2,2"
-                    Padding="3,0,3,0"
+            <Border Margin="0"
+                    Padding="0"
                     MouseDown="Editer_MouseDown"
                     >
-                <Grid>
+                <Grid >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:ToggleBouton Grid.Column="0" Valeur="{Binding Ref}" Selection="{Binding Favori}" />
-                    <local:Texte Grid.Column="1" Valeur="{Binding Intitule, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Grid Grid.Column="0" Margin="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
+                                <StackPanel Margin="0,0,3,0" VerticalAlignment="Center">
+                                    <local:Date Valeur="{Binding DateValeur}" Info="True" Editable="False" HorizontalContentAlignment="Left"/>
+                                    <local:Date Valeur="{Binding DateCompta}" Margin="5,0,0,0" Info="True" Editable="{Binding Pointer}" HorizontalContentAlignment="Center" FontSize="11"/>
+                                </StackPanel>
+                            </Border>
+                            <Grid Grid.Column="1" Margin="1,0,0,0" VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Pointer}"/>
+                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Pointer}"/>
+                                </Grid>
+                                <local:Texte Grid.Row="1"  Valeur="{Binding Description}" Editable="{Binding Pointer}" Info="True" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <local:Texte Grid.Column="1" Margin="5,0,10,0" MinWidth="70" Valeur="{Binding Valeur}" Editable="{Binding Pointer}" Info="True" VerticalAlignment="Stretch" TextWrapping="NoWrap" TextAlignment="Right" FontWeight="Bold"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="xListeBanqueTemplate">
+            <DataTemplate.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Background" Value="White"/>
+                </Style>
+            </DataTemplate.Resources>
+            <Border Margin="0"
+                    Padding="0"
+                    MouseDown="Editer_MouseDown"
+                    >
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:Texte Grid.Column="0" Margin="5,0,10,0" MinWidth="70" Valeur="{Binding Nom}" Editable="{Binding Editer}" Info="True" TextWrapping="NoWrap" TextAlignment="Left" FontWeight="Bold"/>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <local:Texte Grid.Row="0" Margin="5,0,10,0" MinWidth="70" Valeur="{Binding SoldeInitial}" Editable="{Binding Editer}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" FontWeight="Bold"/>
+                        <local:Texte Grid.Row="1" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" FontSize="11" VerticalAlignment="Bottom"/>
+                    </Grid>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -300,7 +366,10 @@
                                 <Button Grid.Column="2" Content="Importer relevé" Margin="15,0,0,0" Padding="2" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="ImporterReleve_Click"/>
                             </Grid>
                         </Border>
-                        <Border DataContext="{Binding BanqueCourante}" Grid.Row="1" Padding="5">
+                        <Border DataContext="{Binding BanqueCourante}"
+                                Grid.Row="1"
+                                Padding="5"
+                                >
                             <Grid Name="xReleve" Width="Auto">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -321,7 +390,7 @@
                                              VerticalAlignment="Center"
                                              Margin="5,0,0,0"
                                              KeyUp="TextBox_KeyEnterUpdate"/>
-                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherEcritureBanque}" HorizontalContentAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherEcritureBanque}" Click="EffacerTextBox_Click" HorizontalContentAlignment="Center"/>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
@@ -387,10 +456,11 @@
                                              VerticalAlignment="Center"
                                              Margin="5,0,0,0"
                                              KeyUp="TextBox_KeyEnterUpdate"/>
-                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold"  DataContext="{Binding ElementName=xRechercherLigneCompta}" HorizontalContentAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold"  DataContext="{Binding ElementName=xRechercherLigneCompta}" Click="EffacerTextBox_Click" HorizontalContentAlignment="Center"/>
                                 </Grid>
                                 <ListBox Name="xListeLigneCompta"
                                          Grid.Row="1"
+                                         AlternationCount="2"
                                          VerticalContentAlignment="Stretch"
                                          ItemsSource="{Binding ListeLigneCompta}"
                                          ItemTemplate="{StaticResource xListeLigneComptaTemplate}"
@@ -405,8 +475,8 @@
                                     >
                                     <ListBox.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Ajouter"/>
-                                            <MenuItem Header="Supprimer"/>
+                                            <MenuItem Header="Ajouter" Click="Ajouter_LigneCompta_Click"/>
+                                            <MenuItem Header="Supprimer" Click="Supprimer_LigneCompta_Click"/>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>
                                 </ListBox>
@@ -422,9 +492,33 @@
             <TabItem Header="Banques">
                 <Grid Name="xBanques">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="38*"/>
-                        <ColumnDefinition Width="1239*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+                    <ListBox Grid.Column="0"
+                             Name="xListeBanque"
+                             AlternationCount="2"
+                             VerticalContentAlignment="Stretch"
+                             ItemsSource="{Binding ListeBanque}"
+                             ItemTemplate="{StaticResource xListeBanqueTemplate}"
+                             SelectedIndex="0"
+                             HorizontalContentAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             IsSynchronizedWithCurrentItem="True"
+                             Margin="0,2.5,0,2.5"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.CanContentScroll="False"
+                             SelectionMode="Extended"
+                    >
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Ajouter" Click="Ajouter_Banque_Click"/>
+                                <MenuItem Header="Supprimer" Click="Supprimer_Banque_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                    <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
                 </Grid>
             </TabItem>
         </TabControl>

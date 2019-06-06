@@ -256,6 +256,7 @@ namespace Compta
                     {
                         _ListeLigneBanque[0].Description = "";
                         _ListeLigneBanque[0].Compte = Banque.Societe.CompteBase;
+                        _ListeLigneBanque[0].Compta = false;
                         new LigneBanque(this);
                     }
                 }
@@ -273,6 +274,7 @@ namespace Compta
                             _ListeLigneBanque[0].Description = Intitule;
                             _ListeLigneBanque[0].Compte = Compte;
                             _ListeLigneBanque[0].Valeur = Valeur;
+                            _ListeLigneBanque[0].Compta = false;
                         }
                     }
                     else
@@ -289,8 +291,16 @@ namespace Compta
             set
             {
                 Set(ref _Compta, value, this);
-                if (value)
-                    Ventiler = false;
+                if (EstCharge)
+                {
+                    if (value)
+                    {
+                        Ventiler = false;
+                        ListeLigneBanque[0].Compta = true;
+                    }
+                    else if (!value && !Ventiler)
+                        ListeLigneBanque[0].Compta = false;
+                }
             }
         }
 
@@ -343,10 +353,14 @@ namespace Compta
         {
             if (!EstCharge) return false;
 
+            while (ListeLigneBanque.Count > 0)
+                ListeLigneBanque[0].Supprimer();
+
+
             if (Banque != null)
                 Banque.ListeEcritureBanque.Remove(this);
 
-            Bdd.Supprimer<EcritureBanque>(this);
+            Bdd.Supprimer(this);
 
             return true;
         }

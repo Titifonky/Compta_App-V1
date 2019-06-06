@@ -592,11 +592,18 @@ namespace Compta
             List<String> NomCles = new List<String>();
             List<PropertyInfo> pListeTri = DicProprietes.ListeTri(T);
 
-            // On récupère le nom du champ
-            NomCles = pListeTri.Select(x => NomChamp(x) +
-                                            " " +
-                                            DirectionTri((x.GetCustomAttributes(typeof(Tri)).First() as Tri).DirectionTri)
-                                            ).ToList<String>();
+            foreach (PropertyInfo P in pListeTri)
+            {
+                // On veut récupérer les attributs des propriétés déclarées dans l'objet.
+                // Si la propriété est un héritage, on récupère les attributs de l'héritage.
+                // Si c'est un override, on récupère seulement les attributs de l'objet enfant
+                Tri[] tab = P.GetCustomAttributes(typeof(Tri), P.DeclaringType != T) as Tri[];
+                if (tab.Length > 0)
+                {
+                    Tri AttTri = tab[0] as Tri;
+                    NomCles.Add(NomChamp(P) + " " + DirectionTri(AttTri.DirectionTri));
+                }
+            }
 
             if (NomCles.Count == 0)
                 NomCles.Add(NomClePrimaire(T) + " ASC");

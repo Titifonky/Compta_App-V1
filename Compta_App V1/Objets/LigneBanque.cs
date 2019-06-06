@@ -115,6 +115,21 @@ namespace Compta
             }
         }
 
+        protected Boolean _Compta = false;
+        [Propriete]
+        public Boolean Compta
+        {
+            get { return _Compta; }
+            set
+            {
+                if (EcritureBanque.Ventiler)
+                    Set(ref _Compta, value, this);
+                else
+                    Set(ref _Compta, false, this);
+
+            }
+        }
+
         public override void Calculer()
         {
             EcritureBanque.ControlerVentilation();
