@@ -112,6 +112,7 @@ namespace Compta
             set
             {
                 Set(ref _Compte, value, this);
+                _Compte.ListeLigneBanque.Ajouter(this);
             }
         }
 

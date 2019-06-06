@@ -70,6 +70,23 @@ namespace Compta
             set { Set(ref _Solde, value, this); }
         }
 
+        private ListeObservable<LigneBanque> _ListeLigneBanque = null;
+        public ListeObservable<LigneBanque> ListeLigneBanque
+        {
+            get
+            {
+                if (_ListeLigneBanque == null)
+                    _ListeLigneBanque = Bdd.Enfants<LigneBanque, Compte>(this);
+
+                return _ListeLigneBanque;
+            }
+
+            set
+            {
+                Set(ref _ListeLigneBanque, value);
+            }
+        }
+
         private ListeObservable<LigneCompta> _ListeLigneCompta = null;
         public ListeObservable<LigneCompta> ListeLigneCompta
         {

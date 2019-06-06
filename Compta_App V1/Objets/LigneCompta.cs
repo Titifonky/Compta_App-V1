@@ -120,6 +120,7 @@ namespace Compta
             set
             {
                 Set(ref _Compte, value, this);
+                _Compte.ListeLigneCompta.Ajouter(this);
             }
         }
 
