@@ -12,7 +12,7 @@ namespace Compta
             Societe = societe;
             Bdd.Ajouter(this);
 
-            Compte C = new Compte(this);
+            Compte C = new Compte(societe, this);
             C.Nom = "-";
         }
 

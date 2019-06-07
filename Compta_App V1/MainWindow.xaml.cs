@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Data;
 
 namespace Compta
 {
@@ -79,6 +79,8 @@ namespace Compta
 
             _RechercherLigneCompta = new RechercheTexte<LigneCompta>(xListeLigneCompta);
             xRechercherLigneCompta.DataContext = _RechercherLigneCompta;
+
+            
 
             return true;
         }

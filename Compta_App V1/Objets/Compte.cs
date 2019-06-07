@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 
 namespace Compta
 {
@@ -6,8 +7,9 @@ namespace Compta
     {
         public Compte() { }
 
-        public Compte(Groupe groupe)
+        public Compte(Societe societe, Groupe groupe)
         {
+            Societe = societe;
             Groupe = groupe;
             Bdd.Ajouter(this);
         }
@@ -17,6 +19,25 @@ namespace Compta
         {
             get { return base.No; }
             set { base.No = value; }
+        }
+
+        private Societe _Societe = null;
+        [CleEtrangere]
+        public Societe Societe
+        {
+            get
+            {
+                if (_Societe == null)
+                    _Societe = Bdd.Parent<Societe, Compte>(this);
+
+                return _Societe;
+            }
+            set
+            {
+                Set(ref _Societe, value, this);
+                if (_Societe.ListeCompte != null)
+                    _Societe.ListeCompte.Ajouter(this);
+            }
         }
 
         private Groupe _Groupe = null;
@@ -34,7 +55,7 @@ namespace Compta
             {
                 Set(ref _Groupe, value, this);
                 if (_Groupe.ListeCompte != null)
-                    _Groupe.ListeCompte.Add(this);
+                    _Groupe.ListeCompte.Ajouter(this);
             }
         }
 
@@ -76,7 +97,11 @@ namespace Compta
             get
             {
                 if (_ListeLigneBanque == null)
+                {
                     _ListeLigneBanque = Bdd.Enfants<LigneBanque, Compte>(this);
+                    _ListeLigneBanque.OnAjouter += delegate (LigneBanque obj, int? id) { Calculer(); };
+                    _ListeLigneBanque.OnSupprimer += delegate (LigneBanque obj, int? id) { Calculer(); };
+                }
 
                 return _ListeLigneBanque;
             }
@@ -93,7 +118,11 @@ namespace Compta
             get
             {
                 if (_ListeLigneCompta == null)
+                {
                     _ListeLigneCompta = Bdd.Enfants<LigneCompta, Compte>(this);
+                    _ListeLigneCompta.OnAjouter += delegate (LigneCompta obj, int? id) { Calculer(); };
+                    _ListeLigneCompta.OnSupprimer += delegate (LigneCompta obj, int? id) { Calculer(); };
+                }
 
                 return _ListeLigneCompta;
             }
@@ -104,11 +133,44 @@ namespace Compta
             }
         }
 
+        public void Calculer()
+        {
+            
+            if (!EstCharge) return;
+
+            Log.Message("Calculer : " + Groupe.Nom + "->" + Nom);
+
+            Double soldeTmp = 0;
+
+            try
+            {
+                foreach (var lb in ListeLigneBanque)
+                {
+                    if (!lb.Compta)
+                        soldeTmp += lb.Valeur;
+                }
+
+                foreach (var lc in ListeLigneCompta)
+                {
+                    soldeTmp -= lc.Valeur;
+                }
+            }
+            catch(Exception e)
+            {
+                Log.Message(e.ToString());
+            }
+
+            Solde = SoldeInitial + soldeTmp;
+        }
+
         public override Boolean Supprimer()
         {
             if (!EstCharge) return false;
 
-            Bdd.Supprimer<Compte>(this);
+            Groupe.ListeCompte.Supprimer(this);
+            Groupe.Societe.ListeCompte.Supprimer(this);
+
+            Bdd.Supprimer(this);
             return true;
         }
     }

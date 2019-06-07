@@ -75,12 +75,11 @@ namespace Compta
             {
                 try
                 {
-                    Set(ref _Groupe, value, this);
-                    ListeCompte = _Groupe.ListeCompte;
-                    if (ListeCompte.Count > 0)
+                    if (Set(ref _Groupe, value, this) && EstCharge && _Groupe.EstCharge)
+                    {
+                        ListeCompte = _Groupe.ListeCompte;
                         Compte = ListeCompte[0];
-                    else
-                        Compte = null;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -119,8 +118,17 @@ namespace Compta
             }
             set
             {
-                Set(ref _Compte, value, this);
-                _Compte.ListeLigneCompta.Ajouter(this);
+                var _OldCompte = _Compte;
+
+                if (value == null) return;
+
+                if (Set(ref _Compte, value, this) && _Compte.EstCharge)
+                {
+                    if (_OldCompte != null)
+                        _OldCompte.ListeLigneCompta.Supprimer(this);
+
+                    _Compte.ListeLigneCompta.Ajouter(this);
+                }
             }
         }
 
@@ -129,6 +137,13 @@ namespace Compta
         {
             get { return _Editer; }
             set { Set(ref _Editer, value, this); }
+        }
+
+        public override void Calculer()
+        {
+            if (!EstCharge) return;
+
+            Compte.Calculer();
         }
 
         public override Boolean Supprimer()

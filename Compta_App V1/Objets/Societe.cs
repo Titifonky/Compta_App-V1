@@ -116,5 +116,23 @@ namespace Compta
                 Set(ref _ListeGroupe, value);
             }
         }
+
+        private ListeObservable<Compte> _ListeCompte = null;
+        public ListeObservable<Compte> ListeCompte
+        {
+            get
+            {
+                if (_ListeCompte == null)
+                {
+                    _ListeCompte = Bdd.Liste<Compte>();
+                }
+
+                return _ListeCompte;
+            }
+            set
+            {
+                Set(ref _ListeCompte, value);
+            }
+        }
     }
 }

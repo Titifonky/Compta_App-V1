@@ -808,7 +808,6 @@ namespace Compta
             where T : ObjetGestion, new()
             where U : ObjetGestion
         {
-
             if (ModeChargerObjet || ModeAjouterObjet) return null;
 
             ListeObservable<T> pListe = new ListeObservable<T>();

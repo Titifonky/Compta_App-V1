@@ -208,6 +208,14 @@ namespace Compta
                 base.Add(item);
         }
 
+        public delegate void OnAjouterHandler(T obj, int? id);
+
+        public event OnAjouterHandler OnAjouter;
+
+        public delegate void OnSupprimerHandler(T obj, int? id);
+
+        public event OnSupprimerHandler OnSupprimer;
+
         public void Ajouter(T Item, Boolean Debut = false)
         {
             if (Contains(Item)) return;
@@ -216,13 +224,67 @@ namespace Compta
                 base.Insert(0, Item);
             else
                 base.Add(Item);
+
+            OnAjouter?.Invoke(Item, null);
+        }
+
+        public void Supprimer(T Item)
+        {
+            base.Remove(Item);
+
+            OnSupprimer?.Invoke(Item, null);
         }
 
         public new void Add(T Item)
         {
             if (Contains(Item)) return;
-
+            
             base.Add(Item);
+
+            OnAjouter?.Invoke(Item, null);
+        }
+
+        public new void Insert(int Index, T Item)
+        {
+            if (Contains(Item)) return;
+            
+            base.Insert(Index, Item);
+
+            OnAjouter?.Invoke(Item, Index);
+        }
+
+        public new void InsertItem(int Index, T Item)
+        {
+            if (Contains(Item)) return;
+
+            base.InsertItem(Index, Item);
+
+            OnAjouter?.Invoke(Item, Index);
+        }
+
+        public new void Remove(T Item)
+        {
+            base.Remove(Item);
+
+            OnSupprimer?.Invoke(Item, null);
+        }
+
+        public new void RemoveAt(int Index)
+        {
+            var Item = base[Index];
+
+            base.RemoveAt(Index);
+
+            OnSupprimer?.Invoke(Item, Index);
+        }
+
+        public new void RemoveItem(int Index)
+        {
+            var Item = base[Index];
+
+            base.RemoveItem(Index);
+
+            OnSupprimer?.Invoke(Item, Index);
         }
 
         public ListeObservable(IEnumerable<T> Liste)

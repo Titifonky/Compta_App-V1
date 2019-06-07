@@ -144,12 +144,11 @@ namespace Compta
             {
                 try
                 {
-                    Set(ref _Groupe, value, this);
-                    ListeCompte = _Groupe.ListeCompte;
-                    if (ListeCompte.Count > 0)
+                    if (Set(ref _Groupe, value, this) && EstCharge && _Groupe.EstCharge)
+                    {
+                        ListeCompte = _Groupe.ListeCompte;
                         Compte = ListeCompte[0];
-                    else
-                        Compte = null;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -189,10 +188,12 @@ namespace Compta
             }
             set
             {
+                if (value == null) return;
+
                 Set(ref _Compte, value, this);
 
-                if (_ListeLigneBanque != null && _ListeLigneBanque.Count > 0 && Ventiler == false && Pointer == true)
-                    _ListeLigneBanque[0].Compte = _Compte;
+                if (EstCharge && ListeLigneBanque.Count > 0 && !Ventiler)
+                    ListeLigneBanque[0].Compte = _Compte;
             }
         }
 

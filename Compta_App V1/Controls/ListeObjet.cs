@@ -74,6 +74,8 @@ namespace Compta
         
         private void ApplyEditable()
         {
+            if (xBase == null || xValeur == null) return;
+
             try
             {
                 if (Editable == true)
@@ -87,7 +89,7 @@ namespace Compta
                 }
                 else
                 {
-                    if (String.IsNullOrWhiteSpace(SelectedValue.ToString()))
+                    if (xValeur.SelectedValue != null && String.IsNullOrWhiteSpace(xValeur.SelectedValue.ToString()))
                         xBase.Visibility = Visibility.Collapsed;
 
                     xValeur.Visibility = Visibility.Collapsed;

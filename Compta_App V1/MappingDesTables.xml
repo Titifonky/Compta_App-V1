@@ -68,7 +68,8 @@ Seules les colonnes à modifier sont nécessaires.
         </Table>
         <Table name="compte">
           <Colonne name="no"/>
-          <Colonne name="groupe"/>
+          <Colonne name="societe" defaut="1"/>
+          <Colonne name="groupe" defaut="1"/>
           <Colonne name="nom"/>
           <Colonne name="description"/>
           <Colonne name="soldeinitial"/>
@@ -124,24 +125,28 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="no">1</Valeur>
             <Valeur name="nom">-</Valeur>
             <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">1</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">2</Valeur>
             <Valeur name="nom">-</Valeur>
             <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">2</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">3</Valeur>
             <Valeur name="nom">-</Valeur>
             <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">3</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">4</Valeur>
             <Valeur name="nom">Arras Vds</Valeur>
             <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">2</Valeur>
           </Insert>
         </Table>

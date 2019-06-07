@@ -54,6 +54,8 @@ namespace Compta
 
         private void ApplyEditable()
         {
+            if (xBase == null || xValeur == null) return;
+
             try
             {
                 if (Editable == true)
