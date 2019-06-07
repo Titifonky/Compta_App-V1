@@ -114,12 +114,16 @@ namespace Compta
 
                 if (value == null) return;
 
-                if (Set(ref _Compte, value, this) && _Compte.EstCharge)
+                if (Set(ref _Compte, value, this) && EstCharge && _Compte.EstCharge)
                 {
-                    if(_OldCompte != null)
+                    if (_OldCompte != null)
+                    {
                         _OldCompte.ListeLigneBanque.Supprimer(this);
+                        _OldCompte.Calculer();
+                    }
 
                     _Compte.ListeLigneBanque.Ajouter(this);
+                    _Compte.Calculer();
                 }
             }
         }
@@ -131,7 +135,7 @@ namespace Compta
             get { return _Compta; }
             set
             {
-                if (!EcritureBanque.Ventiler)
+                if (EstCharge && !EcritureBanque.Ventiler)
                     value = false;
 
                 Set(ref _Compta, value, this);

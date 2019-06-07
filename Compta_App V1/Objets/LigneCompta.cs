@@ -122,12 +122,16 @@ namespace Compta
 
                 if (value == null) return;
 
-                if (Set(ref _Compte, value, this) && _Compte.EstCharge)
+                if (Set(ref _Compte, value, this) && EstCharge && _Compte.EstCharge)
                 {
                     if (_OldCompte != null)
+                    {
                         _OldCompte.ListeLigneCompta.Supprimer(this);
+                        _OldCompte.Calculer();
+                    }
 
                     _Compte.ListeLigneCompta.Ajouter(this);
+                    _Compte.Calculer();
                 }
             }
         }

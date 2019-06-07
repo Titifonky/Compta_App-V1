@@ -97,11 +97,7 @@ namespace Compta
             get
             {
                 if (_ListeLigneBanque == null)
-                {
                     _ListeLigneBanque = Bdd.Enfants<LigneBanque, Compte>(this);
-                    _ListeLigneBanque.OnAjouter += delegate (LigneBanque obj, int? id) { Calculer(); };
-                    _ListeLigneBanque.OnSupprimer += delegate (LigneBanque obj, int? id) { Calculer(); };
-                }
 
                 return _ListeLigneBanque;
             }
@@ -137,8 +133,6 @@ namespace Compta
         {
             
             if (!EstCharge) return;
-
-            Log.Message("Calculer : " + Groupe.Nom + "->" + Nom);
 
             Double soldeTmp = 0;
 

@@ -621,6 +621,105 @@
                     </Grid>
 
                     <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Border Grid.Row="0" Padding="5" Margin="0,0,0,3">
+                            <TextBlock Grid.Column="0" Text="Détail" HorizontalAlignment="Center" FontSize="15" FontWeight="Medium" Margin="20,0,20,0" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Padding="5"
+                                >
+                            <Grid Name="xDetailGroupe" Width="Auto">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Recherche :"/>
+                                    <TextBox Grid.Column="1"
+                                             Name="xRechercherDetail"
+                                             Text="{Binding Path=Valeur, Mode=OneWayToSource}"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center"
+                                             Margin="5,0,0,0"
+                                             KeyUp="TextBox_KeyEnterUpdate"/>
+                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherCompte}" Click="EffacerTextBox_Click" HorizontalContentAlignment="Center"/>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox Grid.Column="0"
+                                             Name="xListeCompteLigneBanque"
+                                             AlternationCount="2"
+                                             VerticalContentAlignment="Stretch"
+                                             DataContext="{Binding Path=SelectedValue, ElementName=xListeCompte}"
+                                             ItemsSource="{Binding ListeLigneBanque}"
+                                             ItemTemplate="{StaticResource xListeLigneComptaTemplate}"
+                                             SelectedIndex="0"
+                                             HorizontalContentAlignment="Stretch"
+                                             VerticalAlignment="Stretch"
+                                             IsSynchronizedWithCurrentItem="True"
+                                             Margin="0,2.5,0,2.5"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             ScrollViewer.CanContentScroll="False"
+                                             SelectionMode="Extended"
+                                         >
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Ajouter" Click="Ajouter_Banque_Click"/>
+                                                <MenuItem Header="Supprimer" Click="Supprimer_Banque_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+
+                                    <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+
+                                    <ListBox Grid.Column="2"
+                                         Name="xListeCompteLigneCompta"
+                                         AlternationCount="2"
+                                         VerticalContentAlignment="Stretch"
+                                         DataContext="{Binding Path=SelectedValue, ElementName=xListeCompte}"
+                                         ItemsSource="{Binding ListeLigneCompta}"
+                                         ItemTemplate="{StaticResource xListeLigneComptaTemplate}"
+                                         SelectedIndex="0"
+                                         HorizontalContentAlignment="Stretch"
+                                         VerticalAlignment="Stretch"
+                                         IsSynchronizedWithCurrentItem="True"
+                                         Margin="0,2.5,0,2.5"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         ScrollViewer.CanContentScroll="False"
+                                         SelectionMode="Extended"
+                                         >
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Ajouter" Click="Ajouter_Banque_Click"/>
+                                                <MenuItem Header="Supprimer" Click="Supprimer_Banque_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Banques">

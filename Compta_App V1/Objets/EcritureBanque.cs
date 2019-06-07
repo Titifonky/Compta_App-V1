@@ -61,9 +61,8 @@ namespace Compta
             }
             set
             {
-                Set(ref _Banque, value, this);
-                if (_Banque.ListeEcritureBanque != null)
-                    _Banque.ListeEcritureBanque.Add(this);
+                if (Set(ref _Banque, value, this) && EstCharge && _Banque.EstCharge)
+                    _Banque.ListeEcritureBanque.Ajouter(this);
             }
         }
 

@@ -21,6 +21,7 @@ namespace Compta
 
         private RechercheTexte<EcritureBanque> _RechercherEcritureBanque;
         private RechercheTexte<LigneCompta> _RechercherLigneCompta;
+        private RechercheTexte<Compte> _RechercherCompte;
 
         public Societe pSociete;
 
@@ -71,8 +72,8 @@ namespace Compta
 
             pSociete.BanqueCourante = pSociete.ListeBanque.FirstOrDefault(b => { return b.Id == Properties.Settings.Default.IdBanque; }) ?? pSociete.ListeBanque[0];
 
-            //TrierListe<EcritureBanque>(xListeEcritureBanque);
-            //TrierListe<LigneCompta>(xListeLigneCompta);
+            TrierListe<EcritureBanque>(xListeEcritureBanque);
+            TrierListe<LigneCompta>(xListeLigneCompta);
 
             _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque, true);
             xRechercherEcritureBanque.DataContext = _RechercherEcritureBanque;
@@ -80,7 +81,8 @@ namespace Compta
             _RechercherLigneCompta = new RechercheTexte<LigneCompta>(xListeLigneCompta);
             xRechercherLigneCompta.DataContext = _RechercherLigneCompta;
 
-            
+            _RechercherCompte = new RechercheTexte<Compte>(xListeCompte);
+            xRechercherCompte.DataContext = _RechercherCompte;
 
             return true;
         }
