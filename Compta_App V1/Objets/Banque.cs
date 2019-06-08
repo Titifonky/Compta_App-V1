@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 
@@ -88,7 +89,27 @@ namespace Compta
             get
             {
                 if (_ListeEcritureBanque == null)
-                    _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
+                {
+                    _ListeEcritureBanque = new ListeObservable<EcritureBanque>();
+                    var ListTmp = Bdd.Enfants<EcritureBanque, Banque>(this);
+                    var SsTmp = new SortedSet<EcritureBanque>(Comparer<EcritureBanque>.Create(
+                        delegate (EcritureBanque a, EcritureBanque b)
+                        {
+                            if (a.DateValeur < b.DateValeur)
+                                return -1;
+                            else if (a.DateValeur == b.DateValeur)
+                                return 0;
+
+                            return 1;
+
+                        }
+                        ));
+                    foreach (var ec in ListTmp)
+                        SsTmp.Add(ec);
+
+                    foreach (var ec in SsTmp)
+                        _ListeEcritureBanque.Add(ec);
+                }
 
                 return _ListeEcritureBanque;
             }

@@ -197,6 +197,10 @@ namespace Compta
             }
         }
 
+        public delegate int FonctionTriHandler(T a, T b);
+
+        public event FonctionTriHandler Trier;
+
         public ListeObservable()
             : base()
         {
