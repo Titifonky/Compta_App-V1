@@ -73,7 +73,8 @@ Attributs possibles :
       <Propriete name="Groupe"/>
       <Propriete name="Nom"/>
       <Propriete name="Description"/>
-      <Propriete name="Solde" unite="€" defaut="0"/>
+      <Propriete name="Solde" defaut="0"/>
+      <Propriete name="SoldeInitial" intitule="Solde initial" defaut="0"/>
     </Objet>
     <Objet name="Societe">
       <Propriete name="Id"/>

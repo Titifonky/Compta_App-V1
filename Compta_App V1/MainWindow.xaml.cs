@@ -72,8 +72,8 @@ namespace Compta
 
             pSociete.BanqueCourante = pSociete.ListeBanque.FirstOrDefault(b => { return b.Id == Properties.Settings.Default.IdBanque; }) ?? pSociete.ListeBanque[0];
 
-            TrierListe<EcritureBanque>(xListeEcritureBanque);
-            TrierListe<LigneCompta>(xListeLigneCompta);
+            //TrierListe<EcritureBanque>(xListeEcritureBanque);
+            //TrierListe<LigneCompta>(xListeLigneCompta);
 
             _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque, true);
             xRechercherEcritureBanque.DataContext = _RechercherEcritureBanque;

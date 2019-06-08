@@ -10,13 +10,11 @@ namespace Compta
 
         public LigneCompta(Societe societe)
         {
-            Societe = societe;
-
             Bdd.Ajouter(this);
 
-            No = Societe.ListeLigneCompta.Count + 1;
-
-            Compte = Societe.CompteBase;
+            No = societe.ListeLigneCompta.Count + 1;
+            Societe = societe;
+            Compte = societe.CompteBase;
         }
 
         private Societe _Societe = null;
@@ -32,8 +30,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _Societe, value, this);
-                if (_Societe.ListeLigneCompta != null)
+                if (SetObjetGestion(ref _Societe, value, this))
                     _Societe.ListeLigneCompta.Add(this);
             }
         }
@@ -75,8 +72,9 @@ namespace Compta
             {
                 try
                 {
-                    if (Set(ref _Groupe, value, this) && EstCharge && _Groupe.EstCharge)
+                    if (SetObjetGestion(ref _Groupe, value, this))
                     {
+                        Log.Message("");
                         ListeCompte = _Groupe.ListeCompte;
                         Compte = ListeCompte[0];
                     }
@@ -122,7 +120,7 @@ namespace Compta
 
                 if (value == null) return;
 
-                if (Set(ref _Compte, value, this) && EstCharge && _Compte.EstCharge)
+                if (SetObjetGestion(ref _Compte, value, this))
                 {
                     if (_OldCompte != null)
                     {
@@ -134,13 +132,6 @@ namespace Compta
                     _Compte.Calculer();
                 }
             }
-        }
-
-        protected Boolean _Editer = false;
-        public Boolean Editer
-        {
-            get { return _Editer; }
-            set { Set(ref _Editer, value, this); }
         }
 
         public override void Calculer()

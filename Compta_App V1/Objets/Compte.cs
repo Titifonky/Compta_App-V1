@@ -1,5 +1,6 @@
 ﻿using LogDebugging;
 using System;
+using System.Windows.Data;
 
 namespace Compta
 {
@@ -7,11 +8,12 @@ namespace Compta
     {
         public Compte() { }
 
-        public Compte(Societe societe, Groupe groupe)
+        public Compte(Groupe groupe)
         {
-            Societe = societe;
-            Groupe = groupe;
             Bdd.Ajouter(this);
+
+            Societe = groupe.Societe;
+            Groupe = groupe;
         }
 
         [Propriete, Max, Tri(Modifiable=true)]
@@ -34,8 +36,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _Societe, value, this);
-                if (_Societe.ListeCompte != null)
+                if (SetObjetGestion(ref _Societe, value, this))
                     _Societe.ListeCompte.Ajouter(this);
             }
         }
@@ -53,13 +54,19 @@ namespace Compta
             }
             set
             {
-                Set(ref _Groupe, value, this);
-                if (_Groupe.ListeCompte != null)
+                // pour ne pas avoir la possibilité d'un groupe sans compte
+                if (EstCharge && _Groupe != null && _Groupe.EstCharge && (_Groupe != value) && (_Groupe.ListeCompte.Count == 1))
+                {
+                    SetObjetGestion(ref _Groupe, _Groupe, this, true);
+                    return;
+                }
+
+                if (SetObjetGestion(ref _Groupe, value, this))
                     _Groupe.ListeCompte.Ajouter(this);
             }
         }
 
-        private String _Nom = "";
+        private String _Nom = "-";
         [Propriete]
         public String Nom
         {
@@ -131,7 +138,6 @@ namespace Compta
 
         public void Calculer()
         {
-            
             if (!EstCharge) return;
 
             Double soldeTmp = 0;
@@ -161,11 +167,16 @@ namespace Compta
         {
             if (!EstCharge) return false;
 
-            Groupe.ListeCompte.Supprimer(this);
-            Groupe.Societe.ListeCompte.Supprimer(this);
+            if (Groupe.ListeCompte.Count > 1)
+            {
+                Groupe.ListeCompte.Supprimer(this);
+                Societe.ListeCompte.Supprimer(this);
 
-            Bdd.Supprimer(this);
-            return true;
+                Bdd.Supprimer(this);
+                return true;
+            }
+
+            return false;
         }
     }
 }

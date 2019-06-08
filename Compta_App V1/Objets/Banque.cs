@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -12,8 +13,9 @@ namespace Compta
 
         public Banque(Societe s)
         {
-            Societe = s;
             Bdd.Ajouter(this);
+
+            Societe = s;
         }
 
         private Societe _Societe = null;
@@ -29,8 +31,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _Societe, value, this);
-                if (_Societe.ListeBanque != null)
+                if (SetObjetGestion(ref _Societe, value, this))
                     _Societe.ListeBanque.Add(this);
             }
         }
@@ -76,13 +77,6 @@ namespace Compta
             }
         }
 
-        protected Boolean _Editer = false;
-        public Boolean Editer
-        {
-            get { return _Editer; }
-            set { Set(ref _Editer, value, this); }
-        }
-
         private ListeObservable<EcritureBanque> _ListeEcritureBanque = null;
         public ListeObservable<EcritureBanque> ListeEcritureBanque
         {
@@ -90,25 +84,8 @@ namespace Compta
             {
                 if (_ListeEcritureBanque == null)
                 {
-                    _ListeEcritureBanque = new ListeObservable<EcritureBanque>();
-                    var ListTmp = Bdd.Enfants<EcritureBanque, Banque>(this);
-                    var SsTmp = new SortedSet<EcritureBanque>(Comparer<EcritureBanque>.Create(
-                        delegate (EcritureBanque a, EcritureBanque b)
-                        {
-                            if (a.DateValeur < b.DateValeur)
-                                return -1;
-                            else if (a.DateValeur == b.DateValeur)
-                                return 0;
-
-                            return 1;
-
-                        }
-                        ));
-                    foreach (var ec in ListTmp)
-                        SsTmp.Add(ec);
-
-                    foreach (var ec in SsTmp)
-                        _ListeEcritureBanque.Add(ec);
+                    _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
+                    _ListeEcritureBanque.Trier += (a, b) => {Log.Message(a.DateValeur + " comp " + b.DateValeur + " " + a.DateValeur.CompareTo(b.DateValeur)); return a.DateValeur.CompareTo(b.DateValeur); };
                 }
 
                 return _ListeEcritureBanque;

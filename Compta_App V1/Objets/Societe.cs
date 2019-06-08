@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Windows.Data;
 
 namespace Compta
 {
@@ -125,6 +126,7 @@ namespace Compta
                 if (_ListeCompte == null)
                 {
                     _ListeCompte = Bdd.Liste<Compte>();
+                    _ListeCompte.ItemsNotifyPropertyChanged = true;
                 }
 
                 return _ListeCompte;

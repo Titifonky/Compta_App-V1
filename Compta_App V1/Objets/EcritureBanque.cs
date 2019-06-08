@@ -10,17 +10,16 @@ namespace Compta
 
         public EcritureBanque(Banque banque, String idBanque, DateTime dateValeur, String intitule, Double valeur)
         {
-            Banque = banque;
-
             Bdd.Ajouter(this);
-
-            No = Banque.ListeEcritureBanque.Count + 1;
 
             IdBanque = idBanque;
             DateValeur = dateValeur;
             Intitule = intitule;
             Valeur = valeur;
-            Compte = Banque.Societe.CompteBase;
+            No = banque.ListeEcritureBanque.Count + 1;
+            Compte = banque.Societe.CompteBase;
+
+            Banque = banque;
 
             InitLigneBanque(new LigneBanque(this));
         }
@@ -61,7 +60,7 @@ namespace Compta
             }
             set
             {
-                if (Set(ref _Banque, value, this) && EstCharge && _Banque.EstCharge)
+                if (SetObjetGestion(ref _Banque, value, this))
                     _Banque.ListeEcritureBanque.Ajouter(this);
             }
         }
@@ -75,6 +74,8 @@ namespace Compta
         }
 
         protected DateTime _DateValeur = DateTime.Now;
+        // Ne pas modifier cette attribut, cela conditionne le calcul
+        // du solde intermédiaire de chaque ecriture
         [Propriete, Tri(DirectionTri = System.ComponentModel.ListSortDirection.Ascending)]
         public DateTime DateValeur
         {
@@ -143,7 +144,7 @@ namespace Compta
             {
                 try
                 {
-                    if (Set(ref _Groupe, value, this) && EstCharge && _Groupe.EstCharge)
+                    if (SetObjetGestion(ref _Groupe, value, this))
                     {
                         ListeCompte = _Groupe.ListeCompte;
                         Compte = ListeCompte[0];
@@ -189,9 +190,7 @@ namespace Compta
             {
                 if (value == null) return;
 
-                Set(ref _Compte, value, this);
-
-                if (EstCharge && ListeLigneBanque.Count > 0 && !Ventiler)
+                if (SetObjetGestion(ref _Compte, value, this))
                     ListeLigneBanque[0].Compte = _Compte;
             }
         }
@@ -223,6 +222,8 @@ namespace Compta
 
         public void CalculerSolde(Boolean MajProp = false)
         {
+            if (!EstCharge) return;
+
             Double Val = Double.NaN;
             var index = Banque.ListeEcritureBanque.IndexOf(this);
             if (index > 0)
@@ -306,7 +307,7 @@ namespace Compta
 
         public void ControlerVentilation(Boolean Hit = true)
         {
-            if ((Ventiler == false) || (_ListeLigneBanque == null)) return;
+            if (!EstCharge || !Ventiler || (_ListeLigneBanque == null)) return;
 
             Double Somme = 0;
             foreach (var lb in ListeLigneBanque)

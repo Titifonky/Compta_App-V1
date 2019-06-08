@@ -10,12 +10,10 @@ namespace Compta
 
         public LigneBanque(EcritureBanque ecritureBanque)
         {
-            EcritureBanque = ecritureBanque;
-
             Bdd.Ajouter(this);
 
-            No = EcritureBanque.ListeLigneBanque.Count + 1;
-
+            No = ecritureBanque.ListeLigneBanque.Count + 1;
+            EcritureBanque = ecritureBanque;
             Compte = ecritureBanque.Banque.Societe.CompteBase;
         }
 
@@ -32,8 +30,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _EcritureBanque, value, this);
-                if (_EcritureBanque.ListeLigneBanque != null)
+                if (SetObjetGestion(ref _EcritureBanque, value, this))
                     _EcritureBanque.ListeLigneBanque.Add(this);
             }
         }
@@ -67,7 +64,7 @@ namespace Compta
             {
                 try
                 {
-                    if (Set(ref _Groupe, value, this) && EstCharge && _Groupe.EstCharge)
+                    if (SetObjetGestion(ref _Groupe, value, this))
                     {
                         ListeCompte = _Groupe.ListeCompte;
                         Compte = ListeCompte[0];
@@ -112,9 +109,7 @@ namespace Compta
             {
                 var _OldCompte = _Compte;
 
-                if (value == null) return;
-
-                if (Set(ref _Compte, value, this) && EstCharge && _Compte.EstCharge)
+                if (value != null && SetObjetGestion(ref _Compte, value, this))
                 {
                     if (_OldCompte != null)
                     {

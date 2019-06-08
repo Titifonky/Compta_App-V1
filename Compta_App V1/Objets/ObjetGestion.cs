@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -55,6 +56,13 @@ namespace Compta
         {
             get { return _No; }
             set { Set(ref _No, value, this); }
+        }
+
+        protected Boolean _Editer = false;
+        public Boolean Editer
+        {
+            get { return _Editer; }
+            set { Set(ref _Editer, value, this); }
         }
 
         public ObjetGestion()
@@ -119,6 +127,24 @@ namespace Compta
             if (EstSvgDansLaBase)
                 Bdd.Maj(Objet, T, propertyName);
             return true;
+        }
+
+        protected bool SetObjetGestion<U, V>(ref U field, U value, V Objet, Boolean ForcerUpdate = false, [CallerMemberName]string propertyName = "")
+            where U : ObjetGestion
+            where V : ObjetGestion
+        {
+            Boolean test = true;
+            if ( (value == null || !value.EstCharge) || (Objet == null || !Objet.EstCharge)) test = false;
+
+            if (ForcerUpdate || !EqualityComparer<U>.Default.Equals(field, value))
+            {
+                field = value;
+                OnPropertyChanged(propertyName);
+                if (EstSvgDansLaBase)
+                    Bdd.Maj(Objet, T, propertyName);
+            }
+
+            return test;
         }
 
         protected bool Set<U>(ref U field, U value, [CallerMemberName]string propertyName = "")
@@ -197,6 +223,35 @@ namespace Compta
             }
         }
 
+        private Boolean _ItemsNotifyPropertyChanged = false;
+
+        public Boolean ItemsNotifyPropertyChanged
+        {
+            get { return _ItemsNotifyPropertyChanged; }
+            set
+            {
+                _ItemsNotifyPropertyChanged = value;
+                if (value)
+                {
+                    foreach (var item in this)
+                    {
+                        var notifyItem = item as INotifyPropertyChanged;
+                        if (notifyItem != null)
+                            notifyItem.PropertyChanged += ItemPropertyChanged;
+                    }
+                }
+                else
+                {
+                    foreach (var item in this)
+                    {
+                        var notifyItem = item as INotifyPropertyChanged;
+                        if (notifyItem != null)
+                            notifyItem.PropertyChanged -= ItemPropertyChanged;
+                    }
+                }
+            }
+        }
+
         public delegate int FonctionTriHandler(T a, T b);
 
         public event FonctionTriHandler Trier;
@@ -212,6 +267,13 @@ namespace Compta
                 base.Add(item);
         }
 
+        public ListeObservable(IEnumerable<T> Liste)
+            : this()
+        {
+            foreach (var item in Liste)
+                this.Add(item);
+        }
+
         public delegate void OnAjouterHandler(T obj, int? id);
 
         public event OnAjouterHandler OnAjouter;
@@ -220,14 +282,33 @@ namespace Compta
 
         public event OnSupprimerHandler OnSupprimer;
 
+        private int ChercherIndex(T Item)
+        {
+            int index = this.Count - 1;
+            int nbBoucle = 0;
+            for (index = this.Count - 1; index > -1; index--)
+            {
+                nbBoucle++;
+                if (Trier(Item, this[index]) >= 0)
+                    break;
+            }
+
+            return index + 1;
+        }
+
         public void Ajouter(T Item, Boolean Debut = false)
         {
             if (Contains(Item)) return;
 
-            if (Debut)
-                base.Insert(0, Item);
+            if (Trier != null)
+                base.Insert(ChercherIndex(Item), Item);
             else
-                base.Add(Item);
+            {
+                if (Debut)
+                    base.Insert(0, Item);
+                else
+                    base.Add(Item);
+            }
 
             OnAjouter?.Invoke(Item, null);
         }
@@ -242,8 +323,11 @@ namespace Compta
         public new void Add(T Item)
         {
             if (Contains(Item)) return;
-            
-            base.Add(Item);
+
+            if (Trier != null)
+                base.Insert(ChercherIndex(Item), Item);
+            else
+                base.Add(Item);
 
             OnAjouter?.Invoke(Item, null);
         }
@@ -251,8 +335,11 @@ namespace Compta
         public new void Insert(int Index, T Item)
         {
             if (Contains(Item)) return;
-            
-            base.Insert(Index, Item);
+
+            if (Trier != null)
+                base.Insert(ChercherIndex(Item), Item);
+            else
+                base.Insert(Index, Item);
 
             OnAjouter?.Invoke(Item, Index);
         }
@@ -261,7 +348,10 @@ namespace Compta
         {
             if (Contains(Item)) return;
 
-            base.InsertItem(Index, Item);
+            if (Trier != null)
+                base.Insert(ChercherIndex(Item), Item);
+            else
+                base.InsertItem(Index, Item);
 
             OnAjouter?.Invoke(Item, Index);
         }
@@ -291,11 +381,34 @@ namespace Compta
             OnSupprimer?.Invoke(Item, Index);
         }
 
-        public ListeObservable(IEnumerable<T> Liste)
-            : this()
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in Liste)
-                this.Add(item);
+            if (ItemsNotifyPropertyChanged && e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    var notifyItem = item as INotifyPropertyChanged;
+                    if (notifyItem != null)
+                        notifyItem.PropertyChanged += ItemPropertyChanged;
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    var notifyItem = item as INotifyPropertyChanged;
+                    if (notifyItem != null)
+                        notifyItem.PropertyChanged -= ItemPropertyChanged;
+                }
+            }
+
+            base.OnCollectionChanged(e);
+        }
+
+        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(ItemsNotifyPropertyChanged)
+                base.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 

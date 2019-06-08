@@ -117,17 +117,10 @@ namespace Compta
                     return;
                 }
 
-                Banque B = ((FrameworkElement)sender).DataContext as Banque;
-                if (B != null)
+                ObjetGestion OB = ((FrameworkElement)sender).DataContext as ObjetGestion;
+                if (OB != null)
                 {
-                    B.Editer = !B.Editer;
-                    return;
-                }
-
-                LigneCompta LC = ((FrameworkElement)sender).DataContext as LigneCompta;
-                if (LC != null)
-                {
-                    LC.Editer = !LC.Editer;
+                    OB.Editer = !OB.Editer;
                     return;
                 }
             }
@@ -613,6 +606,42 @@ namespace Compta
         }
 
         #endregion
+
+        #region EVENEMENT Compte
+
+        private void Ajouter_Compte_Click(object sender, RoutedEventArgs e)
+        {
+            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
+            Compte L = (Compte)V.SelectedItem;
+
+            if (L != null)
+                new Compte(L.Groupe);
+        }
+
+        private void Supprimer_Compte_Click(object sender, RoutedEventArgs e)
+        {
+            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
+            Compte L = (Compte)V.SelectedItem;
+
+            if (L != null)
+                L.Supprimer();
+        }
+
+        #endregion
+
+        private void Atteindre_Click(object sender, RoutedEventArgs e)
+        {
+            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
+            LigneBanque L = (LigneBanque)V.SelectedItem;
+            if (L != null)
+            {
+                xComptabilite.Focus();
+
+                xListeEcritureBanque.ScrollIntoView(L.EcritureBanque);
+                xListeEcritureBanque.SelectedItem = L.EcritureBanque;
+                
+            }
+        }
 
         #region LISTVIEW
 

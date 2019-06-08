@@ -9,10 +9,10 @@ namespace Compta
 
         public Groupe(Societe societe)
         {
-            Societe = societe;
             Bdd.Ajouter(this);
 
-            Compte C = new Compte(societe, this);
+            Societe = societe;
+            Compte C = new Compte(this);
             C.Nom = "-";
         }
 
@@ -36,8 +36,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _Societe, value, this);
-                if (_Societe.ListeGroupe != null)
+                if (SetObjetGestion(ref _Societe, value, this))
                     _Societe.ListeGroupe.Add(this);
             }
         }

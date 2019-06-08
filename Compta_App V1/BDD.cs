@@ -817,13 +817,7 @@ namespace Compta
             // Si on demande les enfants d'un Objet non sauvegardé dans la base, il y a un pb
             // on renvoi la liste vide.
             if ((Parent != null) && (!Parent.EstSvgDansLaBase))
-            {
-
-                Log.Methode("Bdd");
-                Log.Write("Erreur ID = -1");
-                Log.Write("Id : " + Parent.Id);
                 return pListe;
-            }
 
             // Filtre sur un objet
             if (Parent != null)

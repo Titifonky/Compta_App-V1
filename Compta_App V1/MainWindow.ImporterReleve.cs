@@ -124,6 +124,8 @@ namespace Compta
                 foreach (var E in Banque.ListeEcritureBanque)
                     EnregistrementsExistants.Add(E.IdBanque);
 
+                List<Enregistrement> ListeEnregistrements = new List<Enregistrement>();
+
                 using (StreamReader sr = new StreamReader(pDialogue.FileName))
                 {
                     while (sr.Peek() > -1)
@@ -142,17 +144,23 @@ namespace Compta
 
                             if (!EnregistrementsExistants.Contains(E.Ref))
                             {
-                                new EcritureBanque(Banque, E.Ref, E.DateValeur, E.Lib1 + (String.IsNullOrWhiteSpace(E.Lib2) ? "" : " / " + E.Lib2), E.Valeur);
+                                ListeEnregistrements.Add(E);
                                 NbImport++;
                             }
                         }
                     }
                 };
 
-                MessageBox.Show(String.Format("{0} ligne(s) importée(s)", NbImport));
-
                 if (NbImport > 0)
+                {
+                    ListeEnregistrements.Reverse();
+                    foreach (var E in ListeEnregistrements)
+                        new EcritureBanque(Banque, E.Ref, E.DateValeur, E.Lib1 + (String.IsNullOrWhiteSpace(E.Lib2) ? "" : " / " + E.Lib2), E.Valeur);
+
                     Banque.CalculerSolde();
+                }
+
+                MessageBox.Show(String.Format("{0} ligne(s) importée(e)", NbImport));
             }
         }
     }
