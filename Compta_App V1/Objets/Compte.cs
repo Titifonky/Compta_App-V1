@@ -106,6 +106,17 @@ namespace Compta
             set { Set(ref _Solde, value, this); }
         }
 
+        private Boolean _Supprimable = true;
+        [Propriete]
+        public Boolean Supprimable
+        {
+            get { return _Supprimable; }
+            set
+            {
+                Set(ref _Supprimable, value, this);
+            }
+        }
+
         private ListeObservable<LigneBanque> _ListeLigneBanque = null;
         public ListeObservable<LigneBanque> ListeLigneBanque
         {
@@ -173,7 +184,7 @@ namespace Compta
 
         public override Boolean Supprimer()
         {
-            if (!EstCharge) return false;
+            if (!EstCharge || !Supprimable) return false;
 
             if (Groupe.ListeCompte.Count > 1)
             {

@@ -291,7 +291,7 @@
             </DataTemplate.Resources>
             <Border Margin="0"
                     Padding="0"
-                    MouseDown="Editer_MouseDown"
+                    
                     >
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -326,8 +326,8 @@
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="5*"/>
                                     </Grid.ColumnDefinitions>
-                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Editer}"/>
-                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Editer}"/>
+                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="False"/>
+                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="False"/>
                                 </Grid>
                                 <local:Texte Grid.Row="1"  Valeur="{Binding Description}" Editable="False" Info="True" TextWrapping="Wrap"/>
                             </Grid>
@@ -654,7 +654,6 @@
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.CanContentScroll="False"
                                          SelectionMode="Extended"
-                                         Loaded="xListeCompte_Loaded"
                                          >
                                     <ListBox.GroupStyle>
                                         <GroupStyle>
@@ -839,19 +838,19 @@
                                     </Grid>
                                     <ListBox Grid.Row="1"
                                              Name="xListeCompteLigneCompta"
-                                         AlternationCount="2"
-                                         VerticalContentAlignment="Stretch"
-                                         DataContext="{Binding Path=SelectedValue, ElementName=xListeCompte}"
-                                         ItemsSource="{Binding ListeLigneCompta}"
-                                         ItemTemplate="{StaticResource xListeLigneComptaTemplate}"
-                                         SelectedIndex="0"
-                                         HorizontalContentAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
-                                         IsSynchronizedWithCurrentItem="True"
-                                         Margin="0,2.5,0,2.5"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.CanContentScroll="False"
-                                         SelectionMode="Extended"
+                                             AlternationCount="2"
+                                             VerticalContentAlignment="Stretch"
+                                             DataContext="{Binding Path=SelectedValue, ElementName=xListeCompte}"
+                                             ItemsSource="{Binding ListeLigneCompta}"
+                                             ItemTemplate="{StaticResource xListeLigneComptaTemplate}"
+                                             SelectedIndex="0"
+                                             HorizontalContentAlignment="Stretch"
+                                             VerticalAlignment="Stretch"
+                                             IsSynchronizedWithCurrentItem="True"
+                                             Margin="0,2.5,0,2.5"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             ScrollViewer.CanContentScroll="False"
+                                             SelectionMode="Extended"
                                          >
                                         <!--<ListBox.ContextMenu>
                                             <ContextMenu>

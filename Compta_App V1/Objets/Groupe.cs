@@ -50,9 +50,7 @@ namespace Compta
             get { return _Nom; }
             set
             {
-                if(Set(ref _Nom, value, this))
-                {
-                }
+                Set(ref _Nom, value, this);
             }
         }
 
@@ -62,6 +60,17 @@ namespace Compta
         {
             get { return _Description; }
             set { Set(ref _Description, value, this); }
+        }
+
+        private Boolean _Supprimable = true;
+        [Propriete]
+        public Boolean Supprimable
+        {
+            get { return _Supprimable; }
+            set
+            {
+                Set(ref _Supprimable, value, this);
+            }
         }
 
         private ListeObservable<Compte> _ListeCompte = null;
@@ -84,7 +93,7 @@ namespace Compta
 
         public override Boolean Supprimer()
         {
-            if (!EstCharge || (Societe.ListeGroupe.IndexOf(this) == 0)) return false;
+            if (!EstCharge || !Supprimable || (Societe.ListeGroupe.IndexOf(this) == 0)) return false;
 
             ModeSupprimer = true;
 

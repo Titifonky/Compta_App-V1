@@ -203,70 +203,65 @@ namespace Compta
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            try
+            ApplyEditable();
+
+            if (e.Property == SuffixDP)
             {
-                ApplyEditable();
+                MajSuffix();
+            }
 
-                if (e.Property == SuffixDP)
+            if (e.Property == SuffixConcatDP)
+            {
+                MajSuffix();
+            }
+
+            if (e.Property == ValeurDP)
+            {
+                if (Orientation == Orientation.Horizontal)
+                    DockPanel.SetDock(xIntitule, Dock.Left);
+                else
                 {
-                    MajSuffix();
+                    DockPanel.SetDock(xIntitule, Dock.Top);
+                    xIntitule.HorizontalAlignment = HorizontalAlignment.Left;
                 }
 
-                if (e.Property == SuffixConcatDP)
-                {
-                    MajSuffix();
-                }
+                if (Intitule)
+                    xIntitule.Visibility = Visibility.Visible;
+                else
+                    xIntitule.Visibility = Visibility.Collapsed;
 
-                if (e.Property == ValeurDP)
-                {
-                    if (Orientation == Orientation.Horizontal)
-                        DockPanel.SetDock(xIntitule, Dock.Left);
-                    else
-                    {
-                        DockPanel.SetDock(xIntitule, Dock.Top);
-                        xIntitule.HorizontalAlignment = HorizontalAlignment.Left;
-                    }
+                if (Unite)
+                    xUnite.Visibility = Visibility.Visible;
+                else
+                    xUnite.Visibility = Visibility.Collapsed;
 
-                    if (Intitule)
-                        xIntitule.Visibility = Visibility.Visible;
-                    else
-                        xIntitule.Visibility = Visibility.Collapsed;
+                String Objet = "";
+                String Propriete = "";
+                String TypePropriete = "";
+
+                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
+                {
+                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
+                    xIntitule.Text = pIntitule + " :";
 
                     if (Unite)
-                        xUnite.Visibility = Visibility.Visible;
-                    else
-                        xUnite.Visibility = Visibility.Collapsed;
-
-                    String Objet = "";
-                    String Propriete = "";
-                    String TypePropriete = "";
-
-                    if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
                     {
-                        String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                        xIntitule.Text = pIntitule + " :";
+                        _Unite = DicIntitules.Unite(Objet, Propriete);
+                        xUnite.Text = _Unite;
+                    }
 
-                        if (Unite)
-                        {
-                            _Unite = DicIntitules.Unite(Objet, Propriete);
-                            xUnite.Text = _Unite;
-                        }
+                    MajSuffix();
 
-                        MajSuffix();
+                    String ToolTip = DicIntitules.Info(Objet, Propriete);
+                    if (!String.IsNullOrWhiteSpace(ToolTip))
+                        xBase.ToolTip = ToolTip;
 
-                        String ToolTip = DicIntitules.Info(Objet, Propriete);
-                        if (!String.IsNullOrWhiteSpace(ToolTip))
-                            xBase.ToolTip = ToolTip;
-
-                        if (IntituleSeul)
-                        {
-                            xGrille.Visibility = Visibility.Collapsed;
-                        }
+                    if (IntituleSeul)
+                    {
+                        xGrille.Visibility = Visibility.Collapsed;
                     }
                 }
             }
-            catch (Exception ex)
-            { Log.Message(ex.ToString()); }
 
             base.OnPropertyChanged(e);
         }

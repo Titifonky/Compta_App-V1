@@ -18,9 +18,7 @@ namespace Compta
             Valeur = valeur;
             No = banque.ListeEcritureBanque.Count + 1;
             Compte = banque.Societe.CompteBase;
-
             Banque = banque;
-
             InitLigneBanque(new LigneBanque(this));
         }
 
@@ -190,7 +188,7 @@ namespace Compta
             {
                 if (value == null) return;
 
-                if (SetObjetGestion(ref _Compte, value, this))
+                if (SetObjetGestion(ref _Compte, value, this) && ListeLigneBanque.Count > 0)
                     ListeLigneBanque[0].Compte = _Compte;
             }
         }

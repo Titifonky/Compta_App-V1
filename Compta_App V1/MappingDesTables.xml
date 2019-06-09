@@ -65,6 +65,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="societe" defaut="1"/>
           <Colonne name="nom"/>
           <Colonne name="description"/>
+          <Colonne name="supprimable" defaut="1"/>
         </Table>
         <Table name="compte">
           <Colonne name="no"/>
@@ -73,6 +74,7 @@ Seules les colonnes à modifier sont nécessaires.
           <Colonne name="nom"/>
           <Colonne name="description"/>
           <Colonne name="soldeinitial"/>
+          <Colonne name="supprimable" defaut="1"/>
           <Colonne name="solde"/>
         </Table>
         <Table name="societe">
@@ -106,18 +108,42 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="nom">Divers</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">0</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">2</Valeur>
             <Valeur name="nom">Client</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">1</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">3</Valeur>
-            <Valeur name="nom">Fournisseurs</Valeur>
+            <Valeur name="nom">Depense</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">4</Valeur>
+            <Valeur name="nom">Fournisseur</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">5</Valeur>
+            <Valeur name="nom">Prorata</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">6</Valeur>
+            <Valeur name="nom">Recette</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="supprimable">1</Valeur>
           </Insert>
         </Table>
         <Table name="compte">
@@ -127,6 +153,7 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">1</Valeur>
+            <Valeur name="supprimable">0</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">2</Valeur>
