@@ -48,7 +48,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeGroupe, value);
+                SetListe(ref _ListeGroupe, value);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeCompte, value);
+                SetListe(ref _ListeCompte, value);
             }
         }
 
@@ -107,16 +107,14 @@ namespace Compta
             }
             set
             {
-                var _OldCompte = _Compte;
-
-                if (value != null && SetObjetGestion(ref _Compte, value, this))
+                if (_Compte != null && (_Compte != value) && _Compte.EstCharge && EstCharge )
                 {
-                    if (_OldCompte != null)
-                    {
-                        _OldCompte.ListeLigneBanque.Supprimer(this);
-                        _OldCompte.Calculer();
-                    }
+                    _Compte.ListeLigneBanque.Supprimer(this);
+                    _Compte.Calculer();
+                }
 
+                if (SetObjetGestion(ref _Compte, value, this))
+                {
                     _Compte.ListeLigneBanque.Ajouter(this);
                     _Compte.Calculer();
                 }

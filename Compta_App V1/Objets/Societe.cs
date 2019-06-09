@@ -31,7 +31,7 @@ namespace Compta
             get { return _BanqueCourante; }
             set
             {
-                Set(ref _BanqueCourante, value);
+                SetListe(ref _BanqueCourante, value);
                 OnModifyBanque(_BanqueCourante.Id);
             }
         }
@@ -82,7 +82,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _ListeLigneCompta, value);
+                SetListe(ref _ListeLigneCompta, value);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _ListeBanque, value);
+                SetListe(ref _ListeBanque, value);
             }
         }
 
@@ -108,13 +108,16 @@ namespace Compta
             get
             {
                 if (_ListeGroupe == null)
+                {
                     _ListeGroupe = Bdd.Enfants<Groupe, Societe>(this);
+                    _ListeGroupe.ItemsNotifyPropertyChanged = true;
+                }
 
                 return _ListeGroupe;
             }
             set
             {
-                Set(ref _ListeGroupe, value);
+                SetListe(ref _ListeGroupe, value);
             }
         }
 
@@ -133,7 +136,7 @@ namespace Compta
             }
             set
             {
-                Set(ref _ListeCompte, value);
+                SetListe(ref _ListeCompte, value);
             }
         }
     }

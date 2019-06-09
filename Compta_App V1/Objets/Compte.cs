@@ -55,11 +55,15 @@ namespace Compta
             set
             {
                 // pour ne pas avoir la possibilité d'un groupe sans compte
-                if (EstCharge && _Groupe != null && _Groupe.EstCharge && (_Groupe != value) && (_Groupe.ListeCompte.Count == 1))
+                if (_Groupe != null && !_Groupe.ModeSupprimer && (_Groupe != value) && _Groupe.EstCharge && EstCharge && (_Groupe.ListeCompte.Count == 1))
                 {
+                    Log.Message("Impossible de supprimer le compte");
                     SetObjetGestion(ref _Groupe, _Groupe, this, true);
                     return;
                 }
+
+                if (_Groupe != null && (_Groupe != value) && _Groupe.EstCharge && EstCharge)
+                    _Groupe.ListeCompte.Supprimer(this);
 
                 if (SetObjetGestion(ref _Groupe, value, this))
                     _Groupe.ListeCompte.Ajouter(this);
@@ -87,7 +91,11 @@ namespace Compta
         public Double SoldeInitial
         {
             get { return _SoldeInitial; }
-            set { Set(ref _SoldeInitial, value, this); }
+            set
+            {
+                if (Set(ref _SoldeInitial, value, this))
+                    Calculer();
+            }
         }
 
         private Double _Solde = 0;
@@ -111,7 +119,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeLigneBanque, value);
+                SetListe(ref _ListeLigneBanque, value);
             }
         }
 
@@ -132,7 +140,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeLigneCompta, value);
+                SetListe(ref _ListeLigneCompta, value);
             }
         }
 
@@ -169,6 +177,12 @@ namespace Compta
 
             if (Groupe.ListeCompte.Count > 1)
             {
+                foreach (var lb in ListeLigneBanque)
+                    lb.Groupe = Societe.ListeGroupe[0];
+
+                foreach (var lc in ListeLigneCompta)
+                    lc.Groupe = Societe.ListeGroupe[0];
+
                 Groupe.ListeCompte.Supprimer(this);
                 Societe.ListeCompte.Supprimer(this);
 

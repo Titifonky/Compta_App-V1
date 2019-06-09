@@ -128,7 +128,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeGroupe, value);
+                SetListe(ref _ListeGroupe, value);
             }
         }
 
@@ -170,7 +170,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeCompte, value);
+                SetListe(ref _ListeCompte, value);
             }
         }
 
@@ -346,7 +346,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeLigneBanque, value);
+                SetListe(ref _ListeLigneBanque, value);
             }
         }
 

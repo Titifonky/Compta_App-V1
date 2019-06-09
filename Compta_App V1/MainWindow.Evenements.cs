@@ -121,6 +121,11 @@ namespace Compta
                 if (OB != null)
                 {
                     OB.Editer = !OB.Editer;
+
+                    Compte C = OB as Compte;
+                    if (C != null)
+                        C.Groupe.Editer = !C.Groupe.Editer;
+
                     return;
                 }
             }
@@ -627,6 +632,27 @@ namespace Compta
                 L.Supprimer();
         }
 
+        private void Ajouter_Groupe_Click(object sender, RoutedEventArgs e)
+        {
+            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
+            Compte L = (Compte)V.SelectedItem;
+
+            if (L != null)
+                new Groupe(L.Societe);
+        }
+
+        private void Supprimer_Groupe_Click(object sender, RoutedEventArgs e)
+        {
+            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
+            Compte L = (Compte)V.SelectedItem;
+
+            if (L != null)
+            {
+                Groupe G = L.Groupe;
+                G.Supprimer();
+            }
+        }
+
         #endregion
 
         private void Atteindre_Click(object sender, RoutedEventArgs e)
@@ -641,6 +667,14 @@ namespace Compta
                 xListeEcritureBanque.SelectedItem = L.EcritureBanque;
                 
             }
+        }
+
+        private void xListeCompte_Loaded(object sender, RoutedEventArgs e)
+        {
+            //ICollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(xListeCompte.ItemsSource);
+            //view.SortDescriptions.Add(new SortDescription("Groupe", ListSortDirection.Ascending));
+
+            //xListeCompte.ItemsSource = view;
         }
 
         #region LISTVIEW

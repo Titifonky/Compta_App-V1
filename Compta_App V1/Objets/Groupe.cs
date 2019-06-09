@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Compta
@@ -10,6 +11,7 @@ namespace Compta
         public Groupe(Societe societe)
         {
             Bdd.Ajouter(this);
+            Nom = "Nouveau groupe";
 
             Societe = societe;
             Compte C = new Compte(this);
@@ -37,7 +39,7 @@ namespace Compta
             set
             {
                 if (SetObjetGestion(ref _Societe, value, this))
-                    _Societe.ListeGroupe.Add(this);
+                    _Societe.ListeGroupe.Ajouter(this);
             }
         }
 
@@ -46,7 +48,12 @@ namespace Compta
         public String Nom
         {
             get { return _Nom; }
-            set { Set(ref _Nom, value, this); }
+            set
+            {
+                if(Set(ref _Nom, value, this))
+                {
+                }
+            }
         }
 
         private String _Description = "";
@@ -69,19 +76,32 @@ namespace Compta
             }
             set
             {
-                Set(ref _ListeCompte, value);
+                SetListe(ref _ListeCompte, value);
             }
         }
 
+        public Boolean ModeSupprimer = false;
+
         public override Boolean Supprimer()
         {
-            if (!EstCharge) return false;
+            if (!EstCharge || (Societe.ListeGroupe.IndexOf(this) == 0)) return false;
 
-            SupprimerListe(_ListeCompte);
+            ModeSupprimer = true;
 
-            Societe.ListeGroupe.Remove(this);
+            List<Compte> LC = new List<Compte>();
 
-            Bdd.Supprimer<Groupe>(this);
+            foreach (var c in ListeCompte)
+                LC.Add(c);
+
+            foreach (var c in LC)
+                c.Groupe = null;
+
+            foreach (var c in LC)
+                c.Groupe = Societe.ListeGroupe[0];
+
+            Societe.ListeGroupe.Supprimer(this);
+
+            Bdd.Supprimer(this);
             return true;
         }
     }

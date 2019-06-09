@@ -654,6 +654,7 @@
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.CanContentScroll="False"
                                          SelectionMode="Extended"
+                                         Loaded="xListeCompte_Loaded"
                                          >
                                     <ListBox.GroupStyle>
                                         <GroupStyle>
@@ -690,8 +691,10 @@
                                     </ListBox.GroupStyle>
                                     <ListBox.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Ajouter" Click="Ajouter_Compte_Click"/>
-                                            <MenuItem Header="Supprimer" Click="Supprimer_Compte_Click"/>
+                                            <MenuItem Header="Ajouter un compte" Click="Ajouter_Compte_Click"/>
+                                            <MenuItem Header="Supprimer le compte" Click="Supprimer_Compte_Click"/>
+                                            <MenuItem Header="Ajouter un groupe" Click="Ajouter_Groupe_Click"/>
+                                            <MenuItem Header="Supprimer le groupe" Click="Supprimer_Groupe_Click"/>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>
                                 </ListBox>
@@ -703,6 +706,7 @@
 
                     <Grid Grid.Column="2">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
@@ -728,17 +732,33 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <local:Texte Grid.Column="0" Valeur="{Binding Groupe.Nom}" Margin="5,0,5,0" Intitule="True" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Groupe.Editer}"/>
+                                <local:Texte Grid.Column="1" Valeur="{Binding Groupe.Description}" Intitule="True" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Groupe.Editer}"/>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="2"
+                                Padding="5"
+                                Margin="0,0,0,3"
+                                DataContext="{Binding Path=SelectedValue, ElementName=xListeCompte}"
+                                MouseDown="Editer_MouseDown"
+                                >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <local:ListeObjet Grid.Column="0" ItemsSource="{Binding Societe.ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Editer}"/>
                                 <local:Texte Grid.Column="1" Valeur="{Binding Nom}" Margin="5,0,5,0" Intitule="True" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Editer}"/>
                                 <local:Texte Grid.Column="2" Valeur="{Binding Description}" Intitule="True" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Editer}"/>
-                                <local:Texte Grid.Column="3" Valeur="{Binding Solde}" Margin="5,0,5,0" Intitule="True" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                                <local:Texte Grid.Column="4" Valeur="{Binding SoldeInitial}" Intitule="True" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Editer}"/>
+                                <local:Texte Grid.Column="3" Valeur="{Binding Solde}" Margin="5,0,5,0" TextAlignment="Right" Intitule="True" Info="True" TextWrapping="NoWrap" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                <local:Texte Grid.Column="4" Valeur="{Binding SoldeInitial}" TextAlignment="Right" Intitule="True" Info="True" TextWrapping="NoWrap" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Editable="{Binding Editer}"/>
                             </Grid>
                         </Border>
-                        <Border Grid.Row="2"
+                        <Border Grid.Row="3"
                                 Padding="5"
                                 >
                             <Grid Grid.Row="1"

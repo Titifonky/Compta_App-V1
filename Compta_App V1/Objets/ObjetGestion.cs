@@ -134,7 +134,7 @@ namespace Compta
             where V : ObjetGestion
         {
             Boolean test = true;
-            if ( (value == null || !value.EstCharge) || (Objet == null || !Objet.EstCharge)) test = false;
+            if ((value == null) || (value != null && !value.EstCharge) || !Objet.EstCharge) test = false;
 
             if (ForcerUpdate || !EqualityComparer<U>.Default.Equals(field, value))
             {
@@ -147,9 +147,8 @@ namespace Compta
             return test;
         }
 
-        protected bool Set<U>(ref U field, U value, [CallerMemberName]string propertyName = "")
+        protected bool SetListe<U>(ref U field, U value, [CallerMemberName]string propertyName = "")
         {
-            if (EqualityComparer<U>.Default.Equals(field, value)) { return false; }
             field = value;
             OnPropertyChanged(propertyName);
             return true;

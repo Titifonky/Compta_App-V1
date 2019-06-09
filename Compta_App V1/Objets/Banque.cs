@@ -93,7 +93,7 @@ namespace Compta
 
             set
             {
-                Set(ref _ListeEcritureBanque, value);
+                SetListe(ref _ListeEcritureBanque, value);
             }
         }
 
