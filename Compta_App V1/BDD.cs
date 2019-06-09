@@ -127,7 +127,10 @@ namespace Compta
         public static Boolean Initialiser(String NomBase)
         {
             if (!Connecter(NomBase))
+            {
+                Log.Message("La connexion a echoué");
                 return false;
+            }
 
             String pChemin = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @FichierMapping);
 

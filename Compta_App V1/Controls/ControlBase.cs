@@ -25,5 +25,9 @@ namespace Compta
             catch { }
             return false;
         }
+
+        protected String Objet = "";
+        protected String ProprieteValeur = "";
+        protected String TypeProprieteValeur = "";
     }
 }

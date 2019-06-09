@@ -59,6 +59,7 @@ namespace Compta
             if (!Bdd.Initialiser(BaseSelectionnee))
             {
                 Log.Message("Impossible de se connecter à la base");
+                MessageBox.Show("Impossible de se connecter à la base");
                 return false;
             }
 

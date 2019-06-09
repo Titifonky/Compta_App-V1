@@ -76,56 +76,50 @@ namespace Compta
             catch { }
         }
 
+        private void MajValeur()
+        {
+            if (Intitule == true)
+                xIntitule.Visibility = Visibility.Visible;
+            else
+                xIntitule.Visibility = Visibility.Collapsed;
+
+            if (IntituleDerriere == true)
+            {
+                Grid.SetColumn(xIntitule, 1);
+                Grid.SetColumn(xValeur, 0);
+                xIntitule.Margin = new Thickness(5, 0, 0, 0);
+            }
+        }
+
+        private void MajIntituleDerriere()
+        {
+            String pIntitule = DicIntitules.Intitule(Objet, ProprieteIntituleDerriere);
+            if (IntituleDerriere == false)
+                pIntitule = pIntitule + " :";
+
+            xIntitule.Text = pIntitule;
+        }
+
+        protected String ProprieteIntituleDerriere = "";
+        protected String TypeProprieteIntituleDerriere = "";
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            ApplyEditable();
-
-            if (e.Property == IntituleDerriereDP)
+            if ((e.Property == ValeurDP) && String.IsNullOrWhiteSpace(Objet))
             {
-                String Objet = "";
-                String Propriete = "";
-                String TypePropriete = "";
-
-                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
-                {
-                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                    if (IntituleDerriere == false)
-                        pIntitule = pIntitule + " :";
-
-                    xIntitule.Text = pIntitule;
-                }
+                InfosBinding(ValeurDP, ref Objet, ref ProprieteValeur, ref TypeProprieteValeur);
+                InfosBinding(IntituleDerriereDP, ref Objet, ref ProprieteIntituleDerriere, ref TypeProprieteIntituleDerriere);
             }
 
-            if (e.Property == ValeurDP)
+            if (IsLoaded)
             {
-                if (Intitule == true)
-                    xIntitule.Visibility = Visibility.Visible;
-                else
-                    xIntitule.Visibility = Visibility.Collapsed;
+                ApplyEditable();
 
-                if (IntituleDerriere == true)
-                {
-                    Grid.SetColumn(xIntitule, 1);
-                    Grid.SetColumn(xValeur, 0);
-                    xIntitule.Margin = new Thickness(5, 0, 0, 0);
-                }
+                if (e.Property == IntituleDerriereDP)
+                    MajIntituleDerriere();
 
-                String Objet = "";
-                String Propriete = "";
-                String TypePropriete = "";
-
-                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
-                {
-                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                    if (IntituleDerriere == false)
-                        pIntitule = pIntitule + " :";
-
-                    xIntitule.Text = pIntitule;
-
-                    String ToolTip = DicIntitules.Info(Objet, Propriete);
-                    if (!String.IsNullOrWhiteSpace(ToolTip))
-                        xBase.ToolTip = ToolTip;
-                }
+                if (e.Property == ValeurDP)
+                    MajValeur();
             }
 
             base.OnPropertyChanged(e);
@@ -133,7 +127,25 @@ namespace Compta
 
         public Case()
         {
+            Loaded += Case_Loaded;
             InitializeComponent();
+        }
+
+        private void Case_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplyEditable();
+            MajIntituleDerriere();
+            MajValeur();
+
+            String pIntitule = DicIntitules.Intitule(Objet, ProprieteValeur);
+            if (IntituleDerriere == false)
+                pIntitule = pIntitule + " :";
+
+            xIntitule.Text = pIntitule;
+
+            String ToolTip = DicIntitules.Info(Objet, ProprieteValeur);
+            if (!String.IsNullOrWhiteSpace(ToolTip))
+                xBase.ToolTip = ToolTip;
         }
     }
 }

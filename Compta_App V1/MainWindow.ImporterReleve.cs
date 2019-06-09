@@ -33,7 +33,7 @@ namespace Compta
 
                 try
                 {
-                    Val = (Double)Convert.ChangeType(s, typeof(Double));
+                    Val = (Double)Convert.ChangeType(s.Replace(',','.'), typeof(Double));
                 }
                 catch
                 {

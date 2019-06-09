@@ -84,30 +84,25 @@ namespace Compta
             catch { }
         }
 
+        private void MajValeur()
+        {
+            if (Intitule == true)
+                xIntitule.Visibility = Visibility.Visible;
+            else
+                xIntitule.Visibility = Visibility.Collapsed;
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            ApplyEditable();
+            if ((e.Property == ValeurDP) && String.IsNullOrWhiteSpace(Objet))
+                InfosBinding(ValeurDP, ref Objet, ref ProprieteValeur, ref TypeProprieteValeur);
 
-            if (e.Property == ValeurDP)
+            if (IsLoaded)
             {
-                if (Intitule == true)
-                    xIntitule.Visibility = Visibility.Visible;
-                else
-                    xIntitule.Visibility = Visibility.Collapsed;
+                ApplyEditable();
 
-                String Objet = "";
-                String Propriete = "";
-                String TypePropriete = "";
-
-                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
-                {
-                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                    xIntitule.Text = pIntitule + " :";
-
-                    String ToolTip = DicIntitules.Info(Objet, Propriete);
-                    if (!String.IsNullOrWhiteSpace(ToolTip) && (Info == true))
-                        xBase.ToolTip = ToolTip;
-                }
+                if (e.Property == ValeurDP)
+                    MajValeur();
             }
 
             base.OnPropertyChanged(e);
@@ -115,7 +110,19 @@ namespace Compta
 
         public Date()
         {
+            Loaded += Date_Loaded;
             InitializeComponent();
+        }
+
+        private void Date_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplyEditable();
+            MajValeur();
+
+            xIntitule.Text = DicIntitules.Intitule(Objet, ProprieteValeur) + " :";
+            String ToolTip = DicIntitules.Info(Objet, ProprieteValeur);
+            if (!String.IsNullOrWhiteSpace(ToolTip) && (Info == true))
+                xBase.ToolTip = ToolTip;
         }
     }
 }

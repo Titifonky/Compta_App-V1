@@ -103,30 +103,25 @@ namespace Compta
             catch { }
         }
 
+        private void MajSelectedValue()
+        {
+            if (Intitule == true)
+                xIntitule.Visibility = Visibility.Visible;
+            else
+                xIntitule.Visibility = Visibility.Collapsed;
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            ApplyEditable();
+            if ((e.Property == SelectedValueDP) && String.IsNullOrWhiteSpace(Objet))
+                InfosBinding(SelectedValueDP, ref Objet, ref ProprieteValeur, ref TypeProprieteValeur);
 
-            if (e.Property == SelectedValueDP)
+            if (IsLoaded)
             {
-                if (Intitule == true)
-                    xIntitule.Visibility = Visibility.Visible;
-                else
-                    xIntitule.Visibility = Visibility.Collapsed;
+                ApplyEditable();
 
-                String Objet = "";
-                String Propriete = "";
-                String TypePropriete = "";
-
-                if (InfosBinding(e.Property, ref Objet, ref Propriete, ref TypePropriete))
-                {
-                    String pIntitule = DicIntitules.Intitule(Objet, Propriete);
-                    xIntitule.Text = pIntitule + " :";
-
-                    String ToolTip = DicIntitules.Info(Objet, Propriete);
-                    if (!String.IsNullOrWhiteSpace(ToolTip))
-                        xBase.ToolTip = ToolTip;
-                }
+                if (e.Property == SelectedValueDP)
+                    MajSelectedValue();
             }
 
             base.OnPropertyChanged(e);
@@ -134,20 +129,20 @@ namespace Compta
 
         public ListeObjet()
         {
+            Loaded += ListeObjet_Loaded;
             InitializeComponent();
+        }
 
-            if (Intitule == true)
-                xIntitule.Visibility = Visibility.Visible;
-            else
-                xIntitule.Visibility = Visibility.Collapsed;
+        private void ListeObjet_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplyEditable();
+            MajSelectedValue();
 
-            if (Editable == true)
-                xValeur.IsHitTestVisible = true;
-            else
-            {
-                xValeur.IsHitTestVisible = false;
-                xValeur.ToolTip = null;
-            }
+            xIntitule.Text = DicIntitules.Intitule(Objet, ProprieteValeur) + " :";
+
+            String ToolTip = DicIntitules.Info(Objet, ProprieteValeur);
+            if (!String.IsNullOrWhiteSpace(ToolTip))
+                xBase.ToolTip = ToolTip;
         }
     }
 }

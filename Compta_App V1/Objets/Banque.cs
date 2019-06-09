@@ -85,7 +85,7 @@ namespace Compta
                 if (_ListeEcritureBanque == null)
                 {
                     _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
-                    _ListeEcritureBanque.Trier += (a, b) => {Log.Message(a.DateValeur + " comp " + b.DateValeur + " " + a.DateValeur.CompareTo(b.DateValeur)); return a.DateValeur.CompareTo(b.DateValeur); };
+                    _ListeEcritureBanque.Trier += (a, b) => { return a.DateValeur.CompareTo(b.DateValeur); };
                 }
 
                 return _ListeEcritureBanque;
