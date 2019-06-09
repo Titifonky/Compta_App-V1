@@ -157,17 +157,19 @@ Seules les colonnes à modifier sont nécessaires.
           </Insert>
           <Insert>
             <Valeur name="no">2</Valeur>
-            <Valeur name="nom">-</Valeur>
+            <Valeur name="nom">Alex Maçon</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">3</Valeur>
-            <Valeur name="nom">-</Valeur>
+            <Valeur name="nom">Anor Médiathèque</Valeur>
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
-            <Valeur name="groupe">3</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
           </Insert>
           <Insert>
             <Valeur name="no">4</Valeur>
@@ -175,6 +177,1039 @@ Seules les colonnes à modifier sont nécessaires.
             <Valeur name="description"></Valeur>
             <Valeur name="societe">1</Valeur>
             <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">5</Valeur>
+            <Valeur name="nom">Compagnons du Devoir</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">6</Valeur>
+            <Valeur name="nom">Courrieres Harmonie</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">7</Valeur>
+            <Valeur name="nom">Deco Menuiserie</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">8</Valeur>
+            <Valeur name="nom">Mayelle Leroy</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">9</Valeur>
+            <Valeur name="nom">Vdsq Thery</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">10</Valeur>
+            <Valeur name="nom">Ville de Lille</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">2</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">11</Valeur>
+            <Valeur name="nom">Amendes</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">12</Valeur>
+            <Valeur name="nom">Assurance</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">13</Valeur>
+            <Valeur name="nom">Carburant</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">14</Valeur>
+            <Valeur name="nom">Charges sociales</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">15</Valeur>
+            <Valeur name="nom">Déplacement</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">16</Valeur>
+            <Valeur name="nom">Divers Administration</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">17</Valeur>
+            <Valeur name="nom">Entretien</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">18</Valeur>
+            <Valeur name="nom">Frais de banque</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">19</Valeur>
+            <Valeur name="nom">Informatique</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">20</Valeur>
+            <Valeur name="nom">Loyer</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">21</Valeur>
+            <Valeur name="nom">Péage</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">22</Valeur>
+            <Valeur name="nom">Prêt equip</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">23</Valeur>
+            <Valeur name="nom">Prêt treso</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">24</Valeur>
+            <Valeur name="nom">Prêt Voiture</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">25</Valeur>
+            <Valeur name="nom">Rbst CCA Etienne</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">26</Valeur>
+            <Valeur name="nom">Rbst Treso</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">27</Valeur>
+            <Valeur name="nom">Resto</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">28</Valeur>
+            <Valeur name="nom">Salaire</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">29</Valeur>
+            <Valeur name="nom">TVA</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">3</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">30</Valeur>
+            <Valeur name="nom">123Roulement</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">31</Valeur>
+            <Valeur name="nom">ACGR</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">32</Valeur>
+            <Valeur name="nom">Air Liquide</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">33</Valeur>
+            <Valeur name="nom">Akzonobel</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">34</Valeur>
+            <Valeur name="nom">Atelier Du Verre</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">35</Valeur>
+            <Valeur name="nom">Auger structure</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">36</Valeur>
+            <Valeur name="nom">BBA Embalages</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">37</Valeur>
+            <Valeur name="nom">Bossu Cuvelier</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">38</Valeur>
+            <Valeur name="nom">Brico depot</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">39</Valeur>
+            <Valeur name="nom">Carglass</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">40</Valeur>
+            <Valeur name="nom">Carniere Defossez</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">41</Valeur>
+            <Valeur name="nom">Carrefour</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">42</Valeur>
+            <Valeur name="nom">Castorama</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">43</Valeur>
+            <Valeur name="nom">CIR Caillebotis</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">44</Valeur>
+            <Valeur name="nom">Cloture du Douaisis</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">45</Valeur>
+            <Valeur name="nom">Comey</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">46</Valeur>
+            <Valeur name="nom">Conforti</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">47</Valeur>
+            <Valeur name="nom">Couleur De Tollens</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">48</Valeur>
+            <Valeur name="nom">Dardenne peintures</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">49</Valeur>
+            <Valeur name="nom">David Vincent Soudure</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">50</Valeur>
+            <Valeur name="nom">Davo</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">51</Valeur>
+            <Valeur name="nom">Dematis</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">52</Valeur>
+            <Valeur name="nom">Design production</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">53</Valeur>
+            <Valeur name="nom">Dessenne</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">54</Valeur>
+            <Valeur name="nom">D'halluin</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">55</Valeur>
+            <Valeur name="nom">Diamond</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">56</Valeur>
+            <Valeur name="nom">Dibon</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">57</Valeur>
+            <Valeur name="nom">Dimatex</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">58</Valeur>
+            <Valeur name="nom">Emile Maurin</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">59</Valeur>
+            <Valeur name="nom">Ergalis</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">60</Valeur>
+            <Valeur name="nom">ESC Europe Sanitaire Chauffage</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">61</Valeur>
+            <Valeur name="nom">Europodium</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">62</Valeur>
+            <Valeur name="nom">Fabory</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">63</Valeur>
+            <Valeur name="nom">Foussier</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">64</Valeur>
+            <Valeur name="nom">France Air</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">65</Valeur>
+            <Valeur name="nom">France galva</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">66</Valeur>
+            <Valeur name="nom">Gaines Thermoretractables</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">67</Valeur>
+            <Valeur name="nom">Glassolutions</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">68</Valeur>
+            <Valeur name="nom">Go Tronic</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">69</Valeur>
+            <Valeur name="nom">Google</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">70</Valeur>
+            <Valeur name="nom">Hedon</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">71</Valeur>
+            <Valeur name="nom">Hoornaert</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">72</Valeur>
+            <Valeur name="nom">Huon</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">73</Valeur>
+            <Valeur name="nom">JV Batiment</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">74</Valeur>
+            <Valeur name="nom">Kdi</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">75</Valeur>
+            <Valeur name="nom">Kiloutou</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">76</Valeur>
+            <Valeur name="nom">La Poste</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">77</Valeur>
+            <Valeur name="nom">Laser Performance</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">78</Valeur>
+            <Valeur name="nom">LD access</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">79</Valeur>
+            <Valeur name="nom">Le Comptoir Marsault</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">80</Valeur>
+            <Valeur name="nom">Leascorp SW</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">81</Valeur>
+            <Valeur name="nom">Legallais</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">82</Valeur>
+            <Valeur name="nom">LeLorrain</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">83</Valeur>
+            <Valeur name="nom">Leroy Merlin</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">84</Valeur>
+            <Valeur name="nom">Levanor</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">85</Valeur>
+            <Valeur name="nom">Lobel</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">86</Valeur>
+            <Valeur name="nom">Master Outillage</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">87</Valeur>
+            <Valeur name="nom">Materiaux Du Bavaisis</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">88</Valeur>
+            <Valeur name="nom">Mayelle</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">89</Valeur>
+            <Valeur name="nom">MCB</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">90</Valeur>
+            <Valeur name="nom">MCB Ménage</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">91</Valeur>
+            <Valeur name="nom">Metaux Express</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">92</Valeur>
+            <Valeur name="nom">Meurant</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">93</Valeur>
+            <Valeur name="nom">Morisaux Scierie</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">94</Valeur>
+            <Valeur name="nom">Nord Laser Tube</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">95</Valeur>
+            <Valeur name="nom">OAP</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">96</Valeur>
+            <Valeur name="nom">Picard serrure</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">97</Valeur>
+            <Valeur name="nom">Profilclo</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">98</Valeur>
+            <Valeur name="nom">Quincaillerie Picarde</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">99</Valeur>
+            <Valeur name="nom">Racetools</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">100</Valeur>
+            <Valeur name="nom">Repro Center</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">101</Valeur>
+            <Valeur name="nom">Rexel</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">102</Valeur>
+            <Valeur name="nom">SAFE</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">103</Valeur>
+            <Valeur name="nom">Saint Gobain</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">104</Valeur>
+            <Valeur name="nom">Salti</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">105</Valeur>
+            <Valeur name="nom">Samaro</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">106</Valeur>
+            <Valeur name="nom">SFEC</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">107</Valeur>
+            <Valeur name="nom">Siligom</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">108</Valeur>
+            <Valeur name="nom">Sncf</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">109</Valeur>
+            <Valeur name="nom">Solidworks</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">110</Valeur>
+            <Valeur name="nom">Speed Laser</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">111</Valeur>
+            <Valeur name="nom">Sud Loire Service</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">112</Valeur>
+            <Valeur name="nom">Technicoupe</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">113</Valeur>
+            <Valeur name="nom">Tollens</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">114</Valeur>
+            <Valeur name="nom">Trenois</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">115</Valeur>
+            <Valeur name="nom">TS métaux</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">116</Valeur>
+            <Valeur name="nom">TSR</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">117</Valeur>
+            <Valeur name="nom">Tubolaser</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">118</Valeur>
+            <Valeur name="nom">Unsteel</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">119</Valeur>
+            <Valeur name="nom">Vaco</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">120</Valeur>
+            <Valeur name="nom">Valoutil</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">121</Valeur>
+            <Valeur name="nom">Vente privé</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">122</Valeur>
+            <Valeur name="nom">Woood</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">4</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">123</Valeur>
+            <Valeur name="nom">Lefebvre Christian Ets.</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">5</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">124</Valeur>
+            <Valeur name="nom">Ramery</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">5</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">125</Valeur>
+            <Valeur name="nom">SJD batiment</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">5</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">126</Valeur>
+            <Valeur name="nom">Constructys</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">127</Valeur>
+            <Valeur name="nom">Financement</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">128</Valeur>
+            <Valeur name="nom">Rbst Frais de banque</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">129</Valeur>
+            <Valeur name="nom">Rbst TVA</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">130</Valeur>
+            <Valeur name="nom">Rejet Virement</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">131</Valeur>
+            <Valeur name="nom">Remboursement</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">132</Valeur>
+            <Valeur name="nom">Subvention</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
+          </Insert>
+          <Insert>
+            <Valeur name="no">133</Valeur>
+            <Valeur name="nom">Treso</Valeur>
+            <Valeur name="description"></Valeur>
+            <Valeur name="societe">1</Valeur>
+            <Valeur name="groupe">6</Valeur>
+            <Valeur name="supprimable">1</Valeur>
           </Insert>
         </Table>
       </Tables>
