@@ -50,7 +50,7 @@ namespace Compta
             DependencyProperty.Register("Valeur", typeof(object),
               typeof(Date), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        private void ApplyEditable()
+        private void MajEditable()
         {
             if (xBase == null || xValeur == null) return;
 
@@ -99,7 +99,8 @@ namespace Compta
 
             if (IsLoaded)
             {
-                ApplyEditable();
+                if (e.Property == EditableDP)
+                    MajEditable();
 
                 if (e.Property == ValeurDP)
                     MajValeur();
@@ -116,7 +117,7 @@ namespace Compta
 
         private void Date_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyEditable();
+            MajEditable();
             MajValeur();
 
             xIntitule.Text = DicIntitules.Intitule(Objet, ProprieteValeur) + " :";

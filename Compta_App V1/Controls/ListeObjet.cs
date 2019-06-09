@@ -72,7 +72,7 @@ namespace Compta
             DependencyProperty.Register("ItemsSource", typeof(object),
               typeof(ListeObjet), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         
-        private void ApplyEditable()
+        private void MajEditable()
         {
             if (xBase == null || xValeur == null) return;
 
@@ -118,7 +118,8 @@ namespace Compta
 
             if (IsLoaded)
             {
-                ApplyEditable();
+                if (e.Property == EditableDP)
+                    MajEditable();
 
                 if (e.Property == SelectedValueDP)
                     MajSelectedValue();
@@ -135,7 +136,7 @@ namespace Compta
 
         private void ListeObjet_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyEditable();
+            MajEditable();
             MajSelectedValue();
 
             xIntitule.Text = DicIntitules.Intitule(Objet, ProprieteValeur) + " :";

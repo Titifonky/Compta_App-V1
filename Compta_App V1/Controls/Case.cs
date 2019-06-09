@@ -52,7 +52,7 @@ namespace Compta
             DependencyProperty.Register("Valeur", typeof(object),
               typeof(Case), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        private void ApplyEditable()
+        private void MajEditable()
         {
             if (xBase == null || xValeur == null) return;
 
@@ -113,7 +113,8 @@ namespace Compta
 
             if (IsLoaded)
             {
-                ApplyEditable();
+                if (e.Property == EditableDP)
+                    MajEditable();
 
                 if (e.Property == IntituleDerriereDP)
                     MajIntituleDerriere();
@@ -133,7 +134,7 @@ namespace Compta
 
         private void Case_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyEditable();
+            MajEditable();
             MajIntituleDerriere();
             MajValeur();
 

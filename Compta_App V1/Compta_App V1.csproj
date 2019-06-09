@@ -126,7 +126,6 @@
     <Compile Include="SelectionnerBase.xaml.cs">
       <DependentUpon>SelectionnerBase.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ToggleBouton.cs" />
     <Compile Include="Impression.cs" />
     <Compile Include="Controls\ControlBase.cs" />
     <Compile Include="Controls\RechercherDossier.cs" />
@@ -135,7 +134,6 @@
     <Compile Include="Controls\Intitule.cs" />
     <Compile Include="Controls\ListeObjet.cs" />
     <Compile Include="Controls\ListeEnum.cs" />
-    <Compile Include="Controls\Entete.cs" />
     <Compile Include="Controls\Date.cs" />
     <Compile Include="Controls\GridExpander.cs" />
     <Compile Include="Controls\Texte.cs" />
@@ -155,10 +153,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ToggleBouton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\Case.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -172,10 +166,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ListeEnum.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Entete.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
