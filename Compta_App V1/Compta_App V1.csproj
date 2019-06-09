@@ -113,6 +113,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Entete.cs" />
+    <Compile Include="Controls\ToggleBouton.cs" />
     <Compile Include="DicIntitules.cs" />
     <Compile Include="MainWindow.ImporterReleve.cs" />
     <Compile Include="Objets\Compte.cs" />
@@ -145,6 +147,14 @@
     <Compile Include="Objets\Version.cs" />
     <Compile Include="Recherche.cs" />
     <Compile Include="Settings.cs" />
+    <Page Include="Controls\Entete.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ToggleBouton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SelectionnerBase.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
