@@ -129,7 +129,7 @@ namespace Compta
             set
             {
                 if (EstCharge && !EcritureBanque.Ventiler)
-                    value = false;
+                    value = EcritureBanque.Compta;
 
                 Set(ref _Compta, value, this);
             }
