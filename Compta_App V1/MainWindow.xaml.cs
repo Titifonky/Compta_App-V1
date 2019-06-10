@@ -85,6 +85,9 @@ namespace Compta
             _RechercherCompte = new RechercheTexte<Compte>(xListeCompte);
             xRechercherCompte.DataContext = _RechercherCompte;
 
+            foreach (var cp in pSociete.ListeCompte)
+                cp.Calculer();
+
             return true;
         }
 
