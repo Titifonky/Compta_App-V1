@@ -233,6 +233,7 @@
     <Content Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Comptes 2019.xlsm" />
     <None Include="Etienne.snk" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
