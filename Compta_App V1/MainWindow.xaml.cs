@@ -85,8 +85,8 @@ namespace Compta
             _RechercherCompte = new RechercheTexte<Compte>(xListeCompte);
             xRechercherCompte.DataContext = _RechercherCompte;
 
-            foreach (var cp in pSociete.ListeBanque[0].ListeEcritureBanque)
-                cp.Pointer = false;
+            //foreach (var cp in pSociete.ListeBanque[0].ListeEcritureBanque)
+            //    cp.Pointer = false;
 
             return true;
         }
