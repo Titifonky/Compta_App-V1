@@ -35,6 +35,24 @@ namespace Compta
             }
         }
 
+        //public new Boolean Editer
+        //{
+        //    get
+        //    {
+        //        if (EstCharge && !EcritureBanque.Ventiler)
+        //            _Editer = false;
+
+        //        return _Editer;
+        //    }
+        //    set
+        //    {
+        //        if (EstCharge && !EcritureBanque.Ventiler)
+        //            value = false;
+
+        //        Set(ref _Editer, value, this);
+        //    }
+        //}
+
         private ListeObservable<Groupe> _ListeGroupe = null;
         public ListeObservable<Groupe> ListeGroupe
         {
@@ -146,8 +164,8 @@ namespace Compta
         {
             if (!EstCharge) return false;
 
-            if (EcritureBanque != null)
-                EcritureBanque.ListeLigneBanque.Remove(this);
+            EcritureBanque.ListeLigneBanque.Remove(this);
+            Compte.ListeLigneBanque.Remove(this);
 
             Bdd.Supprimer(this);
 

@@ -291,7 +291,7 @@
             </DataTemplate.Resources>
             <Border Margin="0"
                     Padding="0"
-                    
+                    MouseDown="Editer_MouseDown"
                     >
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -362,7 +362,7 @@
                         </Grid.ColumnDefinitions>
                         <local:Texte Grid.Column="0" Valeur="{Binding Nom}" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                         <local:Texte Grid.Column="1" Valeur="{Binding Description}" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding Nb}" Margin="5,0,10,0" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        <local:Texte Grid.Column="2" Valeur="{Binding Nb, Mode=TwoWay}" Margin="5,0,10,0" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                         <local:Texte Grid.Column="3" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                     </Grid>
                 </Grid>

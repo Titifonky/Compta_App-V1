@@ -120,6 +120,8 @@ namespace Compta
                 {
                     ListeLigneBanque.OnAjouter += (a, b) => CalculerNb();
                     ListeLigneBanque.OnSupprimer += (a, b) => CalculerNb();
+                    ListeLigneCompta.OnAjouter += (a, b) => CalculerNb();
+                    ListeLigneCompta.OnSupprimer += (a, b) => CalculerNb();
                     _Nb = (ListeLigneBanque.Count + ListeLigneCompta.Count).ToString();
                 }
 

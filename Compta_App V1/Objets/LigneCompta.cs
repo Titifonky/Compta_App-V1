@@ -144,8 +144,9 @@ namespace Compta
         {
             if (!EstCharge) return false;
 
-            if (Societe != null)
-                Societe.ListeLigneCompta.Remove(this);
+            Societe.ListeLigneCompta.Remove(this);
+            Compte.ListeLigneCompta.Remove(this);
+
 
             Bdd.Supprimer(this);
 
