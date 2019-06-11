@@ -152,6 +152,8 @@ namespace Compta
                 {
                     ListeCompte = _Groupe.ListeCompte;
                     Compte = ListeCompte[0];
+
+                    Log.Message("Set compte : " + Compte.Nom);
                 }
 
                 EditionGroupe = false;
@@ -191,7 +193,6 @@ namespace Compta
             }
             set
             {
-                Log.Message("EB Compte " + (Compte != null));
                 if (EditionCompte) return;
 
                 EditionCompte = true;

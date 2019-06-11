@@ -471,7 +471,7 @@ namespace Compta
 
             TempsRequete += DateTime.Now - d;
 
-            Log.Message(TempsRequete);
+            //Log.Message(TempsRequete);
 
             return dt;
         }

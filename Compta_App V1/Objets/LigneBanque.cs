@@ -130,9 +130,7 @@ namespace Compta
                 return _Compte;
             }
             set
-            {
-                Log.Message("LB Compte " + (Compte != null));
-
+            { 
                 if (EditionCompte) return;
 
                 EditionCompte = true;
