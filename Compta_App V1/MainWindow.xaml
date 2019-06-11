@@ -149,10 +149,10 @@
                                         </Style>
                                     </ListView.ItemContainerStyle>
                                     <ListView.Resources>
-                                        <Style TargetType="local:Texte">
+                                        <!--<Style TargetType="local:Texte">
                                             <Setter Property="TextWrapping" Value="NoWrap" />
                                             <EventSetter Event="KeyUp" Handler="Control_KeyUp"/>
-                                        </Style>
+                                        </Style>-->
                                         <Style TargetType="local:ListeEnum">
                                             <EventSetter Event="LostFocus" Handler="Control_LostFocus"/>
                                         </Style>
@@ -256,7 +256,7 @@
                             <local:Case Grid.Column="0" Valeur="{Binding Pointer}" Margin="2,0,2,0" Editable="{Binding Editer}" HorizontalContentAlignment="Center"/>
                             <Border Grid.Column="1" BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
                                 <StackPanel Margin="0,0,3,0" VerticalAlignment="Center">
-                                    <local:Date Valeur="{Binding DateValeur}" Info="True" Editable="False" HorizontalContentAlignment="Left"/>
+                                    <local:Date Valeur="{Binding DateValeur}" Info="True" Editable="{Binding Editer}" HorizontalContentAlignment="Left"/>
                                     <local:Date Valeur="{Binding DateCompta}" Margin="5,0,0,0" Info="True" Editable="{Binding Editer}" HorizontalContentAlignment="Center" FontSize="11"/>
                                 </StackPanel>
                             </Border>
@@ -358,10 +358,12 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
+                            <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
                         <local:Texte Grid.Column="0" Valeur="{Binding Nom}" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                         <local:Texte Grid.Column="1" Valeur="{Binding Description}" Info="True" TextWrapping="NoWrap" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        <local:Texte Grid.Column="2" Valeur="{Binding Nb}" Margin="5,0,10,0" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                        <local:Texte Grid.Column="3" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                     </Grid>
                 </Grid>
             </Border>
@@ -512,18 +514,18 @@
                                          ScrollViewer.CanContentScroll="False"
                                          SelectionMode="Extended"
                                     >
-                                    <ListBox.ItemContainerStyle>
+                                    <!--<ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem">
                                             <Style.Triggers>
                                                 <Trigger Property="IsSelected" Value="True" >
                                                     <Setter Property="FontWeight" Value="Bold" />
-                                                    <Setter Property="Background" Value="Transparent" />
-                                                    <Setter Property="Foreground" Value="Black" />
+                                                    --><!--<Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="Black" />--><!--
                                                 </Trigger>
                                             </Style.Triggers>
 
                                         </Style>
-                                    </ListBox.ItemContainerStyle>
+                                    </ListBox.ItemContainerStyle>-->
                                     <!--<ListBox.Resources>
                                         <Style TargetType="{x:Type ListBoxItem}">
                                             <EventSetter Event="MouseDoubleClick" Handler="Editer_MouseDoubleClick" />

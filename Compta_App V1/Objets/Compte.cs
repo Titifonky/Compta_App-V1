@@ -106,6 +106,28 @@ namespace Compta
             set { Set(ref _Solde, value, this); }
         }
 
+        private void CalculerNb()
+        {
+            Nb = (ListeLigneBanque.Count + ListeLigneCompta.Count).ToString();
+        }
+
+        private String _Nb = "";
+        public String Nb
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_Nb))
+                {
+                    ListeLigneBanque.OnAjouter += (a, b) => CalculerNb();
+                    ListeLigneBanque.OnSupprimer += (a, b) => CalculerNb();
+                    _Nb = (ListeLigneBanque.Count + ListeLigneCompta.Count).ToString();
+                }
+
+                return _Nb;
+            }
+            set { Set(ref _Nb, value, this); }
+        }
+
         private Boolean _Supprimable = true;
         [Propriete]
         public Boolean Supprimable

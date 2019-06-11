@@ -112,6 +112,9 @@ namespace Compta
                 if (_Compte == null)
                     _Compte = Bdd.Parent<Compte, LigneCompta>(this);
 
+                if (_Compte == null)
+                    _Compte = Societe.ListeGroupe[0].ListeCompte[0];
+
                 return _Compte;
             }
             set
