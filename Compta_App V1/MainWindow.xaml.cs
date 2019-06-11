@@ -66,6 +66,12 @@ namespace Compta
             xConnexionCourante.Text = BaseSelectionnee + ", connecté à l'adresse : " + Bdd.ConnexionCourante;
 
             pSociete = Bdd.Liste<Societe>()[0];
+            Bdd.Liste<Banque>();
+            Bdd.Liste<Groupe>();
+            Bdd.Liste<Compte>();
+            Bdd.Liste<EcritureBanque>();
+            Bdd.Liste<LigneBanque>();
+            Bdd.Liste<LigneCompta>();
 
             this.DataContext = pSociete;
 

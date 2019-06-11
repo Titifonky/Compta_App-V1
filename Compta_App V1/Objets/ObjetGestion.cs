@@ -59,7 +59,7 @@ namespace Compta
         }
 
         protected Boolean _Editer = false;
-        public Boolean Editer
+        public virtual Boolean Editer
         {
             get { return _Editer; }
             set { Set(ref _Editer, value, this); }
@@ -121,7 +121,8 @@ namespace Compta
         protected bool Set<U, V>(ref U field, U value, V Objet, [CallerMemberName]string propertyName = "")
             where V : ObjetGestion
         {
-            if (EqualityComparer<U>.Default.Equals(field, value)) { return false; }
+            if (EqualityComparer<U>.Default.Equals(field, value)) return false;
+
             field = value;
             OnPropertyChanged(propertyName);
             if (EstSvgDansLaBase)

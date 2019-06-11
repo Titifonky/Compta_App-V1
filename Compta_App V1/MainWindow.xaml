@@ -326,8 +326,8 @@
                                         <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition Width="5*"/>
                                     </Grid.ColumnDefinitions>
-                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="False"/>
-                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="False"/>
+                                    <local:ListeObjet Grid.Column="0" ItemsSource="{Binding ListeGroupe}" SelectedValue="{Binding Groupe}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Editer}"/>
+                                    <local:ListeObjet Grid.Column="1" ItemsSource="{Binding ListeCompte}" SelectedValue="{Binding Compte}" DisplayMemberPath="Nom" Intitule="False" Editable="{Binding Editer}"/>
                                 </Grid>
                                 <local:Texte Grid.Row="1"  Valeur="{Binding Description}" Editable="False" Info="True" TextWrapping="Wrap"/>
                             </Grid>

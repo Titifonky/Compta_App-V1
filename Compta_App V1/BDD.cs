@@ -445,8 +445,13 @@ namespace Compta
             return Liste;
         }
 
+        public static int NbRequeteRecupererTable = 0;
+
         private static DataTable RecupererTable(String sql)
         {
+            NbRequeteRecupererTable++;
+            Log.Message("Nb requete table : " + NbRequeteRecupererTable);
+            Log.Message("       requete : " + sql);
             DbDataReader Lecteur = null;
             try
             {

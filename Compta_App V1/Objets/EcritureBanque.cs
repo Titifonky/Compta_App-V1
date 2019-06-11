@@ -130,28 +130,31 @@ namespace Compta
             }
         }
 
+        private Boolean EditionGroupe = false;
+
         protected Groupe _Groupe = null;
         public Groupe Groupe
         {
             get
             {
-                _Groupe = Compte.Groupe;
+                if(_Groupe == null && Compte != null)
+                    _Groupe = Compte.Groupe;
+
                 return _Groupe;
             }
             set
             {
-                try
+                if (EditionGroupe) return;
+
+                EditionGroupe = true;
+
+                if (SetObjetGestion(ref _Groupe, value, this))
                 {
-                    if (SetObjetGestion(ref _Groupe, value, this))
-                    {
-                        ListeCompte = _Groupe.ListeCompte;
-                        Compte = ListeCompte[0];
-                    }
+                    ListeCompte = _Groupe.ListeCompte;
+                    Compte = ListeCompte[0];
                 }
-                catch (Exception e)
-                {
-                    Log.Message(e.ToString());
-                }
+
+                EditionGroupe = false;
             }
         }
 
@@ -172,6 +175,8 @@ namespace Compta
             }
         }
 
+        private Boolean EditionCompte = false;
+
         protected Compte _Compte = null;
         // Le champ peut être NULL, donc aucune contrainte de base
         [CleEtrangere(Contrainte = ""), ForcerCopie]
@@ -186,10 +191,20 @@ namespace Compta
             }
             set
             {
-                if (value == null) return;
+                if (EditionCompte) return;
+
+                EditionCompte = true;
 
                 if (SetObjetGestion(ref _Compte, value, this) && ListeLigneBanque.Count > 0)
-                    ListeLigneBanque[0].Compte = _Compte;
+                {
+                    if (Groupe != _Compte.Groupe)
+                        Groupe = _Compte.Groupe;
+
+                    if (!Ventiler)
+                        ListeLigneBanque[0].Compte = _Compte;
+                }
+
+                EditionCompte = false;
             }
         }
 
@@ -256,7 +271,7 @@ namespace Compta
                         _ListeLigneBanque[0].Description = "";
                         _ListeLigneBanque[0].Compte = Banque.Societe.CompteBase;
                         _ListeLigneBanque[0].Compta = false;
-                        new LigneBanque(this);
+                        var lb = new LigneBanque(this);
                     }
                 }
                 else
@@ -274,6 +289,7 @@ namespace Compta
                             _ListeLigneBanque[0].Compte = Compte;
                             _ListeLigneBanque[0].Valeur = Valeur;
                             _ListeLigneBanque[0].Compta = false;
+                            _ListeLigneBanque[0].Ventiler = false;
                         }
                     }
                     else
