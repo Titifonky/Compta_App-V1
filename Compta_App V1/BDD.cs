@@ -445,31 +445,35 @@ namespace Compta
             return Liste;
         }
 
-        public static int NbRequeteRecupererTable = 0;
+        public static DateTime TempsRequete = new DateTime();
 
         private static DataTable RecupererTable(String sql)
         {
-            NbRequeteRecupererTable++;
-            Log.Message("Nb requete table : " + NbRequeteRecupererTable);
-            Log.Message("       requete : " + sql);
+            DataTable dt = null;
             DbDataReader Lecteur = null;
+
+            DateTime d = DateTime.Now;
+
             try
             {
-                DataTable dt = new DataTable();
+                dt = new DataTable();
                 MySqlCommand Cmde = new MySqlCommand(sql, _ConnexionBase);
                 Lecteur = Cmde.ExecuteReader();
                 dt.Load(Lecteur);
                 Lecteur.Close();
-                return dt;
             }
             catch (Exception e)
             {
                 Debug.Print(e.Message);
                 if (Lecteur != null)
                     Lecteur.Close();
-
-                return null;
             }
+
+            TempsRequete += DateTime.Now - d;
+
+            Log.Message(TempsRequete);
+
+            return dt;
         }
 
         private static async Task<DataTable> RecupererTableAsync(String sql)

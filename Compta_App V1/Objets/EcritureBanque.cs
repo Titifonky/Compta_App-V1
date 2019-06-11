@@ -191,6 +191,7 @@ namespace Compta
             }
             set
             {
+                Log.Message("EB Compte " + (Compte != null));
                 if (EditionCompte) return;
 
                 EditionCompte = true;
