@@ -1262,6 +1262,8 @@ namespace Compta
             {
                 Type U = T;
 
+                if (T.IsAbstract) return false;
+
                 while(U.BaseType != null)
                 {
                     if (U.BaseType == typeof(ObjetGestion))
