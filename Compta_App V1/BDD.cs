@@ -727,6 +727,7 @@ namespace Compta
 
                 // On récupère les propriétés
                 Dictionary<String, PropertyInfo> pDicProp = DicProprietes.ListePropriete(typeof(T));
+                Dictionary<String, FieldInfo> pDicChamp = DicProprietes.ListeChamp(typeof(T));
 
                 // On charge la cle primaire en premier
                 PropertyInfo ClePrimaire = DicProprietes.ClePrimaire(typeof(T));
@@ -746,11 +747,15 @@ namespace Compta
                 foreach (PropertyInfo Prop in pDicProp.Values)
                 {
                     String pNomChamp = NomChamp(Prop);
+                    FieldInfo Champ = pDicChamp[pNomChamp];
 
                     if (Attribute.IsDefined(Prop, typeof(CleEtrangere)))
                     {
                         if ((Parent != null) && (Prop.PropertyType == typeof(U)))
-                            Prop.SetValue(Objet, Parent);
+                        {
+                            //Prop.SetValue(Objet, Parent);
+                            Champ.SetValue(Objet, Parent);
+                        }
                     }
                     else if (Li.Table.Columns.Contains(pNomChamp))
                     {
@@ -758,9 +763,15 @@ namespace Compta
                             continue;
 
                         if (Prop.PropertyType.IsEnum)
-                            Prop.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Li[pNomChamp].ToString()));
+                        {
+                            //Prop.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Li[pNomChamp].ToString()));
+                            Champ.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Li[pNomChamp].ToString()));
+                        }
                         else
-                            Prop.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], Prop.PropertyType));
+                        {
+                            //Prop.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], Prop.PropertyType));
+                            Champ.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], Prop.PropertyType));
+                        }
                     }
                 }
 
@@ -1255,6 +1266,7 @@ namespace Compta
         public static class DicProprietes
         {
             private static Dictionary<Type, Dictionary<String, PropertyInfo>> _DicPropriete = null;
+            private static Dictionary<Type, Dictionary<String, FieldInfo>> _DicChamp = null;
             private static Dictionary<Type, PropertyInfo> _DicClePrimaire = null;
             private static Dictionary<Type, List<PropertyInfo>> _DicTri = null;
 
@@ -1278,6 +1290,7 @@ namespace Compta
             static DicProprietes()
             {
                 _DicPropriete = new Dictionary<Type, Dictionary<String, PropertyInfo>>();
+                _DicChamp = new Dictionary<Type, Dictionary<String, FieldInfo>>();
                 _DicClePrimaire = new Dictionary<Type, PropertyInfo>();
                 _DicTri = new Dictionary<Type, List<PropertyInfo>>();
 
@@ -1299,11 +1312,13 @@ namespace Compta
                     List<PropertyInfo> pListeProp = T.GetProperties().Where(Prop => Attribute.IsDefined(Prop, typeof(Propriete), true)).ToList<PropertyInfo>();
 
                     Dictionary<String, PropertyInfo> pDicPropriete = new Dictionary<String, PropertyInfo>();
+                    Dictionary<String, FieldInfo> pDicChamp = new Dictionary<String, FieldInfo>();
                     List<PropertyInfo> pListTri = new List<PropertyInfo>();
 
                     foreach (PropertyInfo Prop in pListeProp)
                     {
                         pDicPropriete.Add(NomChamp(Prop), Prop);
+                        pDicChamp.Add(NomChamp(Prop), T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).First(Champ => Champ.Name == "_" + Prop.Name));
 
                         if (Attribute.IsDefined(Prop, typeof(ClePrimaire)) && !_DicClePrimaire.ContainsKey(T))
                             _DicClePrimaire.Add(T, Prop);
@@ -1313,7 +1328,9 @@ namespace Compta
                     }
 
                     pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList<PropertyInfo>();
+
                     _DicPropriete.Add(T, pDicPropriete);
+                    _DicChamp.Add(T, pDicChamp);
                     _DicTri.Add(T, pListTri);
                 }
             }
@@ -1326,6 +1343,11 @@ namespace Compta
             public static Dictionary<String, PropertyInfo> ListePropriete(Type T)
             {
                 return _DicPropriete[T];
+            }
+
+            public static Dictionary<String, FieldInfo> ListeChamp(Type T)
+            {
+                return _DicChamp[T];
             }
 
             public static PropertyInfo ClePrimaire(Type T)
