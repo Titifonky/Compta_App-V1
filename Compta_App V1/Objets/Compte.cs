@@ -142,6 +142,7 @@ namespace Compta
         }
 
         private ListeObservable<LigneBanque> _ListeLigneBanque = null;
+        [ListeObjetGestion]
         public ListeObservable<LigneBanque> ListeLigneBanque
         {
             get
@@ -163,6 +164,7 @@ namespace Compta
         }
 
         private ListeObservable<LigneCompta> _ListeLigneCompta = null;
+        [ListeObjetGestion]
         public ListeObservable<LigneCompta> ListeLigneCompta
         {
             get

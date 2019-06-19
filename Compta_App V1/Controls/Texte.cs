@@ -151,13 +151,14 @@ namespace Compta
             {
                 if (Valeur != null && String.IsNullOrWhiteSpace(Valeur.ToString()))
                     xBase.Visibility = Visibility.Collapsed;
-
-                xValeur.Background = Brushes.Transparent;
-                xValeur.TextWrapping = TextWrapping;
-                xValeur.BorderThickness = new Thickness(0);
-                xValeur.IsHitTestVisible = false;
-                if (Unite)
-                    xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+                else
+                {
+                    xValeur.Background = Brushes.Transparent;
+                    xValeur.BorderThickness = new Thickness(0);
+                    xValeur.IsHitTestVisible = false;
+                    if (Unite)
+                        xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+                }
             }
         }
 

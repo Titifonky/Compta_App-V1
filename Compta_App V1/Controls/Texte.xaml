@@ -21,6 +21,7 @@
                        TextAlignment="Right"
                        HorizontalAlignment="Right"
                        Width="Auto"
+                       Visibility="Collapsed"
                        />
             <Grid Name="xGrille">
                 <Grid.ColumnDefinitions>
@@ -34,11 +35,13 @@
                          VerticalContentAlignment="Center"
                          KeyUp="TextBox_ToucheEntreeUpdate"
                          BorderBrush="Black"
-                         BorderThickness="1"
+                         BorderThickness="0"
                          TextWrapping="{Binding TextWrapping}"
                          AcceptsReturn="{Binding AcceptsReturn}"
                          TextAlignment="{Binding TextAlignment}"
                          HorizontalAlignment="Stretch"
+                         Background ="Transparent"
+                         IsHitTestVisible ="false"
                          />
                 <TextBlock Grid.Column="1"
                            Name="xUnite"
@@ -48,6 +51,7 @@
                            Foreground="Black"
                            TextAlignment="Left"
                            TextWrapping="{Binding TextWrapping}"
+                           Visibility="Collapsed"
                            />
             </Grid>
         </DockPanel>

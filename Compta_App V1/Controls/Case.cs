@@ -61,12 +61,12 @@ namespace Compta
                 if (Editable == true)
                 {
                     xBase.Visibility = Visibility.Visible;
-                    xValeur.Visibility = Visibility.Visible;
+                    //xValeur.Visibility = Visibility.Visible;
                     xValeur.IsHitTestVisible = true;
                 }
                 else
                 {
-                    xValeur.Visibility = Visibility.Visible;
+                    //xValeur.Visibility = Visibility.Visible;
                     xValeur.IsHitTestVisible = false;
 
                     if (xValeur.IsChecked == false)

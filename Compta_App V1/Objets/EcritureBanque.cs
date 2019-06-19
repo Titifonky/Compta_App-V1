@@ -350,6 +350,7 @@ namespace Compta
         }
 
         private ListeObservable<LigneBanque> _ListeLigneBanque = null;
+        [ListeObjetGestion]
         public ListeObservable<LigneBanque> ListeLigneBanque
         {
             get

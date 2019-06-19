@@ -71,6 +71,7 @@ namespace Compta
         }
 
         private ListeObservable<LigneCompta> _ListeLigneCompta = null;
+        [ListeObjetGestion]
         public ListeObservable<LigneCompta> ListeLigneCompta
         {
             get
@@ -87,6 +88,7 @@ namespace Compta
         }
 
         private ListeObservable<Banque> _ListeBanque = null;
+        [ListeObjetGestion]
         public ListeObservable<Banque> ListeBanque
         {
             get
@@ -103,6 +105,7 @@ namespace Compta
         }
 
         private ListeObservable<Groupe> _ListeGroupe = null;
+        [ListeObjetGestion]
         public ListeObservable<Groupe> ListeGroupe
         {
             get
@@ -122,6 +125,7 @@ namespace Compta
         }
 
         private ListeObservable<Compte> _ListeCompte = null;
+        [ListeObjetGestion]
         public ListeObservable<Compte> ListeCompte
         {
             get

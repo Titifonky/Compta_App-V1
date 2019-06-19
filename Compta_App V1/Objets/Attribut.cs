@@ -66,6 +66,12 @@ namespace Compta
     }
 
     [AttributeUsage(AttributeTargets.Property)]
+    public class ListeObjetGestion : Attribute
+    {
+        public ListeObjetGestion() { }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
     public class Max : Attribute
     {
         String _NomPropriete = "";

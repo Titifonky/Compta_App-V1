@@ -28,6 +28,7 @@
                   VerticalContentAlignment="Center"
                   HorizontalAlignment="Left"
                   Grid.Column="1"
+                  IsHitTestVisible ="False"
                   />
     </Grid>
 </local:ControlBase>

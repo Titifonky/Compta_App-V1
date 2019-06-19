@@ -746,6 +746,9 @@ namespace Compta
                 // Pour chacune d'elle, on les initialise correctement avec les valeurs de la base
                 foreach (PropertyInfo Prop in pDicProp.Values)
                 {
+                    if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                        continue;
+
                     String pNomChamp = NomChamp(Prop);
                     FieldInfo Champ = pDicChamp[pNomChamp];
 

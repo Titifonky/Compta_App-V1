@@ -74,6 +74,7 @@ namespace Compta
         }
 
         private ListeObservable<Compte> _ListeCompte = null;
+        [ListeObjetGestion]
         public ListeObservable<Compte> ListeCompte
         {
             get

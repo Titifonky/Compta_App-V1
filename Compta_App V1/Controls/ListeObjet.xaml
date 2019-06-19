@@ -32,6 +32,7 @@
                   VerticalAlignment="Center"
                   BorderThickness="1"
                   BorderBrush="Black"
+                  Visibility="Collapsed"
                   />
         <TextBlock Grid.Column="1"
                    Name="xValeurTexte"
@@ -40,7 +41,7 @@
                    VerticalAlignment="Center"
                    Foreground="Black"
                    TextAlignment="Left"
-                   Visibility="Collapsed"
+                   Visibility="Visible"
                    />
     </Grid>
 </local:ControlBase>

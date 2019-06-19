@@ -82,22 +82,17 @@ namespace Compta
                 {
                     xBase.Visibility = Visibility.Visible;
                     xValeur.Visibility = Visibility.Visible;
-                    xValeur.IsHitTestVisible = true;
-                    xValeur.Background = Brushes.White;
-                    xValeur.BorderThickness = new Thickness(1);
                     xValeurTexte.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     if (xValeur.SelectedValue != null && String.IsNullOrWhiteSpace(xValeur.SelectedValue.ToString()))
                         xBase.Visibility = Visibility.Collapsed;
-
-                    xValeur.Visibility = Visibility.Collapsed;
-                    xValeur.IsHitTestVisible = false;
-                    xValeur.ToolTip = null;
-                    xValeur.Background = Brushes.Transparent;
-                    xValeur.BorderThickness = new Thickness(0);
-                    xValeurTexte.Visibility = Visibility.Visible;
+                    else
+                    {
+                        xValeur.Visibility = Visibility.Collapsed;
+                        xValeurTexte.Visibility = Visibility.Visible;
+                    }
                 }
             }
             catch { }

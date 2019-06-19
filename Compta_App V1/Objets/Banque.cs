@@ -77,15 +77,21 @@ namespace Compta
             }
         }
 
+        // Pour tester si la liste est triée
+        private Boolean EstTrie = false;
         private ListeObservable<EcritureBanque> _ListeEcritureBanque = null;
+        [ListeObjetGestion]
         public ListeObservable<EcritureBanque> ListeEcritureBanque
         {
             get
             {
                 if (_ListeEcritureBanque == null)
-                {
                     _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
+
+                if (!EstTrie && (_ListeEcritureBanque != null))
+                {
                     _ListeEcritureBanque.Trier += (a, b) => { return a.DateValeur.CompareTo(b.DateValeur); };
+                    EstTrie = true;
                 }
 
                 return _ListeEcritureBanque;
