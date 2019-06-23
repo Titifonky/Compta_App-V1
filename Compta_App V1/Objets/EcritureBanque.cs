@@ -37,7 +37,7 @@ namespace Compta
             set { base.No = value; }
         }
 
-        protected Boolean _Pointer = false;
+        private Boolean _Pointer = false;
         [Propriete]
         public Boolean Pointer
         {
@@ -45,7 +45,8 @@ namespace Compta
             set { Set(ref _Pointer, value, this); }
         }
 
-        protected Banque _Banque = null;
+        private int? _Id_Banque = null;
+        private Banque _Banque = null;
         [CleEtrangere]
         public Banque Banque
         {
@@ -63,7 +64,7 @@ namespace Compta
             }
         }
 
-        protected String _IdBanque = "";
+        private String _IdBanque = "";
         [Propriete]
         public String IdBanque
         {
@@ -71,7 +72,7 @@ namespace Compta
             set { _IdBanque = value; }
         }
 
-        protected DateTime _DateValeur = DateTime.Now;
+        private DateTime _DateValeur = DateTime.Now;
         // Ne pas modifier cette attribut, cela conditionne le calcul
         // du solde intermédiaire de chaque ecriture
         [Propriete, Tri(DirectionTri = System.ComponentModel.ListSortDirection.Ascending)]
@@ -81,7 +82,7 @@ namespace Compta
             set { Set(ref _DateValeur, value, this); }
         }
 
-        protected String _Intitule = "";
+        private String _Intitule = "";
         [Propriete]
         public String Intitule
         {
@@ -89,7 +90,7 @@ namespace Compta
             set { Set(ref _Intitule, value, this); }
         }
 
-        protected Boolean _AfficherDescription;
+        private Boolean _AfficherDescription;
         public Boolean AfficherDescription
         {
             get
@@ -105,7 +106,7 @@ namespace Compta
             }
         }
 
-        protected String _Description = "";
+        private String _Description = "";
         [Propriete]
         public String Description
         {
@@ -132,7 +133,7 @@ namespace Compta
 
         private Boolean EditionGroupe = false;
 
-        protected Groupe _Groupe = null;
+        private Groupe _Groupe = null;
         public Groupe Groupe
         {
             get
@@ -179,7 +180,9 @@ namespace Compta
 
         private Boolean EditionCompte = false;
 
-        protected Compte _Compte = null;
+
+        private int? _Id_Compte = null;
+        private Compte _Compte = null;
         // Le champ peut être NULL, donc aucune contrainte de base
         [CleEtrangere(Contrainte = ""), ForcerCopie]
         public Compte Compte
@@ -210,7 +213,7 @@ namespace Compta
             }
         }
 
-        protected Double _Valeur = 0;
+        private Double _Valeur = 0;
         [Propriete]
         public Double Valeur
         {
@@ -218,7 +221,7 @@ namespace Compta
             set { Set(ref _Valeur, value, this); }
         }
 
-        protected Double _Solde = Double.NaN;
+        private Double _Solde = Double.NaN;
         [Propriete]
         public Double Solde
         {
@@ -335,7 +338,7 @@ namespace Compta
                 _VerifVentilation = Somme;
         }
 
-        protected Double _VerifVentilation = 0;
+        private Double _VerifVentilation = 0;
         public Double VerifVentilation
         {
             get

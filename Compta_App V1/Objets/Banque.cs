@@ -18,6 +18,7 @@ namespace Compta
             Societe = s;
         }
 
+        private int? _Id_Societe = null;
         private Societe _Societe = null;
         [CleEtrangere]
         public Societe Societe

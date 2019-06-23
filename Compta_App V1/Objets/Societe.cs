@@ -42,29 +42,7 @@ namespace Compta
             get
             {
                 if (_CompteBase == null)
-                {
-                    Groupe G = null;
-                    foreach (var g in ListeGroupe)
-                    {
-                        if (g.No == 1)
-                        {
-                            G = g;
-                            break;
-                        }
-                    }
-
-                    if (G != null)
-                    {
-                        foreach (var c in G.ListeCompte)
-                        {
-                            if (c.No == 1)
-                            {
-                                _CompteBase = c;
-                                break;
-                            }
-                        }
-                    }
-                }
+                    _CompteBase = ListeGroupe[0].ListeCompte[0];
 
                 return _CompteBase;
             }

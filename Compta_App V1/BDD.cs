@@ -1330,7 +1330,105 @@ namespace Compta
                             pListTri.Add(Prop);
                     }
 
-                    pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList<PropertyInfo>();
+                    pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
+
+                    _DicPropriete.Add(T, pDicPropriete);
+                    _DicChamp.Add(T, pDicChamp);
+                    _DicTri.Add(T, pListTri);
+                }
+            }
+
+            public static List<Type> ListeType()
+            {
+                return _DicPropriete.Keys.ToList<Type>();
+            }
+
+            public static Dictionary<String, PropertyInfo> ListePropriete(Type T)
+            {
+                return _DicPropriete[T];
+            }
+
+            public static Dictionary<String, FieldInfo> ListeChamp(Type T)
+            {
+                return _DicChamp[T];
+            }
+
+            public static PropertyInfo ClePrimaire(Type T)
+            {
+                return _DicClePrimaire[T];
+            }
+
+            public static List<PropertyInfo> ListeTri(Type T)
+            {
+                return _DicTri[T];
+            }
+        }
+
+        public static class DicProp
+        {
+            private static Dictionary<Type, Dictionary<String, PropertyInfo>> _DicPropriete = null;
+            private static Dictionary<Type, Dictionary<String, FieldInfo>> _DicChamp = null;
+            private static Dictionary<Type, PropertyInfo> _DicClePrimaire = null;
+            private static Dictionary<Type, List<PropertyInfo>> _DicTri = null;
+
+            private static Boolean TypeEstObjetGestion(Type T)
+            {
+                Type U = T;
+
+                if (T.IsAbstract) return false;
+
+                while (U.BaseType != null)
+                {
+                    if (U.BaseType == typeof(ObjetGestion))
+                        return true;
+
+                    U = U.BaseType;
+                }
+
+                return false;
+            }
+
+            static DicProp()
+            {
+                _DicPropriete = new Dictionary<Type, Dictionary<String, PropertyInfo>>();
+                _DicChamp = new Dictionary<Type, Dictionary<String, FieldInfo>>();
+                _DicClePrimaire = new Dictionary<Type, PropertyInfo>();
+                _DicTri = new Dictionary<Type, List<PropertyInfo>>();
+
+                List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
+
+                int i = 0;
+                while (i < ListeTypes.Count)
+                {
+                    Type T = ListeTypes[i];
+
+                    if (!TypeEstObjetGestion(T))
+                        ListeTypes.RemoveAt(i);
+                    else
+                        i++;
+                }
+
+                foreach (Type T in ListeTypes)
+                {
+                    List<PropertyInfo> pListeProp = T.GetProperties().Where(Prop => Attribute.IsDefined(Prop, typeof(Propriete), true)).ToList<PropertyInfo>();
+
+                    Dictionary<String, PropertyInfo> pDicPropriete = new Dictionary<String, PropertyInfo>();
+                    Dictionary<String, FieldInfo> pDicChamp = new Dictionary<String, FieldInfo>();
+                    List<PropertyInfo> pListTri = new List<PropertyInfo>();
+
+                    foreach (PropertyInfo Prop in pListeProp)
+                    {
+                        pDicPropriete.Add(NomChamp(Prop), Prop);
+                        pDicChamp.Add(NomChamp(Prop), T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).First(Champ => Champ.Name == "_" + Prop.Name));
+
+                        if (Attribute.IsDefined(Prop, typeof(ClePrimaire)) && !_DicClePrimaire.ContainsKey(T))
+                            _DicClePrimaire.Add(T, Prop);
+
+                        if (Attribute.IsDefined(Prop, typeof(Tri)))
+                            pListTri.Add(Prop);
+                    }
+
+                    pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
 
                     _DicPropriete.Add(T, pDicPropriete);
                     _DicChamp.Add(T, pDicChamp);

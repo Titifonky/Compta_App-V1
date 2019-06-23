@@ -23,6 +23,7 @@ namespace Compta
             set { base.No = value; }
         }
 
+        private int? _Id_Societe = null;
         private Societe _Societe = null;
         [CleEtrangere]
         public Societe Societe
@@ -41,6 +42,7 @@ namespace Compta
             }
         }
 
+        private int? _Id_Groupe = null;
         private Groupe _Groupe = null;
         [CleEtrangere]
         public Groupe Groupe

@@ -25,6 +25,7 @@ namespace Compta
             set { base.No = value; }
         }
 
+        private int? _Id_Societe = null;
         private Societe _Societe = null;
         [CleEtrangere]
         public Societe Societe
