@@ -45,7 +45,7 @@ namespace Compta
             set { Set(ref _Pointer, value, this); }
         }
 
-        private int? _Id_Banque = null;
+        private int? _IdBanque = null;
         private Banque _Banque = null;
         [CleEtrangere]
         public Banque Banque
@@ -181,7 +181,7 @@ namespace Compta
         private Boolean EditionCompte = false;
 
 
-        private int? _Id_Compte = null;
+        private int? _IdCompte = null;
         private Compte _Compte = null;
         // Le champ peut être NULL, donc aucune contrainte de base
         [CleEtrangere(Contrainte = ""), ForcerCopie]

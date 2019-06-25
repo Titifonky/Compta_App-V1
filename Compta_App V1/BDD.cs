@@ -174,7 +174,7 @@ namespace Compta
                     Bdd.Enregistrer();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Message(e.ToString());
                 Log.Message("Pd d'initialisation de la base");
@@ -1279,7 +1279,7 @@ namespace Compta
 
                 if (T.IsAbstract) return false;
 
-                while(U.BaseType != null)
+                while (U.BaseType != null)
                 {
                     if (U.BaseType == typeof(ObjetGestion))
                         return true;
@@ -1364,12 +1364,82 @@ namespace Compta
             }
         }
 
+        public class Info
+        {
+            public Info(PropertyInfo propriete, FieldInfo champ, FieldInfo champId = null)
+            {
+                Propriete = propriete;
+                NomProp = propriete.Name;
+
+                Champ = champ;
+                NomChamp = champ.Name;
+
+                if (champId != null)
+                {
+                    ChampId = champId;
+                    NomChampId = champId.Name;
+                }
+
+            }
+            public String NomProp { get; private set; }
+            public PropertyInfo Propriete { get; private set; }
+            public String NomChamp { get; private set; }
+            public FieldInfo Champ { get; private set; }
+            public String NomChampId { get; private set; }
+            public FieldInfo ChampId { get; private set; }
+        }
+
+        public class StructObjetGestion
+        {
+            public StructObjetGestion(Type t)
+            {
+                T = t;
+                ListeCleEtrangere = new List<Info>();
+                ListeInfo = new List<Info>();
+                ListeObjet = new List<Info>();
+                ListeTri = new List<Info>();
+
+                var DicChamp = new Dictionary<String, FieldInfo>();
+                foreach (var champ in T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
+                    DicChamp.Add(champ.Name.Substring(1), champ);
+
+                Info Champ = null;
+
+                Info InitProp(PropertyInfo p, bool i = false) => Champ = new Info(p, DicChamp[p.Name], i ? DicChamp["Id" + p.Name] : null);
+
+                foreach (var prop in T.GetProperties())
+                {
+                    Champ = null;
+
+                    if (Attribute.IsDefined(prop, typeof(ClePrimaire)))
+                        ClePrimaire = InitProp(prop);
+
+                    else if (Attribute.IsDefined(prop, typeof(CleEtrangere)))
+                        ListeCleEtrangere.Add(InitProp(prop, true));
+
+                    else if (Attribute.IsDefined(prop, typeof(Propriete), true))
+                        ListeInfo.Add(InitProp(prop));
+
+                    else if (Attribute.IsDefined(prop, typeof(ListeObjetGestion)))
+                        ListeObjet.Add(InitProp(prop));
+
+                    if (Champ != null && Attribute.IsDefined(prop, typeof(Tri)))
+                        ListeTri.Add(Champ);
+                }
+
+                ListeTri = ListeTri.OrderBy(x => (x.Propriete.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
+            }
+            public Type T { get; private set; }
+            public Info ClePrimaire { get; private set; }
+            public List<Info> ListeCleEtrangere { get; private set; }
+            public List<Info> ListeInfo { get; private set; }
+            public List<Info> ListeObjet { get; private set; }
+            public List<Info> ListeTri { get; private set; }
+        }
+
         public static class DicProp
         {
-            private static Dictionary<Type, Dictionary<String, PropertyInfo>> _DicPropriete = null;
-            private static Dictionary<Type, Dictionary<String, FieldInfo>> _DicChamp = null;
-            private static Dictionary<Type, PropertyInfo> _DicClePrimaire = null;
-            private static Dictionary<Type, List<PropertyInfo>> _DicTri = null;
+            public static Dictionary<Type, StructObjetGestion> DicPropriete { get; private set; }
 
             private static Boolean TypeEstObjetGestion(Type T)
             {
@@ -1390,76 +1460,15 @@ namespace Compta
 
             static DicProp()
             {
-                _DicPropriete = new Dictionary<Type, Dictionary<String, PropertyInfo>>();
-                _DicChamp = new Dictionary<Type, Dictionary<String, FieldInfo>>();
-                _DicClePrimaire = new Dictionary<Type, PropertyInfo>();
-                _DicTri = new Dictionary<Type, List<PropertyInfo>>();
+                DicPropriete = new Dictionary<Type, StructObjetGestion>();
 
-                List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
-
-                int i = 0;
-                while (i < ListeTypes.Count)
-                {
-                    Type T = ListeTypes[i];
-
-                    if (!TypeEstObjetGestion(T))
-                        ListeTypes.RemoveAt(i);
-                    else
-                        i++;
-                }
+                List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().Where(T => TypeEstObjetGestion(T)).ToList();
 
                 foreach (Type T in ListeTypes)
-                {
-                    List<PropertyInfo> pListeProp = T.GetProperties().Where(Prop => Attribute.IsDefined(Prop, typeof(Propriete), true)).ToList<PropertyInfo>();
-
-                    Dictionary<String, PropertyInfo> pDicPropriete = new Dictionary<String, PropertyInfo>();
-                    Dictionary<String, FieldInfo> pDicChamp = new Dictionary<String, FieldInfo>();
-                    List<PropertyInfo> pListTri = new List<PropertyInfo>();
-
-                    foreach (PropertyInfo Prop in pListeProp)
-                    {
-                        pDicPropriete.Add(NomChamp(Prop), Prop);
-                        pDicChamp.Add(NomChamp(Prop), T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).First(Champ => Champ.Name == "_" + Prop.Name));
-
-                        if (Attribute.IsDefined(Prop, typeof(ClePrimaire)) && !_DicClePrimaire.ContainsKey(T))
-                            _DicClePrimaire.Add(T, Prop);
-
-                        if (Attribute.IsDefined(Prop, typeof(Tri)))
-                            pListTri.Add(Prop);
-                    }
-
-                    pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
-
-                    _DicPropriete.Add(T, pDicPropriete);
-                    _DicChamp.Add(T, pDicChamp);
-                    _DicTri.Add(T, pListTri);
-                }
+                    DicPropriete.Add(T, new StructObjetGestion(T));
             }
 
-            public static List<Type> ListeType()
-            {
-                return _DicPropriete.Keys.ToList<Type>();
-            }
-
-            public static Dictionary<String, PropertyInfo> ListePropriete(Type T)
-            {
-                return _DicPropriete[T];
-            }
-
-            public static Dictionary<String, FieldInfo> ListeChamp(Type T)
-            {
-                return _DicChamp[T];
-            }
-
-            public static PropertyInfo ClePrimaire(Type T)
-            {
-                return _DicClePrimaire[T];
-            }
-
-            public static List<PropertyInfo> ListeTri(Type T)
-            {
-                return _DicTri[T];
-            }
+            public static List<Type> ListeType => DicPropriete.Keys.ToList<Type>();
         }
 
         // Dictionnaire des objets déjà crée.
