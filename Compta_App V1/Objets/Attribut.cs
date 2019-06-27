@@ -74,15 +74,7 @@ namespace Compta
     [AttributeUsage(AttributeTargets.Property)]
     public class Max : Attribute
     {
-        String _NomPropriete = "";
-
         public Max() { }
-
-        public String NomPropriete
-        {
-            get { return _NomPropriete; }
-            set { _NomPropriete = value; }
-        }
     }
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -104,6 +96,22 @@ namespace Compta
         {
             get { return _DirectionTri; }
             set { _DirectionTri = value; }
+        }
+
+        public String DirectionTriSql
+        {
+            get
+            {
+                switch (_DirectionTri)
+                {
+                    case ListSortDirection.Ascending:
+                        return "ASC";
+                    case ListSortDirection.Descending:
+                        return "DESC";
+                    default:
+                        return "ASC";
+                }
+            }
         }
 
         public Boolean Modifiable

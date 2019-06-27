@@ -17,7 +17,7 @@ namespace Compta
             Compte = societe.CompteBase;
         }
 
-        private int? _IdSociete = null;
+        private int? _Id_Societe = null;
         private Societe _Societe = null;
         [CleEtrangere]
         public Societe Societe

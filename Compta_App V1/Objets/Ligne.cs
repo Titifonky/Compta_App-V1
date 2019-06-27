@@ -7,7 +7,7 @@ namespace Compta
     {
         public Ligne() { }
 
-        [Propriete]
+        [Propriete, Max]
         public override int No
         {
             get { return base.No; }
@@ -30,7 +30,7 @@ namespace Compta
             set { Set(ref _DateValeur, value, this); }
         }
 
-        protected int? _IdCompte = null;
+        protected int? _Id_Compte = null;
         protected Compte _Compte = null;
         // Le champ peut être NULL, donc aucune contrainte de base
         [CleEtrangere(Contrainte = ""), ForcerCopie]

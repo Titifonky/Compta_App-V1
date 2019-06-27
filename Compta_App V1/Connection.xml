@@ -7,7 +7,7 @@
       <User>mfb</User>
       <Port>3306</Port>
       <Pw>Avantiti59!?</Pw>
-      <DB>mfb_compta</DB>
+      <DB>mfb_compta_test</DB>
     </Connection>
   </Base>
 </Bases>

@@ -18,7 +18,7 @@ namespace Compta
             Ventiler = this.Ventiler;
         }
 
-        private int? _IdEcritureBanque = null;
+        private int? _Id_EcritureBanque = null;
         private EcritureBanque _EcritureBanque = null;
         [CleEtrangere]
         public EcritureBanque EcritureBanque

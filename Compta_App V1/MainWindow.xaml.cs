@@ -100,20 +100,9 @@ namespace Compta
         private void TrierListe<T>(ListBox Box)
             where T : ObjetGestion
         {
-            List<PropertyInfo> pListeTri = Bdd.DicProprietes.ListeTri(typeof(T));
+            foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeTri)
+                Box.Items.SortDescriptions.Add(new SortDescription(info.NomProp, info.Tri.DirectionTri));
 
-            foreach (PropertyInfo P in pListeTri)
-            {
-                // On veut récupérer les attributs des propriétés déclarées dans l'objet.
-                // Si la propriété est un héritage, on récupère les attributs de l'héritage.
-                // Si c'est un override, on récupère seulement les attributs de l'objet enfant
-                Tri[] tab = P.GetCustomAttributes(typeof(Tri), P.DeclaringType != typeof(T)) as Tri[];
-                if (tab.Length > 0)
-                {
-                    Tri AttTri = tab[0] as Tri;
-                    Box.Items.SortDescriptions.Add(new SortDescription(P.Name, AttTri.DirectionTri));
-                }
-            }
             Box.Items.IsLiveSorting = true;
         }
 

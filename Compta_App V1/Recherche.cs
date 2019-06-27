@@ -97,35 +97,30 @@ namespace Compta
                 {
                     String Chaine_Recherche = Valeur;
 
-                    foreach (PropertyInfo Prop in Bdd.DicProprietes.ListePropriete(typeof(T)).Values)
+                    foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeInfo)
                     {
-                        if (Regex.IsMatch(Prop.GetValue(Obj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(info.Propriete.GetValue(Obj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
                             return true;
                     }
 
                     if (_SousListe)
                     {
-                        foreach (PropertyInfo PropObj in typeof(T).GetProperties())
+                        foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeListeObjet)
                         {
-                            Type PropType = PropObj.PropertyType;
-                            if (PropType.IsGenericType && (PropType.GetGenericTypeDefinition() == typeof(ListeObservable<>)))
+                            Object ObjListe = info.Propriete.GetValue(Obj);
+
+                            int n = (int)info.Propriete.PropertyType.GetProperty("Count").GetValue(ObjListe);
+
+                            for (int i = 0; i < n; i++)
                             {
-                                Type TypeListe = PropType.GetGenericArguments()[0];
-                                Object Liste = PropObj.GetValue(Obj);
+                                // Get the list element as type object  
+                                object[] index = { i };
+                                object sObj = info.Propriete.PropertyType.GetProperty("Item").GetValue(ObjListe, index);
 
-                                int n = (int)PropType.GetProperty("Count").GetValue(Liste);
-
-                                for (int i = 0; i < n; i++)
+                                foreach (var val in Bdd.DicProp.Dic[info.TypeObjet].ListeInfo)
                                 {
-                                    // Get the list element as type object  
-                                    object[] index = { i };
-                                    object sObj = PropType.GetProperty("Item").GetValue(Liste, index);
-
-                                    foreach (PropertyInfo Prop in Bdd.DicProprietes.ListePropriete(TypeListe).Values)
-                                    {
-                                        if (Regex.IsMatch(Prop.GetValue(sObj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
-                                            return true;
-                                    }
+                                    if (Regex.IsMatch(val.Propriete.GetValue(sObj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
+                                        return true;
                                 }
                             }
                         }

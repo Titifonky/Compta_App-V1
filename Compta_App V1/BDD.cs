@@ -32,7 +32,34 @@ namespace Compta
         //private static String _SvgNom = "SvgBase";
         //private static String _SvgExt = ".sql";
 
-        static Bdd() { }
+        static Bdd()
+        {
+            //DateTime tp = DateTime.Now;
+
+            //var l = DicProp.ListeType;
+
+            //Log.Message(DateTime.Now - tp);
+
+            //tp = DateTime.Now;
+
+            //foreach (var item in DicProp.Dic)
+            //{
+            //    Log.Message("==========================================");
+            //    Log.Message(item.Key);
+            //    var s = item.Value;
+
+            //    Log.Message("");
+            //    Log.Message("Type");
+            //    Log.Message(s.T.Name);
+
+            //    Log.Message("");
+            //    Log.Message("ListeTri");
+            //    foreach (var prop in s.ListeTri)
+            //        Log.Message(prop.NomProp);
+            //}
+
+            //Log.Message(DateTime.Now - tp);
+        }
 
         public static List<String> ListeBase()
         {
@@ -142,7 +169,8 @@ namespace Compta
 
             try
             {
-                if (TableExiste(typeof(Version)))
+                var StructVersion = DicProp.Dic[typeof(Version)];
+                if (TableExiste(StructVersion.NomTable))
                 {
                     ListeVersion = Liste<Version>();
 
@@ -205,13 +233,14 @@ namespace Compta
                 // On récupère la liste des tables
                 pListeNomDesTables = NomDesTables();
 
-                foreach (Type Type in DicProprietes.ListeType())
+                foreach (var StructObjet in DicProp.Dic.Values)
                 {
+                    Type Type = StructObjet.T;
                     #region MODIFICATION DE LA STRUCTURE
 
                     CreerTable(Type);
 
-                    String pNomNouvelleTable = NomTable(Type);
+                    String pNomNouvelleTable = StructObjet.NomTable;
                     String pNomAncienneTable = OLD(pNomNouvelleTable);
 
                     XmlNode pTable = Base.SelectSingleNode(String.Format("Structure/Tables/Table[@name='{0}']", pNomNouvelleTable));
@@ -229,9 +258,9 @@ namespace Compta
                         List<String> pParamOldColonnes = new List<String>();
                         List<String> pParamNewColonnes = new List<String>();
 
-                        foreach (PropertyInfo Prop in DicProprietes.ListePropriete(Type).Values)
+                        foreach (Info info in DicProp.Dic[Type].ListeChampSql)
                         {
-                            String pNomNewColonne = NomChamp(Prop);
+                            String pNomNewColonne = info.NomChampSql;
                             String pNomOldColonne = pNomNewColonne;
 
                             Boolean FusionDeColonnes;
@@ -268,7 +297,7 @@ namespace Compta
                             // Si la colonne existe dans l'ancienne table, on l'ajoute
                             if (ListeAnciennesColonnes.Contains(pNomOldColonne) || FusionDeColonnes || ValeurParDefaut)
                             {
-                                if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                                if (info.TypeChampSql.HasFlag(eTypeChampSql.ClePrimaire))
                                 {
                                     pParamOldColonnes.Insert(0, pNomOldColonne);
                                     pParamNewColonnes.Insert(0, pNomNewColonne);
@@ -290,7 +319,7 @@ namespace Compta
 
                         {
                             ListParametres pParams = new ListParametres();
-                            pParams.Ajouter(new MySqlParameter(Prefix + "AncienneTable", DbType.String)).Value = pNomAncienneTable;
+                            pParams.Ajouter(new MySqlParameter("@AncienneTable", DbType.String)).Value = pNomAncienneTable;
 
                             Executer(String.Format("DROP TABLE {0};", pNomAncienneTable), null);
                         }
@@ -315,7 +344,7 @@ namespace Compta
                                     if (Valeur.Name == "Valeur")
                                     {
                                         ListeColonne.Add(Valeur.Attributes["name"].Value);
-                                        pParams.Ajouter(new MySqlParameter(Prefix + Valeur.Attributes["name"].Value, Valeur.InnerText));
+                                        pParams.Ajouter(new MySqlParameter("@" + Valeur.Attributes["name"].Value, Valeur.InnerText));
                                     }
 
 
@@ -376,37 +405,32 @@ namespace Compta
 
         private static void CreerTable(Type T)
         {
-            if (!TableExiste(T))
-            {
-                Dictionary<String, PropertyInfo> pDic = DicProprietes.ListePropriete(T);
+            var StructObjet = DicProp.Dic[T];
 
+            if (!TableExiste(StructObjet.NomTable))
+            {
                 List<String> pDicColonnes = new List<String>();
 
-                foreach (PropertyInfo Prop in pDic.Values)
+                foreach (var info in StructObjet.ListeChampSql)
                 {
-                    String Definition = "`" + NomChamp(Prop) + "` " + TypeChamp(Prop) + " " + ContrainteChamp(Prop);
+                    String Definition = "`" + info.NomChampSql + "` " + info.FormatChampSql + " " + info.ContrainteChampSql;
 
-                    if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                    if (info.TypeChampSql.HasFlag(eTypeChampSql.ClePrimaire))
                         pDicColonnes.Insert(0, Definition);
                     else
                         pDicColonnes.Add(Definition);
                 }
 
-                pDicColonnes.Add("PRIMARY KEY (`" + NomChamp(DicProprietes.ClePrimaire(T)) + "`)");
+                pDicColonnes.Add("PRIMARY KEY (`" + StructObjet.ClePrimaire.NomChampSql + "`)");
 
                 {
-                    String Sql = String.Format("CREATE TABLE {0} ({1});", NomTable(T), String.Join(", ", pDicColonnes));
+                    String Sql = String.Format("CREATE TABLE {0} ({1});", StructObjet.NomTable, String.Join(", ", pDicColonnes));
 
                     Executer(Sql, null);
                 }
 
                 return;
             }
-        }
-
-        private static Boolean TableExiste(Type T)
-        {
-            return TableExiste(NomTable(T));
         }
 
         private static Boolean TableExiste(String NomTable)
@@ -427,11 +451,6 @@ namespace Compta
                 Liste.Add(R["table_name"].ToString());
 
             return Liste;
-        }
-
-        private static List<String> NomDesColonnes(Type T)
-        {
-            return NomDesColonnes(NomTable(T));
         }
 
         private static List<String> NomDesColonnes(String NomTable)
@@ -471,31 +490,9 @@ namespace Compta
 
             TempsRequete += DateTime.Now - d;
 
-            //Log.Message(TempsRequete);
+            Log.Message(TempsRequete);
 
             return dt;
-        }
-
-        private static async Task<DataTable> RecupererTableAsync(String sql)
-        {
-            DbDataReader Lecteur = null;
-            try
-            {
-                DataTable dt = new DataTable();
-                MySqlCommand Cmde = new MySqlCommand(sql, _ConnexionBase);
-                Lecteur = await Cmde.ExecuteReaderAsync();
-                dt.Load(Lecteur);
-                Lecteur.Close();
-                return dt;
-            }
-            catch (Exception e)
-            {
-                Debug.Print(e.Message);
-                if (Lecteur != null)
-                    Lecteur.Close();
-
-                return null;
-            }
         }
 
         private static Object RecupererChamp(String sql, Type TypeValeur)
@@ -504,18 +501,6 @@ namespace Compta
             object Valeur = Cmde.ExecuteScalar();
             Cmde.Dispose();
 
-            if ((Valeur == null) || (Valeur == System.DBNull.Value))
-            {
-                return TypeValeur.GetDefaultValue();
-            }
-
-            return Convert.ChangeType(Valeur, TypeValeur);
-        }
-
-        private static async Task<Object> RecupererChampAsync(String sql, Type TypeValeur)
-        {
-            MySqlCommand Cmde = new MySqlCommand(sql, _ConnexionBase);
-            object Valeur = await Cmde.ExecuteScalarAsync();
             if ((Valeur == null) || (Valeur == System.DBNull.Value))
             {
                 return TypeValeur.GetDefaultValue();
@@ -554,11 +539,6 @@ namespace Compta
             Cmde.Dispose();
         }
 
-        private static Boolean IsOLD(String NomTable)
-        {
-            return Regex.IsMatch(NomTable, "^" + OLD());
-        }
-
         private static String OLD()
         {
             return "old_";
@@ -567,122 +547,11 @@ namespace Compta
         {
             return OLD() + NomTable;
         }
-        private static String NomTable(Type T)
-        {
-            return T.Name.ToString().ToLowerInvariant();
-        }
-        private static String NomClePrimaire(Type T)
-        {
-            return NomChamp(DicProprietes.ClePrimaire(T));
-        }
-        private static String NomChamp(Type T)
-        {
-            return NomChamp(T.Name);
-        }
-        private static String NomChamp(PropertyInfo P)
-        {
-            return NomChamp(P.Name);
-        }
-        private static String NomChamp(String Nom)
-        {
-            return Nom.ToLowerInvariant();
-        }
-        private static String DirectionTri(ListSortDirection Dir)
-        {
-            switch (Dir)
-            {
-                case ListSortDirection.Ascending:
-                    return "ASC";
-                case ListSortDirection.Descending:
-                    return "DESC";
-                default:
-                    return "ASC";
-            }
-        }
-        private static List<String> NomClesTri(Type T)
-        {
-            List<String> NomCles = new List<String>();
-            List<PropertyInfo> pListeTri = DicProprietes.ListeTri(T);
-
-            foreach (PropertyInfo P in pListeTri)
-            {
-                // On veut récupérer les attributs des propriétés déclarées dans l'objet.
-                // Si la propriété est un héritage, on récupère les attributs de l'héritage.
-                // Si c'est un override, on récupère seulement les attributs de l'objet enfant
-                Tri[] tab = P.GetCustomAttributes(typeof(Tri), P.DeclaringType != T) as Tri[];
-                if (tab.Length > 0)
-                {
-                    Tri AttTri = tab[0] as Tri;
-                    NomCles.Add(NomChamp(P) + " " + DirectionTri(AttTri.DirectionTri));
-                }
-            }
-
-            if (NomCles.Count == 0)
-                NomCles.Add(NomClePrimaire(T) + " ASC");
-
-            return NomCles;
-        }
-        private static String TypeChamp(PropertyInfo P)
-        {
-            Propriete pAttProp = (Propriete)P.GetCustomAttributes(typeof(Propriete)).First();
-
-            switch (pAttProp.Type)
-            {
-                case TypeSQL_e.cAuto:
-                    if (P.PropertyType == typeof(int))
-                        return "INTEGER";
-                    else if (P.PropertyType == typeof(Boolean))
-                        return "INTEGER";
-                    else if (P.PropertyType == typeof(Double))
-                        return "DOUBLE";
-                    else if (P.PropertyType == typeof(DateTime))
-                        return "TIMESTAMP";
-                    else if (P.PropertyType == typeof(String))
-                        return "TEXT";
-                    else if (P.PropertyType.IsEnum)
-                        return "INTEGER";
-                    else
-                        return "TEXT";
-
-                case TypeSQL_e.cInt:
-                    return "INTEGER";
-
-                case TypeSQL_e.cBool:
-                    return "INTEGER";
-
-                case TypeSQL_e.cDbl:
-                    return "DOUBLE";
-
-                case TypeSQL_e.cDate:
-                    return "TEXT";
-
-                case TypeSQL_e.cString:
-                    return "TEXT";
-
-                case TypeSQL_e.cEnum:
-                    return "INTEGER";
-
-                case TypeSQL_e.cSerial:
-                    return "INTEGER";
-
-                default:
-                    return "TEXT";
-            }
-        }
-        private static String ContrainteChamp(PropertyInfo P)
-        {
-            Propriete pAttProp = P.GetCustomAttributes(typeof(Propriete)).First() as Propriete;
-
-            if (pAttProp != null)
-                return pAttProp.Contrainte;
-
-            return "";
-        }
 
         // Renvoi l'id d'une ligne
         private static int IdLigne(DataRow Li, Type T)
         {
-            return (int)Convert.ChangeType(Li[NomClePrimaire(T)], typeof(int));
+            return (int)Convert.ChangeType(Li[DicProp.Dic[T].ClePrimaire.NomChampSql], typeof(int));
         }
 
         private static int DernierIdInsere(Type T)
@@ -703,13 +572,13 @@ namespace Compta
         private static Boolean ModeChargerObjet = false;
         private static Boolean ModeAjouterObjet = false;
 
-        private static T ChargerObjet<T>(DataRow Li)
+        private static T ChargerObjet<T>(DataRow li)
             where T : ObjetGestion, new()
         {
-            return ChargerObjet<T, T>(Li, null);
+            return ChargerObjet<T, T>(li, null);
         }
 
-        private static T ChargerObjet<T, U>(DataRow Li, U Parent)
+        private static T ChargerObjet<T, U>(DataRow li, U parent)
             where T : ObjetGestion, new()
             where U : ObjetGestion
         {
@@ -718,7 +587,7 @@ namespace Compta
             ModeChargerObjet = true;
 
             // On récupère l'objet dans le dico
-            T Objet = DicObjet.RecupererObjet<T>(IdLigne(Li, typeof(T)));
+            T Objet = DicObjet.RecupererObjet<T>(IdLigne(li, typeof(T)));
 
             // S'il n'existe pas, on le crée et on le rempli
             if (Objet == null)
@@ -726,55 +595,30 @@ namespace Compta
                 Objet = new T();
 
                 // On récupère les propriétés
-                Dictionary<String, PropertyInfo> pDicProp = DicProprietes.ListePropriete(typeof(T));
-                Dictionary<String, FieldInfo> pDicChamp = DicProprietes.ListeChamp(typeof(T));
+                var Dic = DicProp.Dic[typeof(T)];
 
                 // On charge la cle primaire en premier
-                PropertyInfo ClePrimaire = DicProprietes.ClePrimaire(typeof(T));
+                Dic.ClePrimaire.Propriete.SetValue(Objet, Convert.ChangeType(li[Dic.ClePrimaire.NomChampSql], Dic.ClePrimaire.TypeObjet));
+
+                // On charge des cles etrangeres
+                foreach (var info in Dic.ListeCleEtrangere)
                 {
-                    String pNomChamp = NomChamp(ClePrimaire);
-
-                    if (Li.Table.Columns.Contains(pNomChamp))
-                    {
-                        if (System.DBNull.Value == Li[pNomChamp])
-                            return null;
-
-                        ClePrimaire.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], ClePrimaire.PropertyType));
-                    }
+                    if ((parent != null) && (info.TypeObjet == typeof(U)))
+                        info.Champ.SetValue(Objet, parent);
                 }
 
                 // Pour chacune d'elle, on les initialise correctement avec les valeurs de la base
-                foreach (PropertyInfo Prop in pDicProp.Values)
+                foreach (var info in Dic.ListeInfo)
                 {
-                    if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
-                        continue;
-
-                    String pNomChamp = NomChamp(Prop);
-                    FieldInfo Champ = pDicChamp[pNomChamp];
-
-                    if (Attribute.IsDefined(Prop, typeof(CleEtrangere)))
+                    if (li.Table.Columns.Contains(info.NomChampSql))
                     {
-                        if ((Parent != null) && (Prop.PropertyType == typeof(U)))
-                        {
-                            //Prop.SetValue(Objet, Parent);
-                            Champ.SetValue(Objet, Parent);
-                        }
-                    }
-                    else if (Li.Table.Columns.Contains(pNomChamp))
-                    {
-                        if (System.DBNull.Value == Li[pNomChamp])
+                        if (System.DBNull.Value == li[info.NomChampSql])
                             continue;
 
-                        if (Prop.PropertyType.IsEnum)
-                        {
-                            //Prop.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Li[pNomChamp].ToString()));
-                            Champ.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Li[pNomChamp].ToString()));
-                        }
+                        if (info.TypeObjet.IsEnum)
+                            info.Champ.SetValue(Objet, System.Enum.Parse(info.TypeObjet, li[info.NomChampSql].ToString()));
                         else
-                        {
-                            //Prop.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], Prop.PropertyType));
-                            Champ.SetValue(Objet, Convert.ChangeType(Li[pNomChamp], Prop.PropertyType));
-                        }
+                            info.Champ.SetValue(Objet, Convert.ChangeType(li[info.NomChampSql], info.TypeObjet));
                     }
                 }
 
@@ -788,24 +632,27 @@ namespace Compta
             return Objet;
         }
 
-        public static T Parent<T, U>(U Enfant)
+        public static T Parent<T, U>(U enfant)
             where T : ObjetGestion, new()
             where U : ObjetGestion
         {
             // Si on demande les enfants d'un Objet non sauvegardé dans la base, il y a un pb
             // on renvoi la liste vide.
-            if ((Enfant != null) && (!Enfant.EstSvgDansLaBase))
+            if ((enfant != null) && (!enfant.EstSvgDansLaBase))
             {
                 Log.Methode("Bdd");
                 Log.Write("Erreur ID = -1");
-                Log.Write("Id : " + Enfant.Id);
+                Log.Write("Id : " + enfant.Id);
                 return null;
             }
 
-            String pQuery = String.Format("SELECT {0} FROM {1} WHERE {2} = {3};", NomChamp(typeof(T)), NomTable(typeof(U)), NomClePrimaire(typeof(U)), Enfant.Id);
+            var StructObjetT = DicProp.Dic[typeof(T)];
+            var StructObjetU = DicProp.Dic[typeof(U)];
+
+            String pQuery = String.Format("SELECT {0} FROM {1} WHERE {2} = {3};", StructObjetT.NomTable, StructObjetU.NomTable, StructObjetU.ClePrimaire.NomChampSql, enfant.Id);
             int pId = (int)Convert.ChangeType(RecupererChamp(pQuery, typeof(int)), typeof(int));
 
-            pQuery = String.Format("SELECT * FROM {0} WHERE {1} = {2};", NomTable(typeof(T)), NomClePrimaire(typeof(T)), pId);
+            pQuery = String.Format("SELECT * FROM {0} WHERE {1} = {2};", StructObjetT.NomTable, StructObjetT.ClePrimaire.NomChampSql, pId);
             DataTable Table = RecupererTable(pQuery);
 
             if ((Table == null) || (Table.Rows.Count == 0))
@@ -830,27 +677,31 @@ namespace Compta
             return pListe;
         }
 
-        public static ListeObservable<T> Enfants<T, U>(U Parent)
+        public static ListeObservable<T> Enfants<T, U>(U parent)
             where T : ObjetGestion, new()
             where U : ObjetGestion
         {
             if (ModeChargerObjet || ModeAjouterObjet) return null;
 
+            var StructObjetT = DicProp.Dic[typeof(T)];
+
             ListeObservable<T> pListe = new ListeObservable<T>();
 
-            String pQuery = String.Format("SELECT * FROM {0}", NomTable(typeof(T)));
+            String pQuery = String.Format("SELECT * FROM {0}", StructObjetT.NomTable);
 
             // Si on demande les enfants d'un Objet non sauvegardé dans la base, il y a un pb
             // on renvoi la liste vide.
-            if ((Parent != null) && (!Parent.EstSvgDansLaBase))
+            if ((parent != null) && (!parent.EstSvgDansLaBase))
                 return pListe;
 
+            var StructObjetU = DicProp.Dic[typeof(U)];
+
             // Filtre sur un objet
-            if (Parent != null)
-                pQuery += String.Format(" WHERE {0} = {1}", NomChamp(Parent.GetType()), Parent.Id);
+            if (parent != null)
+                pQuery += String.Format(" WHERE {0} = {1}", StructObjetU.NomTable, parent.Id);
 
             // S'il y a des clef de tri, on les ajoute
-            List<String> pNomClesTri = NomClesTri(typeof(T));
+            List<String> pNomClesTri = StructObjetT.NomCleTri;
             if (pNomClesTri.Count > 0)
                 pQuery += String.Format(" ORDER BY {0};", String.Join(", ", pNomClesTri));
 
@@ -862,118 +713,71 @@ namespace Compta
             // Sinon, on charge les objets
             foreach (DataRow Li in Table.Rows)
             {
-                T pObj = ChargerObjet<T, U>(Li, Parent);
+                T pObj = ChargerObjet<T, U>(Li, parent);
                 pListe.Add(pObj);
             }
 
             return pListe;
         }
 
-        public static void Ajouter<T>(T Objet)
+        public static void Ajouter<T>(T objet)
             where T : ObjetGestion
         {
             if (ModeChargerObjet) return;
 
             ModeAjouterObjet = true;
 
-            Dictionary<String, PropertyInfo> pDicProp = DicProprietes.ListePropriete(typeof(T));
+            var StructObjet = DicProp.Dic[typeof(T)];
 
-            foreach (PropertyInfo Prop in pDicProp.Values)
+            foreach (var info in StructObjet.ListeInfo)
             {
-                String Defaut = DicIntitules.Defaut(typeof(T).Name, Prop.Name);
-
-                #region CLE PRIMAIRE
-                // Si c'est une clé primaire, on passe à la suivante
-                if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                if (info.TypeChampSql.HasFlag(eTypeChampSql.CleEtrangere))
                     continue;
 
-                #endregion
+                String Defaut = DicIntitules.Defaut(typeof(T).Name, info.NomProp);
 
-                #region CLE ETRANGERE
-                if (Attribute.IsDefined(Prop, typeof(CleEtrangere)))
-                    continue;
-
-                #endregion
-
-                #region INTEGER MAX
-                // Si c'est une propriété MAX, on récupère le maximum de la colonne suivant les conditions
-                if (Attribute.IsDefined(Prop, typeof(Max)))
+                if (info.TypeChampSql.HasFlag(eTypeChampSql.Max))
                 {
-                    String pFiltreColonne = "";
-
-                    // On récupère l'attribut Max
-                    // On vérifie s'il a une propriété d'attachée
-                    Max pAttMax = (Max)Prop.GetCustomAttributes(typeof(Max)).First();
-                    if (!String.IsNullOrWhiteSpace(pAttMax.NomPropriete))
-                    {
-                        String pNomProp = pAttMax.NomPropriete;
-                        // On récupere la propriété liée
-                        PropertyInfo pProp = pDicProp[NomChamp(pNomProp)];
-                        // Sa valeur
-                        String Valeur = pProp.GetValue(Objet).ToString();
-                        // On crée le filtre
-                        pFiltreColonne = "WHERE " + pNomProp + "=" + Valeur;
-                    }
-
-                    String pQueryMax = String.Format("SELECT MAX({0}) FROM {1} {2}", NomChamp(Prop), NomTable(typeof(T)), pFiltreColonne);
-
-                    int pVal = (int)RecupererChamp(pQueryMax, Prop.PropertyType) + 1;
-                    Prop.SetValue(Objet, pVal);
-                    continue;
+                    int pVal = (int)RecupererChamp(String.Format("SELECT MAX({0}) FROM {1}", info.NomChampSql, StructObjet.NomTable), info.TypeObjet) + 1;
+                    info.Propriete.SetValue(objet, pVal);
                 }
-                #endregion
-
-                if (Prop.PropertyType.IsEnum && !String.IsNullOrWhiteSpace(Defaut))
-                {
-                    Prop.SetValue(Objet, System.Enum.Parse(Prop.PropertyType, Defaut));
-                    continue;
-                }
-
-                // Si la valeur par défaut n'est pas vide
-                if (!String.IsNullOrWhiteSpace(Defaut))
-                {
-                    Prop.SetValue(Objet, Convert.ChangeType(Defaut, Prop.PropertyType));
-                    continue;
-                }
-
-                // Si la valeur de la propriete est null
-                if (Prop.GetValue(Objet) == null)
-                {
-                    Prop.SetValue(Objet, Prop.PropertyType.GetDefaultValue());
-                    continue;
-                }
+                else if (info.TypeObjet.IsEnum && !String.IsNullOrWhiteSpace(Defaut))
+                    info.Propriete.SetValue(objet, System.Enum.Parse(info.TypeObjet, Defaut));
+                else if (!String.IsNullOrWhiteSpace(Defaut))
+                    info.Propriete.SetValue(objet, Convert.ChangeType(Defaut, info.TypeObjet));
+                else if (info.Propriete.GetValue(objet) == null)
+                    info.Propriete.SetValue(objet, info.TypeObjet.GetDefaultValue());
 
                 // Sinon on laisse la valeur existante
             }
 
-            if (Attribute.IsDefined(typeof(T), typeof(ForcerAjout)))
-                Ajouter(Objet, typeof(T));
+            if (StructObjet.ForcerAjout)
+                Ajouter(objet, typeof(T));
             else
-                ListeAjouter.Ajouter(Objet, typeof(T));
+                ListeAjouter.Ajouter(objet, typeof(T));
 
-            Objet.EstCharge = true;
-
+            objet.EstCharge = true;
             ModeAjouterObjet = false;
         }
 
-        public static void Maj(ObjetGestion Objet, Type T, String NomPropriete = null)
+        public static void Maj(ObjetGestion objet, Type T, String nomPropriete = null)
         {
             if (ModeChargerObjet || ModeAjouterObjet) return;
 
-            ListeMaj.Ajouter(Objet, T);
+            ListeMaj.Ajouter(objet, T);
         }
 
-        public static void Supprimer<T>(T Objet)
+        public static void Supprimer<T>(T objet)
             where T : ObjetGestion
         {
-            if (Objet.EstSvgDansLaBase)
+            if (objet.EstSvgDansLaBase)
             {
-                ListeAjouter.Supprimer(Objet);
-                ListeMaj.Supprimer(Objet);
-                ListeSupprimer.Ajouter(Objet, typeof(T));
+                ListeAjouter.Supprimer(objet);
+                ListeMaj.Supprimer(objet);
+                ListeSupprimer.Ajouter(objet, typeof(T));
             }
 
-            Objet = null;
+            objet = null;
         }
 
         private class GenericOrderedDictionary<T, U> : OrderedDictionary
@@ -1025,41 +829,40 @@ namespace Compta
             ListeSupprimer.Clear();
         }
 
-        private static String Prefix = "@";
-        private static readonly String PrefixClef = Prefix + "Valeur_";
-
-        private static void Ajouter(ObjetGestion Objet, Type T)
+        private static void Ajouter(ObjetGestion objet, Type T)
         {
-            if (Objet.EstSvgDansLaBase) return;
+            if (objet.EstSvgDansLaBase) return;
 
-            Dictionary<String, PropertyInfo> pDicProp = DicProprietes.ListePropriete(T);
+            var StructObjet = DicProp.Dic[T];
 
             List<String> pListeChamps = new List<String>();
             ListParametres pDicValeurs = new ListParametres();
 
-            foreach (PropertyInfo Prop in pDicProp.Values)
-            {
-                String Defaut = DicIntitules.Defaut(T.Name, Prop.Name);
+            String PrefixClef = "@Valeur_";
 
-                String Cle = PrefixClef + NomChamp(Prop);
+            foreach (var info in StructObjet.ListeInfo)
+            {
+                String Defaut = DicIntitules.Defaut(T.Name, info.NomProp);
+
+                String Cle = PrefixClef + info.NomChampSql;
 
                 #region CLE PRIMAIRE
                 // Si c'est une clé primaire, on passe à la suivante
-                if (Attribute.IsDefined(Prop, typeof(ClePrimaire)))
+                if (info.TypeChampSql.HasFlag(eTypeChampSql.ClePrimaire))
                     continue;
 
                 #endregion
 
                 #region CLE ETRANGERE
-                if (Attribute.IsDefined(Prop, typeof(CleEtrangere)))
+                if (info.TypeChampSql.HasFlag(eTypeChampSql.CleEtrangere))
                 {
                     // On récupère l'id de l'objet
-                    Object Obj = Prop.GetValue(Objet);
+                    Object Obj = info.Propriete.GetValue(objet);
 
                     // S'il est égale à la valeur par défaut, il est initialisé donc on l'ajoute
                     if (Obj != null)
                     {
-                        pListeChamps.Add(NomChamp(Prop));
+                        pListeChamps.Add(info.NomChampSql);
                         pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(Obj.ToString());
                     }
                     continue;
@@ -1067,7 +870,7 @@ namespace Compta
 
                 #endregion
 
-                pListeChamps.Add(NomChamp(Prop));
+                pListeChamps.Add(info.NomChampSql);
 
                 // Delegate pour l'insertion dans le dictionnaire
                 Action<MySqlDbType, Func<Object, Object>> AjouterDic = delegate (MySqlDbType t, Func<Object, Object> f)
@@ -1080,24 +883,24 @@ namespace Compta
                         return c(v);
                     };
 
-                    if (Prop.GetValue(Objet) != null)
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(Prop.GetValue(Objet), f);
+                    if (info.Propriete.GetValue(objet) != null)
+                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(info.Propriete.GetValue(objet), f);
                     else if (String.IsNullOrWhiteSpace(Defaut))
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(Prop.PropertyType.GetDefaultValue(), f);
+                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(info.TypeObjet.GetDefaultValue(), f);
                     else
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Convert.ChangeType(Valeur(Defaut, f), Prop.PropertyType);
+                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Convert.ChangeType(Valeur(Defaut, f), info.TypeObjet);
                 };
 
 
                 #region ENUM
                 // Si c'est un Enum, on fait la conversion
-                if (Prop.PropertyType.IsEnum)
+                if (info.TypeObjet.IsEnum)
                 {
                     AjouterDic(MySqlDbType.Int32, o =>
                     {
                         String s = o as String;
                         if (s != null)
-                            o = System.Enum.Parse(Prop.PropertyType, s);
+                            o = System.Enum.Parse(info.TypeObjet, s);
 
                         return Convert.ToInt32(o);
                     });
@@ -1107,7 +910,7 @@ namespace Compta
 
                 #region BOOLEAN
                 // Si c'est un Boolean, c'est pareil, on converti
-                if (Prop.PropertyType == typeof(Boolean))
+                if (info.TypeObjet == typeof(Boolean))
                 {
                     AjouterDic(MySqlDbType.Int32, o => { return Convert.ToInt32(o); });
                     continue;
@@ -1116,7 +919,7 @@ namespace Compta
 
                 #region STRING
                 // Si c'est un String, c'est pareil, on converti
-                if (Prop.PropertyType == typeof(String))
+                if (info.TypeObjet == typeof(String))
                 {
                     AjouterDic(MySqlDbType.Text, null);
                     continue;
@@ -1125,7 +928,7 @@ namespace Compta
 
                 #region DATETIME
                 // Si c'est un DateTime, c'est pareil, on converti
-                if (Prop.PropertyType == typeof(DateTime))
+                if (info.TypeObjet == typeof(DateTime))
                 {
                     AjouterDic(MySqlDbType.Timestamp, null);
                     continue;
@@ -1134,7 +937,7 @@ namespace Compta
 
                 #region DOUBLE
                 // Si c'est un Double, c'est pareil, on converti
-                if (Prop.PropertyType == typeof(Double))
+                if (info.TypeObjet == typeof(Double))
                 {
                     AjouterDic(MySqlDbType.Double, o =>
                     {
@@ -1150,24 +953,24 @@ namespace Compta
 
                 #region INTEGER
                 // Si c'est un int32, c'est pareil, on converti
-                if (Prop.PropertyType == typeof(int))
+                if (info.TypeObjet == typeof(int))
                 {
                     AjouterDic(MySqlDbType.Int32, null);
                     continue;
                 }
                 #endregion
 
-                if (Prop.GetValue(Objet) != null)
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, Prop.GetValue(Objet).ToString()));
+                if (info.Propriete.GetValue(objet) != null)
+                    pDicValeurs.Ajouter(new MySqlParameter(Cle, info.Propriete.GetValue(objet).ToString()));
                 else if (String.IsNullOrWhiteSpace(Defaut))
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, Prop.PropertyType.GetDefaultValue()));
+                    pDicValeurs.Ajouter(new MySqlParameter(Cle, info.TypeObjet.GetDefaultValue()));
                 else
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, Convert.ChangeType(Defaut, Prop.PropertyType)));
+                    pDicValeurs.Ajouter(new MySqlParameter(Cle, Convert.ChangeType(Defaut, info.TypeObjet)));
             }
 
             {
                 String pQuery = String.Format("INSERT INTO {0} ( {1} ) VALUES ( {2} );",
-                    NomTable(T),
+                    StructObjet.NomTable,
                     String.Join(" , ", pListeChamps),
                     String.Join(" , ", pDicValeurs.Noms)
                     );
@@ -1175,204 +978,192 @@ namespace Compta
                 ExecuterAsync(pQuery, pDicValeurs);
             }
 
-            Objet.Id = DernierIdInsere(T);
+            objet.Id = DernierIdInsere(T);
 
-            DicObjet.ReferencerObjet(Objet, T);
+            DicObjet.ReferencerObjet(objet, T);
         }
 
-        private static void Maj(ObjetGestion Objet, Type T)
+        private static void Maj(ObjetGestion objet, Type T)
         {
-            if (!Objet.EstSvgDansLaBase) return;
+            if (!objet.EstSvgDansLaBase) return;
 
-            Dictionary<String, PropertyInfo> pDicProp = DicProprietes.ListePropriete(T);
-
-            List<PropertyInfo> ListeProp = new List<PropertyInfo>();
-
-            ListeProp = pDicProp.Values.ToList<PropertyInfo>();
-
-            ListParametres pDicValeurs = new ListParametres();
+            ListParametres ListeParam = new ListParametres();
             List<String> pListChaine = new List<String>();
 
-            foreach (PropertyInfo Prop in ListeProp)
+            var StructObjet = DicProp.Dic[T];
+            String PrefixClef = "@Valeur_";
+
+            foreach (var info in StructObjet.ListeInfo)
             {
-                if ((!Attribute.IsDefined(Prop, typeof(ClePrimaire))) && (Prop.GetValue(Objet) != null))
+                var val = info.Propriete.GetValue(objet);
+
+                if (val != null)
                 {
-                    String Cle = PrefixClef + NomChamp(Prop);
+                    String Cle = PrefixClef + info.NomChampSql;
 
-                    pListChaine.Add(NomChamp(Prop) + " = " + Cle);
+                    pListChaine.Add(info.NomChampSql + " = " + Cle);
 
-                    if (Attribute.IsDefined(Prop, typeof(CleEtrangere)))
-                    {
-                        // On récupère l'id de l'objet
-                        Object Obj = Prop.GetValue(Objet);
-
-                        // S'il est égale à la valeur par défaut, il est initialisé donc on l'ajoute
-                        if (Obj != null)
-                            pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(Obj.ToString());
-                        continue;
-                    }
-                    else if (Prop.PropertyType.IsEnum)
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = (int)Prop.GetValue(Objet);
-                    }
-                    else if (Prop.PropertyType == typeof(int))
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Prop.GetValue(Objet);
-                    }
-                    else if (Prop.PropertyType == typeof(Boolean))
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(Prop.GetValue(Objet));
-                    }
-                    else if (Prop.PropertyType == typeof(Double))
-                    {
-                        Double Val = (Double)Prop.GetValue(Objet);
-                        if (Double.IsNaN(Val))
-                            Val = 0;
-
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Double)).Value = Val;
-                    }
-                    else if (Prop.PropertyType == typeof(DateTime))
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Timestamp)).Value = Prop.GetValue(Objet);
-                    }
-                    else if (Prop.PropertyType == typeof(String))
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Text)).Value = Prop.GetValue(Objet);
-                    }
+                    if (info.TypeChampSql.HasFlag(eTypeChampSql.CleEtrangere))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(val.ToString());
+                    else if (info.TypeObjet.IsEnum)
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = (int)val;
+                    else if (info.TypeObjet == typeof(int))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = val;
+                    else if (info.TypeObjet == typeof(Boolean))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(val);
+                    else if (info.TypeObjet == typeof(Double))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Double)).Value = Double.IsNaN((Double)val) ? 0 : (Double)val;
+                    else if (info.TypeObjet == typeof(DateTime))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Timestamp)).Value = val;
+                    else if (info.TypeObjet == typeof(String))
+                        ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Text)).Value = val;
                     else
-                    {
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, Prop.GetValue(Objet)));
-                    }
+                        ListeParam.Ajouter(new MySqlParameter(Cle, val));
                 }
             }
 
-            pDicValeurs.Ajouter(new MySqlParameter(PrefixClef + NomClePrimaire(T), Objet.Id));
+            ListeParam.Ajouter(new MySqlParameter(PrefixClef + StructObjet.ClePrimaire.NomChampSql, objet.Id));
 
-            String pQuery = String.Format("UPDATE {0} SET {1} WHERE {2} = {3}", NomTable(T), String.Join(" , ", pListChaine), NomClePrimaire(T), PrefixClef + NomClePrimaire(T));
-            ExecuterAsync(pQuery, pDicValeurs);
+            String pQuery = String.Format("UPDATE {0} SET {1} WHERE {2} = {3}", StructObjet.NomTable, String.Join(" , ", pListChaine), StructObjet.ClePrimaire.NomChampSql, PrefixClef + StructObjet.ClePrimaire.NomChampSql);
+            ExecuterAsync(pQuery, ListeParam);
         }
 
-        private static void Supprimer(ObjetGestion Objet, Type T)
+        private static void Supprimer(ObjetGestion objet, Type T)
         {
-            if (!Objet.EstSvgDansLaBase) return;
+            if (!objet.EstSvgDansLaBase) return;
 
-            DicObjet.SupprimerObjet(Objet, T);
+            DicObjet.SupprimerObjet(objet, T);
 
-            String pQuery = String.Format("DELETE FROM {0} WHERE {1} = {2};", NomTable(T), NomClePrimaire(T), Objet.Id.ToString());
+            String pQuery = String.Format("DELETE FROM {0} WHERE {1} = {2};", DicProp.Dic[T].NomTable, DicProp.Dic[T].ClePrimaire.NomChampSql, objet.Id.ToString());
             ExecuterAsync(pQuery, null);
+        }
+
+        public static void PreCharger<T>(T objet)
+            where T : ObjetGestion
+        {
+
+        }
+
+        public static void PreCharger<T>(List<T> listeObjet)
+            where T : ObjetGestion
+        {
+            var StructObjetT = Bdd.DicProp.Dic[typeof(T)];
+
+            var ListeId = new List<int>();
+            foreach (var item in listeObjet)
+                ListeId.Add(item.Id);
+
+
+
         }
 
         // Dictionnaire des objets avec leurs propriétés et le nom du champ associé.
         // Structure :
         //              Dictionary<Type, Dictionary<String, PropertyInfo>>
 
-        public static class DicProprietes
+        [Flags]
+        public enum eTypeChampSql
         {
-            private static Dictionary<Type, Dictionary<String, PropertyInfo>> _DicPropriete = null;
-            private static Dictionary<Type, Dictionary<String, FieldInfo>> _DicChamp = null;
-            private static Dictionary<Type, PropertyInfo> _DicClePrimaire = null;
-            private static Dictionary<Type, List<PropertyInfo>> _DicTri = null;
-
-            private static Boolean TypeEstObjetGestion(Type T)
-            {
-                Type U = T;
-
-                if (T.IsAbstract) return false;
-
-                while (U.BaseType != null)
-                {
-                    if (U.BaseType == typeof(ObjetGestion))
-                        return true;
-
-                    U = U.BaseType;
-                }
-
-                return false;
-            }
-
-            static DicProprietes()
-            {
-                _DicPropriete = new Dictionary<Type, Dictionary<String, PropertyInfo>>();
-                _DicChamp = new Dictionary<Type, Dictionary<String, FieldInfo>>();
-                _DicClePrimaire = new Dictionary<Type, PropertyInfo>();
-                _DicTri = new Dictionary<Type, List<PropertyInfo>>();
-
-                List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().ToList();
-
-                int i = 0;
-                while (i < ListeTypes.Count)
-                {
-                    Type T = ListeTypes[i];
-
-                    if (!TypeEstObjetGestion(T))
-                        ListeTypes.RemoveAt(i);
-                    else
-                        i++;
-                }
-
-                foreach (Type T in ListeTypes)
-                {
-                    List<PropertyInfo> pListeProp = T.GetProperties().Where(Prop => Attribute.IsDefined(Prop, typeof(Propriete), true)).ToList<PropertyInfo>();
-
-                    Dictionary<String, PropertyInfo> pDicPropriete = new Dictionary<String, PropertyInfo>();
-                    Dictionary<String, FieldInfo> pDicChamp = new Dictionary<String, FieldInfo>();
-                    List<PropertyInfo> pListTri = new List<PropertyInfo>();
-
-                    foreach (PropertyInfo Prop in pListeProp)
-                    {
-                        pDicPropriete.Add(NomChamp(Prop), Prop);
-                        pDicChamp.Add(NomChamp(Prop), T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).First(Champ => Champ.Name == "_" + Prop.Name));
-
-                        if (Attribute.IsDefined(Prop, typeof(ClePrimaire)) && !_DicClePrimaire.ContainsKey(T))
-                            _DicClePrimaire.Add(T, Prop);
-
-                        if (Attribute.IsDefined(Prop, typeof(Tri)))
-                            pListTri.Add(Prop);
-                    }
-
-                    pListTri = pListTri.OrderBy(x => (x.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
-
-                    _DicPropriete.Add(T, pDicPropriete);
-                    _DicChamp.Add(T, pDicChamp);
-                    _DicTri.Add(T, pListTri);
-                }
-            }
-
-            public static List<Type> ListeType()
-            {
-                return _DicPropriete.Keys.ToList<Type>();
-            }
-
-            public static Dictionary<String, PropertyInfo> ListePropriete(Type T)
-            {
-                return _DicPropriete[T];
-            }
-
-            public static Dictionary<String, FieldInfo> ListeChamp(Type T)
-            {
-                return _DicChamp[T];
-            }
-
-            public static PropertyInfo ClePrimaire(Type T)
-            {
-                return _DicClePrimaire[T];
-            }
-
-            public static List<PropertyInfo> ListeTri(Type T)
-            {
-                return _DicTri[T];
-            }
+            Aucun = 0,
+            ClePrimaire = 1,
+            CleEtrangere = 2,
+            Propriete = 4,
+            ListeObjetGestion = 8,
+            Tri = 16,
+            Max = 32
         }
 
         public class Info
         {
-            public Info(PropertyInfo propriete, FieldInfo champ, FieldInfo champId = null)
+            public Info(PropertyInfo propriete, FieldInfo champ, FieldInfo champId)
             {
+                if (Attribute.IsDefined(propriete, typeof(Propriete), true))
+                {
+                    TypeChampSql = eTypeChampSql.Propriete;
+
+                    if (Attribute.IsDefined(propriete, typeof(ClePrimaire)))
+                        TypeChampSql |= eTypeChampSql.ClePrimaire;
+
+                    else if (Attribute.IsDefined(propriete, typeof(CleEtrangere)))
+                        TypeChampSql |= eTypeChampSql.CleEtrangere;
+
+                    if (Attribute.IsDefined(propriete, typeof(Tri), false))
+                    {
+                        TypeChampSql |= eTypeChampSql.Tri;
+                        Tri = propriete.GetCustomAttributes(typeof(Tri)).First() as Tri;
+                    }
+
+                    if (Attribute.IsDefined(propriete, typeof(Max), false))
+                    {
+                        TypeChampSql |= eTypeChampSql.Max;
+                        Max = propriete.GetCustomAttributes(typeof(Max)).First() as Max;
+                    }
+
+                    Propriete pAttProp = propriete.GetCustomAttributes(typeof(Propriete)).First() as Propriete;
+
+                    if (pAttProp != null)
+                    {
+                        switch (pAttProp.Type)
+                        {
+                            case TypeSQL_e.cAuto:
+                                if (propriete.PropertyType == typeof(int))
+                                    FormatChampSql = "INTEGER";
+                                else if (propriete.PropertyType == typeof(Boolean))
+                                    FormatChampSql = "INTEGER";
+                                else if (propriete.PropertyType == typeof(Double))
+                                    FormatChampSql = "DOUBLE";
+                                else if (propriete.PropertyType == typeof(DateTime))
+                                    FormatChampSql = "TIMESTAMP";
+                                else if (propriete.PropertyType == typeof(String))
+                                    FormatChampSql = "TEXT";
+                                else if (propriete.PropertyType.IsEnum)
+                                    FormatChampSql = "INTEGER";
+                                else
+                                    FormatChampSql = "TEXT";
+                                break;
+
+                            case TypeSQL_e.cInt:
+                                FormatChampSql = "INTEGER";
+                                break;
+                            case TypeSQL_e.cBool:
+                                FormatChampSql = "INTEGER";
+                                break;
+                            case TypeSQL_e.cDbl:
+                                FormatChampSql = "DOUBLE";
+                                break;
+                            case TypeSQL_e.cDate:
+                                FormatChampSql = "TEXT";
+                                break;
+                            case TypeSQL_e.cString:
+                                FormatChampSql = "TEXT";
+                                break;
+                            case TypeSQL_e.cEnum:
+                                FormatChampSql = "INTEGER";
+                                break;
+                            case TypeSQL_e.cSerial:
+                                FormatChampSql = "INTEGER";
+                                break;
+                            default:
+                                FormatChampSql = "TEXT";
+                                break;
+                        }
+
+                        ContrainteChampSql = pAttProp.Contrainte;
+                    }
+                }
+
+                else if (Attribute.IsDefined(propriete, typeof(ListeObjetGestion)))
+                    TypeChampSql = eTypeChampSql.ListeObjetGestion;
+
+                if (TypeChampSql == eTypeChampSql.Aucun) return;
+
                 Propriete = propriete;
                 NomProp = propriete.Name;
 
                 Champ = champ;
                 NomChamp = champ.Name;
+
+                NomChampSql = propriete.Name.ToLowerInvariant();
 
                 if (champId != null)
                 {
@@ -1380,13 +1171,24 @@ namespace Compta
                     NomChampId = champId.Name;
                 }
 
+                TypeObjet = propriete.PropertyType;
+
+                if (TypeObjet.GetInterface(nameof(ICollection)) != null)
+                    TypeObjet = TypeObjet.GetGenericArguments()[0];
             }
+            public Max Max { get; private set; } = null;
+            public Tri Tri { get; private set; } = null;
+            public String FormatChampSql { get; private set; } = "";
+            public String ContrainteChampSql { get; private set; } = "";
+            public eTypeChampSql TypeChampSql { get; private set; } = eTypeChampSql.Aucun;
+            public Type TypeObjet { get; private set; }
             public String NomProp { get; private set; }
             public PropertyInfo Propriete { get; private set; }
             public String NomChamp { get; private set; }
             public FieldInfo Champ { get; private set; }
             public String NomChampId { get; private set; }
             public FieldInfo ChampId { get; private set; }
+            public String NomChampSql { get; private set; }
         }
 
         public class StructObjetGestion
@@ -1394,52 +1196,78 @@ namespace Compta
             public StructObjetGestion(Type t)
             {
                 T = t;
-                ListeCleEtrangere = new List<Info>();
-                ListeInfo = new List<Info>();
-                ListeObjet = new List<Info>();
-                ListeTri = new List<Info>();
 
+                // On recupère les champs dans un dictionnaire
+                // avec comme clé le nom du champ moins la première lettre qui doit normalement
+                // correspondre à un "_"
                 var DicChamp = new Dictionary<String, FieldInfo>();
                 foreach (var champ in T.GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
                     DicChamp.Add(champ.Name.Substring(1), champ);
 
-                Info Champ = null;
-
-                Info InitProp(PropertyInfo p, bool i = false) => Champ = new Info(p, DicChamp[p.Name], i ? DicChamp["Id" + p.Name] : null);
-
                 foreach (var prop in T.GetProperties())
                 {
-                    Champ = null;
+                    Info Champ = new Info(prop,
+                                          DicChamp.ContainsKey(prop.Name) ? DicChamp[prop.Name] : null,
+                                          DicChamp.ContainsKey("Id_" + prop.Name) ? DicChamp["Id_" + prop.Name] : null
+                                          );
 
-                    if (Attribute.IsDefined(prop, typeof(ClePrimaire)))
-                        ClePrimaire = InitProp(prop);
+                    if (Champ.TypeChampSql.HasFlag(eTypeChampSql.Propriete))
+                    {
+                        ListeChampSql.Add(Champ);
 
-                    else if (Attribute.IsDefined(prop, typeof(CleEtrangere)))
-                        ListeCleEtrangere.Add(InitProp(prop, true));
+                        if (Champ.TypeChampSql.HasFlag(eTypeChampSql.ClePrimaire))
+                            ClePrimaire = Champ;
 
-                    else if (Attribute.IsDefined(prop, typeof(Propriete), true))
-                        ListeInfo.Add(InitProp(prop));
+                        else if (Champ.TypeChampSql.HasFlag(eTypeChampSql.CleEtrangere))
+                            ListeCleEtrangere.Add(Champ);
 
-                    else if (Attribute.IsDefined(prop, typeof(ListeObjetGestion)))
-                        ListeObjet.Add(InitProp(prop));
+                        else
+                            ListeInfo.Add(Champ);
 
-                    if (Champ != null && Attribute.IsDefined(prop, typeof(Tri)))
-                        ListeTri.Add(Champ);
+                        if (Champ.TypeChampSql.HasFlag(eTypeChampSql.Tri))
+                            ListeTri.Add(Champ);
+                    }
+
+                    else if (Champ.TypeChampSql.HasFlag(eTypeChampSql.ListeObjetGestion))
+                        ListeListeObjet.Add(Champ);
                 }
 
+                // On tri les cles de 
                 ListeTri = ListeTri.OrderBy(x => (x.Propriete.GetCustomAttributes(typeof(Tri)).First() as Tri).No).ToList();
+
+                //===================================================================================================
+
+                foreach (var info in ListeTri)
+                {
+                    var Tri = info.Propriete.GetCustomAttributes(typeof(Tri)).First() as Tri;
+                    NomCleTri.Add(info.NomProp + " " + Tri.DirectionTriSql);
+                }
+
+                if (NomCleTri.Count == 0)
+                    NomCleTri.Add(ClePrimaire.NomChampSql + " ASC");
+
+                NomTable = T.Name.ToString().ToLowerInvariant();
+
+                if (Attribute.IsDefined(T, typeof(ForcerAjout)))
+                    ForcerAjout = true;
             }
-            public Type T { get; private set; }
-            public Info ClePrimaire { get; private set; }
-            public List<Info> ListeCleEtrangere { get; private set; }
-            public List<Info> ListeInfo { get; private set; }
-            public List<Info> ListeObjet { get; private set; }
-            public List<Info> ListeTri { get; private set; }
+
+            public Boolean ForcerAjout { get; private set; } = false;
+            public String NomTable { get; private set; }
+            public Type T { get; private set; } = null;
+            public Info ClePrimaire { get; private set; } = null;
+            public List<Info> ListeCleEtrangere { get; private set; } = new List<Info>();
+            public List<Info> ListeInfo { get; private set; } = new List<Info>();
+            public List<Info> ListeChampSql { get; private set; } = new List<Info>();
+            public List<Info> ListeListeObjet { get; private set; } = new List<Info>();
+            public List<Info> ListeTri { get; private set; } = new List<Info>();
+            public List<String> NomCleTri { get; private set; } = new List<String>();
+
         }
 
         public static class DicProp
         {
-            public static Dictionary<Type, StructObjetGestion> DicPropriete { get; private set; }
+            public static Dictionary<Type, StructObjetGestion> Dic { get; private set; }
 
             private static Boolean TypeEstObjetGestion(Type T)
             {
@@ -1460,15 +1288,15 @@ namespace Compta
 
             static DicProp()
             {
-                DicPropriete = new Dictionary<Type, StructObjetGestion>();
+                Dic = new Dictionary<Type, StructObjetGestion>();
 
                 List<Type> ListeTypes = Assembly.GetExecutingAssembly().GetTypes().Where(T => TypeEstObjetGestion(T)).ToList();
 
                 foreach (Type T in ListeTypes)
-                    DicPropriete.Add(T, new StructObjetGestion(T));
+                    Dic.Add(T, new StructObjetGestion(T));
             }
 
-            public static List<Type> ListeType => DicPropriete.Keys.ToList<Type>();
+            public static List<Type> ListeType => Dic.Keys.ToList<Type>();
         }
 
         // Dictionnaire des objets déjà crée.
