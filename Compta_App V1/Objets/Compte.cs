@@ -16,7 +16,7 @@ namespace Compta
             Groupe = groupe;
         }
 
-        [Propriete, Max, Tri(Modifiable=true)]
+        [Propriete, Max]
         public override int No
         {
             get { return base.No; }
@@ -73,7 +73,7 @@ namespace Compta
         }
 
         private String _Nom = "-";
-        [Propriete]
+        [Propriete, Tri]
         public String Nom
         {
             get { return _Nom; }
@@ -150,10 +150,13 @@ namespace Compta
             get
             {
                 if (_ListeLigneBanque == null)
-                {
                     _ListeLigneBanque = Bdd.Enfants<LigneBanque, Compte>(this);
+
+                if (!_ListeLigneBanque.OptionsCharges)
+                {
                     _ListeLigneBanque.OnAjouter += delegate (LigneBanque obj, int? id) { Calculer(); };
                     _ListeLigneBanque.OnSupprimer += delegate (LigneBanque obj, int? id) { Calculer(); };
+                    _ListeLigneBanque.OptionsCharges = true;
                 }
 
                 return _ListeLigneBanque;
@@ -172,10 +175,13 @@ namespace Compta
             get
             {
                 if (_ListeLigneCompta == null)
-                {
                     _ListeLigneCompta = Bdd.Enfants<LigneCompta, Compte>(this);
+
+                if (!_ListeLigneCompta.OptionsCharges)
+                {
                     _ListeLigneCompta.OnAjouter += delegate (LigneCompta obj, int? id) { Calculer(); };
                     _ListeLigneCompta.OnSupprimer += delegate (LigneCompta obj, int? id) { Calculer(); };
+                    _ListeLigneCompta.OptionsCharges = true;
                 }
 
                 return _ListeLigneCompta;

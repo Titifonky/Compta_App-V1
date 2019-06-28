@@ -151,4 +151,7 @@ namespace Compta
             set { _Unite = value; }
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class NePasPreCharger : Attribute { }
 }

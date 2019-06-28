@@ -50,6 +50,8 @@ namespace Compta
             set { _EstCharge = value; }
         }
 
+        public Boolean EstPreCharge { get; set; } = false;
+
         protected int _No = 0;
         [Propriete, Max, Tri]
         public virtual int No
@@ -190,6 +192,8 @@ namespace Compta
                 return _ListeEntete;
             }
         }
+
+        public Boolean OptionsCharges { get; set; } = false;
 
         public void Numeroter()
         {

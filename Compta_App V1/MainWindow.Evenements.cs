@@ -353,7 +353,12 @@ namespace Compta
                     Nb = 1;
 
                 for (int i = 0; i < Nb; i++)
-                    pListe.Add(Ajouter<T, U>(Parent));
+                {
+                    T obj = Ajouter<T, U>(Parent);
+                    pListe.Add(obj);
+                    V.ScrollIntoView(obj);
+                    V.SelectedItem = obj;
+                }
             }
 
             return pListe;
@@ -665,7 +670,7 @@ namespace Compta
 
                 xListeEcritureBanque.ScrollIntoView(L.EcritureBanque);
                 xListeEcritureBanque.SelectedItem = L.EcritureBanque;
-                
+
             }
         }
 

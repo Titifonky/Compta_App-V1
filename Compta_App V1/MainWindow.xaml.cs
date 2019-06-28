@@ -28,6 +28,7 @@ namespace Compta
         public MainWindow()
         {
             this.Closing += new CancelEventHandler(MainWindow_Closing);
+            this.Loaded += MainWindow_Loaded;
 
             InitializeComponent();
 
@@ -39,6 +40,11 @@ namespace Compta
 
             WindowParam.AjouterParametre(this);
             WindowParam.RestaurerParametre(this);
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Log.Message("Requette SQL : " + Bdd.TempsRequete);
         }
 
         private Boolean Start()
@@ -66,12 +72,32 @@ namespace Compta
             xConnexionCourante.Text = BaseSelectionnee + ", connecté à l'adresse : " + Bdd.ConnexionCourante;
 
             pSociete = Bdd.Liste<Societe>()[0];
-            Bdd.Liste<Banque>();
-            Bdd.Liste<Groupe>();
-            Bdd.Liste<Compte>();
-            Bdd.Liste<EcritureBanque>();
-            Bdd.Liste<LigneBanque>();
-            Bdd.Liste<LigneCompta>();
+
+            Log.Message("Precharger Societe");
+            var result1 = Bdd.PreCharger(typeof(Societe), new List<ObjetGestion>() { pSociete });
+
+            Log.Message("Precharger Banque");
+            var result2 = Bdd.PreCharger(typeof(Banque), result1[typeof(Banque)]);
+
+            Log.Message("Precharger EcritureBanque");
+            var result3 = Bdd.PreCharger(typeof(EcritureBanque), result2[typeof(EcritureBanque)]);
+
+            Log.Message("Precharger Groupe");
+            var result4 = Bdd.PreCharger(typeof(Groupe), result1[typeof(Groupe)]);
+
+            Log.Message("Precharger Compte");
+            var result5 = Bdd.PreCharger(typeof(Compte), result4[typeof(Compte)]);
+
+            Log.Message("Precharger Fin");
+
+            //foreach (Compte cp in result4[typeof(Compte)])
+            //{
+            //    Log.Message(cp.Nom);
+            //    Log.Message(cp.ListeLigneBanque.Count);
+            //    Log.Message(cp.ListeLigneCompta.Count);
+            //}
+
+            Log.Message("test chargement");
 
             this.DataContext = pSociete;
 

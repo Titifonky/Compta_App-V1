@@ -18,7 +18,7 @@ namespace Compta
             C.Nom = "-";
         }
 
-        [Propriete, Max, Tri(Modifiable = true)]
+        [Propriete, Max]
         public override int No
         {
             get { return base.No; }
@@ -45,7 +45,7 @@ namespace Compta
         }
 
         private String _Nom = "";
-        [Propriete]
+        [Propriete, Tri]
         public String Nom
         {
             get { return _Nom; }
@@ -82,6 +82,12 @@ namespace Compta
             {
                 if (_ListeCompte == null)
                     _ListeCompte = Bdd.Enfants<Compte, Groupe>(this);
+
+                if(!_ListeCompte.OptionsCharges)
+                {
+                    _ListeCompte.Trier += (a, b) => { return a.Nom.CompareTo(b.Nom); };
+                    _ListeCompte.OptionsCharges = true;
+                }
 
                 return _ListeCompte;
             }

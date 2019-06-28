@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows.Data;
+using System.Linq;
 
 namespace Compta
 {
@@ -42,9 +43,58 @@ namespace Compta
             get
             {
                 if (_CompteBase == null)
-                    _CompteBase = ListeGroupe[0].ListeCompte[0];
+                {
+                    var grp = ListeGroupe.Where(c => c.No == 1).First();
+                    _CompteBase = grp.ListeCompte[0];
+                }
 
                 return _CompteBase;
+            }
+        }
+
+        private ListeObservable<Groupe> _ListeGroupe = null;
+        [ListeObjetGestion]
+        public ListeObservable<Groupe> ListeGroupe
+        {
+            get
+            {
+                if (_ListeGroupe == null)
+                    _ListeGroupe = Bdd.Enfants<Groupe, Societe>(this);
+
+                if (!_ListeGroupe.OptionsCharges)
+                {
+                    _ListeGroupe.ItemsNotifyPropertyChanged = true;
+                    _ListeGroupe.OptionsCharges = true;
+                }
+
+                return _ListeGroupe;
+            }
+            set
+            {
+                SetListe(ref _ListeGroupe, value);
+            }
+        }
+
+        private ListeObservable<Compte> _ListeCompte = null;
+        [ListeObjetGestion]
+        public ListeObservable<Compte> ListeCompte
+        {
+            get
+            {
+                if (_ListeCompte == null)
+                    _ListeCompte = Bdd.Liste<Compte>();
+
+                if (!_ListeCompte.OptionsCharges)
+                {
+                    _ListeCompte.ItemsNotifyPropertyChanged = true;
+                    _ListeCompte.OptionsCharges = true;
+                }
+
+                return _ListeCompte;
+            }
+            set
+            {
+                SetListe(ref _ListeCompte, value);
             }
         }
 
@@ -81,45 +131,6 @@ namespace Compta
                 SetListe(ref _ListeBanque, value);
             }
         }
-
-        private ListeObservable<Groupe> _ListeGroupe = null;
-        [ListeObjetGestion]
-        public ListeObservable<Groupe> ListeGroupe
-        {
-            get
-            {
-                if (_ListeGroupe == null)
-                {
-                    _ListeGroupe = Bdd.Enfants<Groupe, Societe>(this);
-                    _ListeGroupe.ItemsNotifyPropertyChanged = true;
-                }
-
-                return _ListeGroupe;
-            }
-            set
-            {
-                SetListe(ref _ListeGroupe, value);
-            }
-        }
-
-        private ListeObservable<Compte> _ListeCompte = null;
-        [ListeObjetGestion]
-        public ListeObservable<Compte> ListeCompte
-        {
-            get
-            {
-                if (_ListeCompte == null)
-                {
-                    _ListeCompte = Bdd.Liste<Compte>();
-                    _ListeCompte.ItemsNotifyPropertyChanged = true;
-                }
-
-                return _ListeCompte;
-            }
-            set
-            {
-                SetListe(ref _ListeCompte, value);
-            }
-        }
+        
     }
 }
