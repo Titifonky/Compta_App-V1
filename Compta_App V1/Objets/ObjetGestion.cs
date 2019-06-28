@@ -256,9 +256,13 @@ namespace Compta
             }
         }
 
-        public delegate int FonctionTriHandler(T a, T b);
+        public delegate int FonctionTriAscHandler(T a, T b);
 
-        public event FonctionTriHandler Trier;
+        public event FonctionTriAscHandler TrierAsc;
+
+        public delegate int FonctionTriDescHandler(T a, T b);
+
+        public event FonctionTriDescHandler TrierDesc;
 
         public ListeObservable()
             : base()
@@ -288,23 +292,36 @@ namespace Compta
 
         private int ChercherIndex(T Item)
         {
-            int index = this.Count - 1;
-            int nbBoucle = 0;
-            for (index = this.Count - 1; index > -1; index--)
+            int index = 0;
+            if (TrierAsc != null)
             {
-                nbBoucle++;
-                if (Trier(Item, this[index]) >= 0)
-                    break;
+                for (index = this.Count - 1; index > -1; index--)
+                {
+                    if (TrierAsc(Item, this[index]) >= 0)
+                        break;
+                }
+                index = Math.Min(this.Count - 1, index + 1);
+            }
+            else if(TrierDesc != null)
+            {
+                for (index = 0; index < this.Count; index++)
+                {
+                    if (TrierDesc(Item, this[index]) >= 0)
+                        break;
+                }
+
+                index = Math.Max(0, index - 1);
+                Log.Message("Max " + this.Count + "  INDEX :  " + index);
             }
 
-            return index + 1;
+            return index;
         }
 
         public void Ajouter(T Item, Boolean Debut = false)
         {
             if (Contains(Item)) return;
 
-            if (Trier != null)
+            if (TrierAsc != null || TrierDesc != null)
                 base.Insert(ChercherIndex(Item), Item);
             else
             {
@@ -328,7 +345,7 @@ namespace Compta
         {
             if (Contains(Item)) return;
 
-            if (Trier != null)
+            if (TrierAsc != null || TrierDesc != null)
                 base.Insert(ChercherIndex(Item), Item);
             else
                 base.Add(Item);
@@ -340,7 +357,7 @@ namespace Compta
         {
             if (Contains(Item)) return;
 
-            if (Trier != null)
+            if (TrierAsc != null || TrierDesc != null)
                 base.Insert(ChercherIndex(Item), Item);
             else
                 base.Insert(Index, Item);
@@ -352,7 +369,7 @@ namespace Compta
         {
             if (Contains(Item)) return;
 
-            if (Trier != null)
+            if (TrierAsc != null || TrierDesc != null)
                 base.Insert(ChercherIndex(Item), Item);
             else
                 base.InsertItem(Index, Item);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogDebugging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -82,12 +83,6 @@ namespace Compta
             {
                 if (_ListeCompte == null)
                     _ListeCompte = Bdd.Enfants<Compte, Groupe>(this);
-
-                if(!_ListeCompte.OptionsCharges)
-                {
-                    _ListeCompte.Trier += (a, b) => { return a.Nom.CompareTo(b.Nom); };
-                    _ListeCompte.OptionsCharges = true;
-                }
 
                 return _ListeCompte;
             }

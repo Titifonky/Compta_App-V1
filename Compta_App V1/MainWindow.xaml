@@ -694,6 +694,7 @@
                                         <ContextMenu>
                                             <MenuItem Header="Ajouter un compte" Click="Ajouter_Compte_Click"/>
                                             <MenuItem Header="Supprimer le compte" Click="Supprimer_Compte_Click"/>
+                                            <Separator/>
                                             <MenuItem Header="Ajouter un groupe" Click="Ajouter_Groupe_Click"/>
                                             <MenuItem Header="Supprimer le groupe" Click="Supprimer_Groupe_Click"/>
                                         </ContextMenu>

@@ -625,7 +625,12 @@ namespace Compta
             Compte L = (Compte)V.SelectedItem;
 
             if (L != null)
-                new Compte(L.Groupe);
+            {
+                var obj = new Compte(L.Groupe);
+
+                V.ScrollIntoView(obj);
+                V.SelectedItem = obj;
+            }
         }
 
         private void Supprimer_Compte_Click(object sender, RoutedEventArgs e)
@@ -634,7 +639,8 @@ namespace Compta
             Compte L = (Compte)V.SelectedItem;
 
             if (L != null)
-                L.Supprimer();
+                if (MessageBox.Show("Voulez vous vraiement supprimer ce compte", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    L.Supprimer();
         }
 
         private void Ajouter_Groupe_Click(object sender, RoutedEventArgs e)
@@ -654,7 +660,9 @@ namespace Compta
             if (L != null)
             {
                 Groupe G = L.Groupe;
-                G.Supprimer();
+
+                if (MessageBox.Show("Voulez vous vraiement supprimer ce groupe", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    G.Supprimer();
             }
         }
 

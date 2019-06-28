@@ -77,7 +77,10 @@ namespace Compta
         public String Nom
         {
             get { return _Nom; }
-            set { Set(ref _Nom, value, this); }
+            set
+            {
+                Set(ref _Nom, value, this);
+            }
         }
 
         private String _Description = "";

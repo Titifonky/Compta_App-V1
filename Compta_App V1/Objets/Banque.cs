@@ -90,7 +90,7 @@ namespace Compta
 
                 if (!_ListeEcritureBanque.OptionsCharges)
                 {
-                    _ListeEcritureBanque.Trier += (a, b) => { return a.DateValeur.CompareTo(b.DateValeur); };
+                    _ListeEcritureBanque.TrierAsc += (a, b) => { return a.DateValeur.CompareTo(b.DateValeur); };
                     _ListeEcritureBanque.OptionsCharges = true;
                 }
 
