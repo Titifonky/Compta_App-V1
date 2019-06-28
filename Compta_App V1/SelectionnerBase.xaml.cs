@@ -31,7 +31,7 @@ namespace Compta
             get
             { return _NomBase; }
 
-            private set
+            set
             {
                 _NomBase = value;
                 OnPropertyChanged();
