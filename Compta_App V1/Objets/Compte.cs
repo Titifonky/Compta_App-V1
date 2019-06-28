@@ -10,7 +10,7 @@ namespace Compta
 
         public Compte(Groupe groupe)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
 
             Societe = groupe.Societe;
             Groupe = groupe;
@@ -31,7 +31,7 @@ namespace Compta
             get
             {
                 if (_Societe == null)
-                    _Societe = Bdd.Parent<Societe, Compte>(this);
+                    _Societe = Bdd2.Parent<Societe, Compte>(this);
 
                 return _Societe;
             }
@@ -50,7 +50,7 @@ namespace Compta
             get
             {
                 if (_Groupe == null)
-                    _Groupe = Bdd.Parent<Groupe, Compte>(this);
+                    _Groupe = Bdd2.Parent<Groupe, Compte>(this);
 
                 return _Groupe;
             }
@@ -153,7 +153,7 @@ namespace Compta
             get
             {
                 if (_ListeLigneBanque == null)
-                    _ListeLigneBanque = Bdd.Enfants<LigneBanque, Compte>(this);
+                    _ListeLigneBanque = Bdd2.Enfants<LigneBanque, Compte>(this);
 
                 if (!_ListeLigneBanque.OptionsCharges)
                 {
@@ -178,7 +178,7 @@ namespace Compta
             get
             {
                 if (_ListeLigneCompta == null)
-                    _ListeLigneCompta = Bdd.Enfants<LigneCompta, Compte>(this);
+                    _ListeLigneCompta = Bdd2.Enfants<LigneCompta, Compte>(this);
 
                 if (!_ListeLigneCompta.OptionsCharges)
                 {
@@ -238,7 +238,7 @@ namespace Compta
                 Groupe.ListeCompte.Supprimer(this);
                 Societe.ListeCompte.Supprimer(this);
 
-                Bdd.Supprimer(this);
+                Bdd2.Supprimer(this);
                 return true;
             }
 

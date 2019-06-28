@@ -245,9 +245,9 @@ namespace Compta
 
         private void Enregistrer_Click(object sender, RoutedEventArgs e)
         {
-            if (Bdd.DoitEtreEnregistre)
+            if (Bdd2.DoitEtreEnregistre)
             {
-                Bdd.Enregistrer();
+                Bdd2.Enregistrer();
                 xDerniereSvg.Text = "Dernière sauvegarde à " + DateTime.Now.Hour + "h" + DateTime.Now.Minute + ":" + DateTime.Now.Second;
             }
             else

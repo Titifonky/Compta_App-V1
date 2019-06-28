@@ -13,7 +13,7 @@ namespace Compta
 
         public Banque(Societe s)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
 
             Societe = s;
         }
@@ -26,7 +26,7 @@ namespace Compta
             get
             {
                 if (_Societe == null)
-                    _Societe = Bdd.Parent<Societe, Banque>(this);
+                    _Societe = Bdd2.Parent<Societe, Banque>(this);
 
                 return _Societe;
             }
@@ -86,7 +86,7 @@ namespace Compta
             get
             {
                 if (_ListeEcritureBanque == null)
-                    _ListeEcritureBanque = Bdd.Enfants<EcritureBanque, Banque>(this);
+                    _ListeEcritureBanque = Bdd2.Enfants<EcritureBanque, Banque>(this);
 
                 if (!_ListeEcritureBanque.OptionsCharges)
                 {
@@ -113,7 +113,7 @@ namespace Compta
             if (Societe != null)
                 Societe.ListeBanque.Remove(this);
 
-            Bdd.Supprimer(this);
+            Bdd2.Supprimer(this);
 
             return true;
         }

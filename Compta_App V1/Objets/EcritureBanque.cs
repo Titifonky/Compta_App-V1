@@ -10,7 +10,7 @@ namespace Compta
 
         public EcritureBanque(Banque banque, String idBanque, DateTime dateValeur, String intitule, Double valeur)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
 
             IdBanque = idBanque;
             DateValeur = dateValeur;
@@ -53,7 +53,7 @@ namespace Compta
             get
             {
                 if (_Banque == null)
-                    _Banque = Bdd.Parent<Banque, EcritureBanque>(this);
+                    _Banque = Bdd2.Parent<Banque, EcritureBanque>(this);
 
                 return _Banque;
             }
@@ -189,7 +189,7 @@ namespace Compta
             get
             {
                 if (_Compte == null)
-                    _Compte = Bdd.Parent<Compte, EcritureBanque>(this);
+                    _Compte = Bdd2.Parent<Compte, EcritureBanque>(this);
 
                 return _Compte;
             }
@@ -358,7 +358,7 @@ namespace Compta
             get
             {
                 if (_ListeLigneBanque == null)
-                    _ListeLigneBanque = Bdd.Enfants<LigneBanque, EcritureBanque>(this);
+                    _ListeLigneBanque = Bdd2.Enfants<LigneBanque, EcritureBanque>(this);
 
                 return _ListeLigneBanque;
             }
@@ -380,7 +380,7 @@ namespace Compta
             if (Banque != null)
                 Banque.ListeEcritureBanque.Remove(this);
 
-            Bdd.Supprimer(this);
+            Bdd2.Supprimer(this);
 
             return true;
         }

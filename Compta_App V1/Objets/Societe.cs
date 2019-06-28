@@ -11,7 +11,7 @@ namespace Compta
     {
         public Societe()
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
         }
 
         private String _Nom = "";
@@ -59,7 +59,7 @@ namespace Compta
             get
             {
                 if (_ListeGroupe == null)
-                    _ListeGroupe = Bdd.Enfants<Groupe, Societe>(this);
+                    _ListeGroupe = Bdd2.Enfants<Groupe, Societe>(this);
 
                 if (!_ListeGroupe.OptionsCharges)
                 {
@@ -82,7 +82,7 @@ namespace Compta
             get
             {
                 if (_ListeCompte == null)
-                    _ListeCompte = Bdd.Liste<Compte>();
+                    _ListeCompte = Bdd2.Liste<Compte>();
 
                 if (!_ListeCompte.OptionsCharges)
                 {
@@ -105,7 +105,7 @@ namespace Compta
             get
             {
                 if (_ListeLigneCompta == null)
-                    _ListeLigneCompta = Bdd.Enfants<LigneCompta, Societe>(this);
+                    _ListeLigneCompta = Bdd2.Enfants<LigneCompta, Societe>(this);
 
                 return _ListeLigneCompta;
             }
@@ -122,7 +122,7 @@ namespace Compta
             get
             {
                 if (_ListeBanque == null)
-                    _ListeBanque = Bdd.Enfants<Banque, Societe>(this);
+                    _ListeBanque = Bdd2.Enfants<Banque, Societe>(this);
 
                 return _ListeBanque;
             }

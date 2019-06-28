@@ -10,7 +10,7 @@ namespace Compta
 
         public LigneBanque(EcritureBanque ecritureBanque)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
 
             No = ecritureBanque.ListeLigneBanque.Count + 1;
             EcritureBanque = ecritureBanque;
@@ -26,7 +26,7 @@ namespace Compta
             get
             {
                 if (_EcritureBanque == null)
-                    _EcritureBanque = Bdd.Parent<EcritureBanque, LigneBanque>(this);
+                    _EcritureBanque = Bdd2.Parent<EcritureBanque, LigneBanque>(this);
 
                 return _EcritureBanque;
             }
@@ -126,7 +126,7 @@ namespace Compta
             get
             {
                 if (_Compte == null)
-                    _Compte = Bdd.Parent<Compte, LigneBanque>(this);
+                    _Compte = Bdd2.Parent<Compte, LigneBanque>(this);
 
                 return _Compte;
             }
@@ -196,7 +196,7 @@ namespace Compta
             EcritureBanque.ListeLigneBanque.Remove(this);
             Compte.ListeLigneBanque.Remove(this);
 
-            Bdd.Supprimer(this);
+            Bdd2.Supprimer(this);
 
             return true;
         }

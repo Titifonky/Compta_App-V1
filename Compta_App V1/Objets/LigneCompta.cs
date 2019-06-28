@@ -10,7 +10,7 @@ namespace Compta
 
         public LigneCompta(Societe societe)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
 
             No = societe.ListeLigneCompta.Count + 1;
             Societe = societe;
@@ -25,7 +25,7 @@ namespace Compta
             get
             {
                 if (_Societe == null)
-                    _Societe = Bdd.Parent<Societe, LigneCompta>(this);
+                    _Societe = Bdd2.Parent<Societe, LigneCompta>(this);
 
                 return _Societe;
             }
@@ -111,7 +111,7 @@ namespace Compta
             get
             {
                 if (_Compte == null)
-                    _Compte = Bdd.Parent<Compte, LigneCompta>(this);
+                    _Compte = Bdd2.Parent<Compte, LigneCompta>(this);
 
                 if (_Compte == null)
                     _Compte = Societe.ListeGroupe[0].ListeCompte[0];
@@ -149,7 +149,7 @@ namespace Compta
             Compte.ListeLigneCompta.Remove(this);
 
 
-            Bdd.Supprimer(this);
+            Bdd2.Supprimer(this);
 
             return true;
         }

@@ -18,7 +18,7 @@ using System.Xml;
 namespace Compta
 {
 
-    public static class Bdd
+    public static class Bdd2
     {
         private static Version VersionCourante = new Version(1);
         private static MySqlConnection _ConnexionBase = null;
@@ -32,7 +32,7 @@ namespace Compta
         //private static String _SvgNom = "SvgBase";
         //private static String _SvgExt = ".sql";
 
-        static Bdd()
+        static Bdd2()
         {
             //DateTime tp = DateTime.Now;
 
@@ -189,8 +189,8 @@ namespace Compta
                                 MettreAJourLaBase(Base);
                         }
 
-                        Bdd.Ajouter<Version>(VersionCourante);
-                        Bdd.Enregistrer();
+                        Bdd2.Ajouter<Version>(VersionCourante);
+                        Bdd2.Enregistrer();
                     }
                 }
                 else
@@ -198,8 +198,8 @@ namespace Compta
                     foreach (XmlNode Base in xmlDoc.SelectSingleNode("/Bases").ChildNodes)
                         MettreAJourLaBase(Base);
 
-                    Bdd.Ajouter<Version>(VersionCourante);
-                    Bdd.Enregistrer();
+                    Bdd2.Ajouter<Version>(VersionCourante);
+                    Bdd2.Enregistrer();
                 }
             }
             catch (Exception e)
@@ -1051,7 +1051,7 @@ namespace Compta
 
         public static Dictionary<Type, List<ObjetGestion>> PreCharger(Type T, List<ObjetGestion> listeObjet)
         {
-            var StructObjetT = Bdd.DicProp.Dic[T];
+            var StructObjetT = Bdd2.DicProp.Dic[T];
 
             var dicObjetsCharge = new Dictionary<Type, List<ObjetGestion>>();
 
@@ -1064,7 +1064,7 @@ namespace Compta
 
             foreach (var liste in StructObjetT.ListeListeObjet)
             {
-                var StructObjetE = Bdd.DicProp.Dic[liste.TypeObjet];
+                var StructObjetE = Bdd2.DicProp.Dic[liste.TypeObjet];
 
                 // On creer les listes pour qu'elles ne soit pas null
                 for (int i = 0; i < listeObjet.Count; i++)
@@ -1115,7 +1115,7 @@ namespace Compta
 
                     foreach (var li in item.Value)
                     {
-                        MethodInfo method_ChargerObjet = typeof(Bdd).GetMethod("ChargerObjet", BindingFlags.NonPublic | BindingFlags.Static);
+                        MethodInfo method_ChargerObjet = typeof(Bdd2).GetMethod("ChargerObjet", BindingFlags.NonPublic | BindingFlags.Static);
                         MethodInfo genericMethod_ChargerObjet = method_ChargerObjet.MakeGenericMethod(StructObjetE.TypeObjet, T);
                         var obj = (ObjetGestion)genericMethod_ChargerObjet.Invoke(null, new object[] { li, parent });
 

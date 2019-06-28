@@ -44,7 +44,7 @@ namespace Compta
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Log.Message("Requette SQL : " + Bdd.TempsRequete);
+            Log.Message("Requette SQL : " + Bdd2.TempsRequete);
         }
 
         private Boolean Start()
@@ -52,7 +52,7 @@ namespace Compta
             Log.Entete();
 
             String BaseSelectionnee = "";
-            List<String> ListeBase = Bdd.ListeBase();
+            List<String> ListeBase = Bdd2.ListeBase();
             if (ListeBase.Count == 1)
                 BaseSelectionnee = ListeBase[0];
             else
@@ -62,31 +62,31 @@ namespace Compta
                 BaseSelectionnee = Fenetre.BaseSelectionnee;
             }
 
-            if (!Bdd.Initialiser(BaseSelectionnee))
+            if (!Bdd2.Initialiser(BaseSelectionnee))
             {
                 Log.Message("Impossible de se connecter à la base");
                 MessageBox.Show("Impossible de se connecter à la base");
                 return false;
             }
 
-            xConnexionCourante.Text = BaseSelectionnee + ", connecté à l'adresse : " + Bdd.ConnexionCourante;
+            xConnexionCourante.Text = BaseSelectionnee + ", connecté à l'adresse : " + Bdd2.ConnexionCourante;
 
-            pSociete = Bdd.Liste<Societe>()[0];
+            pSociete = Bdd2.Liste<Societe>()[0];
 
             Log.Message("Precharger Societe");
-            var result1 = Bdd.PreCharger(typeof(Societe), new List<ObjetGestion>() { pSociete });
+            var result1 = Bdd2.PreCharger(typeof(Societe), new List<ObjetGestion>() { pSociete });
 
             Log.Message("Precharger Banque");
-            var result2 = Bdd.PreCharger(typeof(Banque), result1[typeof(Banque)]);
+            var result2 = Bdd2.PreCharger(typeof(Banque), result1[typeof(Banque)]);
 
             Log.Message("Precharger EcritureBanque");
-            var result3 = Bdd.PreCharger(typeof(EcritureBanque), result2[typeof(EcritureBanque)]);
+            var result3 = Bdd2.PreCharger(typeof(EcritureBanque), result2[typeof(EcritureBanque)]);
 
             Log.Message("Precharger Groupe");
-            var result4 = Bdd.PreCharger(typeof(Groupe), result1[typeof(Groupe)]);
+            var result4 = Bdd2.PreCharger(typeof(Groupe), result1[typeof(Groupe)]);
 
             Log.Message("Precharger Compte");
-            var result5 = Bdd.PreCharger(typeof(Compte), result4[typeof(Compte)]);
+            var result5 = Bdd2.PreCharger(typeof(Compte), result4[typeof(Compte)]);
 
             Log.Message("Precharger Fin");
 
@@ -126,7 +126,7 @@ namespace Compta
         private void TrierListe<T>(ListBox Box)
             where T : ObjetGestion
         {
-            foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeTri)
+            foreach (var info in Bdd2.DicProp.Dic[typeof(T)].ListeTri)
                 Box.Items.SortDescriptions.Add(new SortDescription(info.NomProp, info.Tri.DirectionTri));
 
             Box.Items.IsLiveSorting = true;
@@ -135,13 +135,13 @@ namespace Compta
         public void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             MessageBoxResult R = MessageBoxResult.No;
-            if (Bdd.DoitEtreEnregistre)
+            if (Bdd2.DoitEtreEnregistre)
                 R = MessageBox.Show("Voulez vous enregistrer la base ?", "Info", MessageBoxButton.YesNo);
 
             if (R == MessageBoxResult.Yes)
-                Bdd.Enregistrer();
+                Bdd2.Enregistrer();
 
-            Bdd.Deconnecter();
+            Bdd2.Deconnecter();
 
             WindowParam.SauverParametre(this);
         }

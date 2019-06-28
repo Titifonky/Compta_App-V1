@@ -97,7 +97,7 @@ namespace Compta
                 {
                     String Chaine_Recherche = Valeur;
 
-                    foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeInfo)
+                    foreach (var info in Bdd2.DicProp.Dic[typeof(T)].ListeInfo)
                     {
                         if (Regex.IsMatch(info.Propriete.GetValue(Obj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
                             return true;
@@ -105,7 +105,7 @@ namespace Compta
 
                     if (_SousListe)
                     {
-                        foreach (var info in Bdd.DicProp.Dic[typeof(T)].ListeListeObjet)
+                        foreach (var info in Bdd2.DicProp.Dic[typeof(T)].ListeListeObjet)
                         {
                             Object ObjListe = info.Propriete.GetValue(Obj);
 
@@ -117,7 +117,7 @@ namespace Compta
                                 object[] index = { i };
                                 object sObj = info.Propriete.PropertyType.GetProperty("Item").GetValue(ObjListe, index);
 
-                                foreach (var val in Bdd.DicProp.Dic[info.TypeObjet].ListeInfo)
+                                foreach (var val in Bdd2.DicProp.Dic[info.TypeObjet].ListeInfo)
                                 {
                                     if (Regex.IsMatch(val.Propriete.GetValue(sObj).ToString().RemoveDiacritics(), Chaine_Recherche, RegexOptions.IgnoreCase))
                                         return true;

@@ -11,7 +11,7 @@ namespace Compta
 
         public Groupe(Societe societe)
         {
-            Bdd.Ajouter(this);
+            Bdd2.Ajouter(this);
             Nom = "Nouveau groupe";
 
             Societe = societe;
@@ -34,7 +34,7 @@ namespace Compta
             get
             {
                 if (_Societe == null)
-                    _Societe = Bdd.Parent<Societe, Groupe>(this);
+                    _Societe = Bdd2.Parent<Societe, Groupe>(this);
 
                 return _Societe;
             }
@@ -82,7 +82,7 @@ namespace Compta
             get
             {
                 if (_ListeCompte == null)
-                    _ListeCompte = Bdd.Enfants<Compte, Groupe>(this);
+                    _ListeCompte = Bdd2.Enfants<Compte, Groupe>(this);
 
                 return _ListeCompte;
             }
@@ -113,7 +113,7 @@ namespace Compta
 
             Societe.ListeGroupe.Supprimer(this);
 
-            Bdd.Supprimer(this);
+            Bdd2.Supprimer(this);
             return true;
         }
     }
