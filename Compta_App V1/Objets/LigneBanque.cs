@@ -164,13 +164,28 @@ namespace Compta
         [Propriete]
         public Boolean Compta
         {
-            get { return _Compta; }
+            get
+            {
+                if (EstCharge && !EcritureBanque.Ventiler)
+                {
+                    _Compta = EcritureBanque.Compta;
+                    Set(ref _Compta, _Compta, this);
+                }
+
+                return _Compta;
+            }
             set
             {
                 if (EstCharge && !EcritureBanque.Ventiler)
                     value = EcritureBanque.Compta;
 
+                Boolean calculer = false;
+
+                if (_Compta != value) calculer = true;
+
                 Set(ref _Compta, value, this);
+
+                if (calculer) Compte.Calculer();
             }
         }
 

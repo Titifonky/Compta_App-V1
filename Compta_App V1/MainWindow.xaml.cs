@@ -99,6 +99,11 @@ namespace Compta
 
             Log.Message("test chargement");
 
+            foreach(var cpte in pSociete.ListeCompte)
+            {
+                cpte.Calculer();
+            }
+
             this.DataContext = pSociete;
 
             pSociete.OnModifyBanque += new Societe.OnModifyBanqueEventHandler(id => { Properties.Settings.Default.IdBanque = id; Properties.Settings.Default.Save(); });

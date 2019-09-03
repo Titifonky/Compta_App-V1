@@ -19,15 +19,15 @@ namespace Compta
             No = banque.ListeEcritureBanque.Count + 1;
             Compte = banque.Societe.CompteBase;
             Banque = banque;
-            InitLigneBanque(new LigneBanque(this));
+            InitLigneBanque(new LigneBanque(this), this);
         }
 
-        private void InitLigneBanque(LigneBanque lb)
+        public static void InitLigneBanque(LigneBanque lb, EcritureBanque eb)
         {
-            lb.DateValeur = DateValeur;
-            lb.Description = Intitule;
-            lb.Valeur = Valeur;
-            lb.Compte = Compte;
+            lb.DateValeur = eb.DateValeur;
+            lb.Description = eb.Intitule;
+            lb.Valeur = eb.Valeur;
+            lb.Compte = eb.Compte;
         }
 
         [Propriete]
@@ -301,6 +301,8 @@ namespace Compta
                 }
             }
         }
+
+        private Boolean EditionCompta = false;
 
         protected Boolean _Compta = false;
         [Propriete]

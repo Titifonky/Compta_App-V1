@@ -44,8 +44,8 @@ namespace Compta
             {
                 if (_CompteBase == null)
                 {
-                    var grp = ListeGroupe.Where(c => c.No == 1).First();
-                    _CompteBase = grp.ListeCompte[0];
+                    var grp = ListeGroupe.Where(c => c.No == 4).First();
+                    _CompteBase = grp.ListeCompte.Where(c => c.No == 162).First();
                 }
 
                 return _CompteBase;

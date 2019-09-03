@@ -20,7 +20,7 @@ namespace Compta
 
     public static class Bdd2
     {
-        private static Version VersionCourante = new Version(1);
+        private static Version VersionCourante = new Version(2);
         private static MySqlConnection _ConnexionBase = null;
 
         private static String FichierMapping = "MappingDesTables.xml";
@@ -32,34 +32,7 @@ namespace Compta
         //private static String _SvgNom = "SvgBase";
         //private static String _SvgExt = ".sql";
 
-        static Bdd2()
-        {
-            //DateTime tp = DateTime.Now;
-
-            //var l = DicProp.ListeType;
-
-            //Log.Message(DateTime.Now - tp);
-
-            //tp = DateTime.Now;
-
-            //foreach (var item in DicProp.Dic)
-            //{
-            //    Log.Message("==========================================");
-            //    Log.Message(item.Key);
-            //    var s = item.Value;
-
-            //    Log.Message("");
-            //    Log.Message("Type");
-            //    Log.Message(s.TypeObjet.Name);
-
-            //    Log.Message("");
-            //    Log.Message("ListeListeObjet");
-            //    foreach (var prop in s.ListeListeObjet)
-            //        Log.Message(prop.NomProp);
-            //}
-
-            //Log.Message(DateTime.Now - tp);
-        }
+        static Bdd2() { }
 
         public static List<String> ListeBase()
         {
@@ -466,7 +439,7 @@ namespace Compta
 
         public static DateTime TempsRequete = new DateTime();
 
-        private static DataTable RecupererTable(String sql)
+        public static DataTable RecupererTable(String sql)
         {
             DataTable dt = null;
             DbDataReader Lecteur = null;
@@ -750,20 +723,23 @@ namespace Compta
                 if (info.TypeChampSql.HasFlag(eTypeChampSql.Max))
                 {
                     int pVal = (int)RecupererChamp(String.Format("SELECT MAX({0}) FROM {1}", info.NomChampSql, StructObjet.NomTable), info.TypeObjet) + 1;
-                    info.Propriete.SetValue(objet, pVal);
+                    info.Champ.SetValue(objet, pVal);
                 }
                 else if (info.TypeObjet.IsEnum && !String.IsNullOrWhiteSpace(Defaut))
-                    info.Propriete.SetValue(objet, System.Enum.Parse(info.TypeObjet, Defaut));
+                    info.Champ.SetValue(objet, System.Enum.Parse(info.TypeObjet, Defaut));
                 else if (!String.IsNullOrWhiteSpace(Defaut))
-                    info.Propriete.SetValue(objet, Convert.ChangeType(Defaut, info.TypeObjet));
-                else if (info.Propriete.GetValue(objet) == null)
-                    info.Propriete.SetValue(objet, info.TypeObjet.GetDefaultValue());
-
-                // Sinon on laisse la valeur existante
+                    info.Champ.SetValue(objet, Convert.ChangeType(Defaut, info.TypeObjet));
+                else if (info.Champ.GetValue(objet) == null)
+                    info.Champ.SetValue(objet, info.TypeObjet.GetDefaultValue());
             }
 
+            // Si on doit forcer l'ajout, on le rajoute à la ListeMaj
+            // pour le mettre à jour avec les dernières valeurs
             if (StructObjet.ForcerAjout)
-                Ajouter(objet, typeof(T));
+            {
+                AjouterBase(objet, typeof(T));
+                ListeMaj.Ajouter(objet, typeof(T));
+            }
             else
                 ListeAjouter.Ajouter(objet, typeof(T));
 
@@ -771,7 +747,7 @@ namespace Compta
             ModeAjouterObjet = false;
         }
 
-        public static void Maj(ObjetGestion objet, Type T, String nomPropriete = null)
+        public static void Maj(ObjetGestion objet, Type T)
         {
             if (ModeChargerObjet || ModeAjouterObjet) return;
 
@@ -827,40 +803,43 @@ namespace Compta
             Log.Methode("Bdd");
 
             foreach (DictionaryEntry v in ListeAjouter)
-                Ajouter((ObjetGestion)v.Key, (Type)v.Value);
+                AjouterBase((ObjetGestion)v.Key, (Type)v.Value);
 
             foreach (DictionaryEntry v in ListeMaj)
-                Maj((ObjetGestion)v.Key, (Type)v.Value);
+                MajBase((ObjetGestion)v.Key, (Type)v.Value);
 
             foreach (DictionaryEntry v in ListeSupprimer)
-                Supprimer((ObjetGestion)v.Key, (Type)v.Value);
+                SupprimerBase((ObjetGestion)v.Key, (Type)v.Value);
 
             ListeAjouter.Clear();
             ListeMaj.Clear();
             ListeSupprimer.Clear();
         }
 
-        private static void Ajouter(ObjetGestion objet, Type T)
+        private static void AjouterBase(ObjetGestion objet, Type T)
         {
             if (objet.EstSvgDansLaBase) return;
 
             var StructObjet = DicProp.Dic[T];
 
-            List<String> pListeChamps = new List<String>();
-            ListParametres pDicValeurs = new ListParametres();
+            List<String> ListeParam = new List<String>();
+            ListParametres DicValeurs = new ListParametres();
 
             String PrefixClef = "@" + "Valeur_";
 
+            // On initialise les clés etrangères avec -1
             foreach (var info in StructObjet.ListeCleEtrangere)
             {
-                Object Obj = info.Propriete.GetValue(objet);
+                String Cle = PrefixClef + info.NomChampSql;
 
-                if (Obj != null)
-                {
-                    String Cle = PrefixClef + info.NomChampSql;
-                    pListeChamps.Add(info.NomChampSql);
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(Obj.ToString());
-                }
+                ListeParam.Add(info.NomChampSql);
+
+                var val = info.Champ.GetValue(objet);
+
+                if (val != null)
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(val.ToString());
+                else
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = -1;
             }
 
             foreach (var info in StructObjet.ListeInfo)
@@ -869,114 +848,40 @@ namespace Compta
 
                 String Cle = PrefixClef + info.NomChampSql;
 
-                pListeChamps.Add(info.NomChampSql);
+                ListeParam.Add(info.NomChampSql);
 
-                // Delegate pour l'insertion dans le dictionnaire
-                Action<MySqlDbType, Func<Object, Object>> AjouterDic = delegate (MySqlDbType t, Func<Object, Object> f)
-                {
-                    Func<Object, Func<Object, Object>, Object> Valeur = delegate (Object v, Func<Object, Object> c)
-                    {
-                        if (c == null)
-                            return v;
-
-                        return c(v);
-                    };
-
-                    if (info.Propriete.GetValue(objet) != null)
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(info.Propriete.GetValue(objet), f);
-                    else if (String.IsNullOrWhiteSpace(Defaut))
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Valeur(info.TypeObjet.GetDefaultValue(), f);
-                    else
-                        pDicValeurs.Ajouter(new MySqlParameter(Cle, t)).Value = Convert.ChangeType(Valeur(Defaut, f), info.TypeObjet);
-                };
-
-
-                #region ENUM
-                // Si c'est un Enum, on fait la conversion
                 if (info.TypeObjet.IsEnum)
-                {
-                    AjouterDic(MySqlDbType.Int32, o =>
-                    {
-                        String s = o as String;
-                        if (s != null)
-                            o = System.Enum.Parse(info.TypeObjet, s);
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(info.Champ.GetValue(objet));
 
-                        return Convert.ToInt32(o);
-                    });
-                    continue;
-                }
-                #endregion
+                else if (info.TypeObjet == typeof(Boolean))
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(info.Champ.GetValue(objet));
 
-                #region BOOLEAN
-                // Si c'est un Boolean, c'est pareil, on converti
-                if (info.TypeObjet == typeof(Boolean))
-                {
-                    AjouterDic(MySqlDbType.Int32, o => { return Convert.ToInt32(o); });
-                    continue;
-                }
-                #endregion
+                else if (info.TypeObjet == typeof(String))
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Text)).Value = info.Champ.GetValue(objet);
 
-                #region STRING
-                // Si c'est un String, c'est pareil, on converti
-                if (info.TypeObjet == typeof(String))
-                {
-                    AjouterDic(MySqlDbType.Text, null);
-                    continue;
-                }
-                #endregion
+                else if (info.TypeObjet == typeof(DateTime))
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Timestamp)).Value = info.Champ.GetValue(objet);
 
-                #region DATETIME
-                // Si c'est un DateTime, c'est pareil, on converti
-                if (info.TypeObjet == typeof(DateTime))
-                {
-                    AjouterDic(MySqlDbType.Timestamp, null);
-                    continue;
-                }
-                #endregion
+                else if (info.TypeObjet == typeof(Double))
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Double)).Value = info.Champ.GetValue(objet);
 
-                #region DOUBLE
-                // Si c'est un Double, c'est pareil, on converti
-                if (info.TypeObjet == typeof(Double))
-                {
-                    AjouterDic(MySqlDbType.Double, o =>
-                    {
-                        Double s = (Double)o;
-                        if (Double.IsNaN(s))
-                            return 0;
+                else if (info.TypeObjet == typeof(int))
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = info.Champ.GetValue(objet);
 
-                        return o;
-                    });
-                    continue;
-                }
-                #endregion
-
-                #region INTEGER
-                // Si c'est un int32, c'est pareil, on converti
-                if (info.TypeObjet == typeof(int))
-                {
-                    AjouterDic(MySqlDbType.Int32, null);
-                    continue;
-                }
-                #endregion
-
-                if (info.Propriete.GetValue(objet) != null)
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, info.Propriete.GetValue(objet).ToString()));
-                else if (String.IsNullOrWhiteSpace(Defaut))
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, info.TypeObjet.GetDefaultValue()));
                 else
-                    pDicValeurs.Ajouter(new MySqlParameter(Cle, Convert.ChangeType(Defaut, info.TypeObjet)));
+                    DicValeurs.Ajouter(new MySqlParameter(Cle, Convert.ChangeType(Defaut, info.TypeObjet)));
             }
 
             {
                 String pQuery = String.Format("INSERT INTO {0} ( {1} ) VALUES ( {2} );",
                     StructObjet.NomTable,
-                    String.Join(" , ", pListeChamps),
-                    String.Join(" , ", pDicValeurs.Noms)
+                    String.Join(" , ", ListeParam),
+                    String.Join(" , ", DicValeurs.Noms)
                     );
 
                 Log.Message(pQuery);
 
-                ExecuterAsync(pQuery, pDicValeurs);
+                ExecuterAsync(pQuery, DicValeurs);
             }
 
             objet.Id = DernierIdInsere(T);
@@ -984,12 +889,12 @@ namespace Compta
             DicObjet.ReferencerObjet(objet, T);
         }
 
-        private static void Maj(ObjetGestion objet, Type T)
+        private static void MajBase(ObjetGestion objet, Type T)
         {
             if (!objet.EstSvgDansLaBase) return;
 
             ListParametres ListeParam = new ListParametres();
-            List<String> pListChaine = new List<String>();
+            List<String> DicValeurs = new List<String>();
 
             var StructObjet = DicProp.Dic[T];
             String PrefixClef = "@" + "Valeur_";
@@ -1001,7 +906,7 @@ namespace Compta
                 if (val != null)
                 {
                     String Cle = PrefixClef + info.NomChampSql;
-                    pListChaine.Add(info.NomChampSql + " = " + Cle);
+                    DicValeurs.Add(info.NomChampSql + " = " + Cle);
                     ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = Convert.ToInt32(val.ToString());
                 }
             }
@@ -1014,7 +919,7 @@ namespace Compta
                 {
                     String Cle = PrefixClef + info.NomChampSql;
 
-                    pListChaine.Add(info.NomChampSql + " = " + Cle);
+                    DicValeurs.Add(info.NomChampSql + " = " + Cle);
 
                     if (info.TypeObjet.IsEnum)
                         ListeParam.Ajouter(new MySqlParameter(Cle, MySqlDbType.Int32)).Value = (int)val;
@@ -1035,11 +940,11 @@ namespace Compta
 
             ListeParam.Ajouter(new MySqlParameter(PrefixClef + StructObjet.ClePrimaire.NomChampSql, objet.Id));
 
-            String pQuery = String.Format("UPDATE {0} SET {1} WHERE {2} = {3}", StructObjet.NomTable, String.Join(" , ", pListChaine), StructObjet.ClePrimaire.NomChampSql, PrefixClef + StructObjet.ClePrimaire.NomChampSql);
+            String pQuery = String.Format("UPDATE {0} SET {1} WHERE {2} = {3}", StructObjet.NomTable, String.Join(" , ", DicValeurs), StructObjet.ClePrimaire.NomChampSql, PrefixClef + StructObjet.ClePrimaire.NomChampSql);
             ExecuterAsync(pQuery, ListeParam);
         }
 
-        private static void Supprimer(ObjetGestion objet, Type T)
+        private static void SupprimerBase(ObjetGestion objet, Type T)
         {
             if (!objet.EstSvgDansLaBase) return;
 
@@ -1173,7 +1078,7 @@ namespace Compta
                         Max = propriete.GetCustomAttributes(typeof(Max)).First() as Max;
                     }
 
-                    Propriete pAttProp = propriete.GetCustomAttributes(typeof(Propriete)).First() as Propriete;
+                    var pAttProp = propriete.GetCustomAttributes(typeof(Propriete)).First() as Propriete;
 
                     if (pAttProp != null)
                     {

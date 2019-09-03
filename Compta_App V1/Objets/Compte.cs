@@ -200,27 +200,23 @@ namespace Compta
         {
             if (!EstCharge) return;
 
-            Double soldeTmp = 0;
+            Double soldeTmp = SoldeInitial;
 
             try
             {
                 foreach (var lb in ListeLigneBanque)
-                {
                     if (!lb.Compta)
                         soldeTmp += lb.Valeur;
-                }
 
                 foreach (var lc in ListeLigneCompta)
-                {
                     soldeTmp -= lc.Valeur;
-                }
             }
             catch(Exception e)
             {
                 Log.Message(e.ToString());
             }
 
-            Solde = SoldeInitial + soldeTmp;
+            Solde = soldeTmp;
         }
 
         public override Boolean Supprimer()

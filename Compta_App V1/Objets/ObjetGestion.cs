@@ -128,7 +128,7 @@ namespace Compta
             field = value;
             OnPropertyChanged(propertyName);
             if (EstSvgDansLaBase)
-                Bdd2.Maj(Objet, T, propertyName);
+                Bdd2.Maj(Objet, T);
             return true;
         }
 
@@ -144,7 +144,7 @@ namespace Compta
                 field = value;
                 OnPropertyChanged(propertyName);
                 if (EstSvgDansLaBase)
-                    Bdd2.Maj(Objet, T, propertyName);
+                    Bdd2.Maj(Objet, T);
             }
 
             return test;

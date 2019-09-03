@@ -75,6 +75,8 @@ Seules les colonnes à modifier sont nécessaires.
         <Table name="lignebanque">
           <Colonne name="no"/>
           <Colonne name="ecriturebanque"/>
+          <Colonne name="pointer" defaut="0"/>
+          <Colonne name="ventiler" defaut="0"/>
           <Colonne name="datevaleur"/>
           <Colonne name="compte"/>
           <Colonne name="description"/>
@@ -147,7 +149,6 @@ Seules les colonnes à modifier sont nécessaires.
         </Table>
         <Table name="compte">
           <Insert><Valeur name="no">1</Valeur><Valeur name="nom">-</Valeur><Valeur name="description"></Valeur><Valeur name="societe">1</Valeur><Valeur name="groupe">1</Valeur><Valeur name="supprimable">0</Valeur></Insert>
-          <Insert><Valeur name="no">2</Valeur><Valeur name="nom">Alex Maçon</Valeur><Valeur name="description"></Valeur><Valeur name="societe">1</Valeur><Valeur name="groupe">2</Valeur><Valeur name="supprimable">1</Valeur></Insert>
           <Insert><Valeur name="no">3</Valeur><Valeur name="nom">Anor Médiathèque</Valeur><Valeur name="description"></Valeur><Valeur name="societe">1</Valeur><Valeur name="groupe">2</Valeur><Valeur name="supprimable">1</Valeur></Insert>
           <Insert><Valeur name="no">4</Valeur><Valeur name="nom">Arras Vds</Valeur><Valeur name="description"></Valeur><Valeur name="societe">1</Valeur><Valeur name="groupe">2</Valeur><Valeur name="supprimable">1</Valeur></Insert>
           <Insert><Valeur name="no">5</Valeur><Valeur name="nom">Compagnons du Devoir</Valeur><Valeur name="description"></Valeur><Valeur name="societe">1</Valeur><Valeur name="groupe">2</Valeur><Valeur name="supprimable">1</Valeur></Insert>
