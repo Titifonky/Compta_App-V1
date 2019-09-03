@@ -89,7 +89,7 @@ namespace Compta
                 if (EditionGroupe) return;
 
                 EditionGroupe = true;
-                
+
                 if (SetObjetGestion(ref _Groupe, value, this))
                 {
                     ListeCompte = _Groupe.ListeCompte;
@@ -131,13 +131,13 @@ namespace Compta
                 return _Compte;
             }
             set
-            { 
+            {
                 if (EditionCompte) return;
 
                 EditionCompte = true;
 
                 // Ancien compte
-                if (_Compte != null && (_Compte != value) && _Compte.EstCharge && EstCharge )
+                if (_Compte != null && (_Compte != value) && _Compte.EstCharge && EstCharge)
                 {
                     _Compte.ListeLigneBanque.Supprimer(this);
                     _Compte.Calculer();
@@ -160,32 +160,34 @@ namespace Compta
             }
         }
 
+        private Boolean EditionCompta = false;
+
         protected Boolean _Compta = false;
         [Propriete]
         public Boolean Compta
         {
             get
             {
-                if (EstCharge && !EcritureBanque.Ventiler)
-                {
-                    _Compta = EcritureBanque.Compta;
-                    Set(ref _Compta, _Compta, this);
-                }
+                if (EstCharge && !EcritureBanque.Ventiler && (EcritureBanque.Compta != _Compta))
+                    Compta = EcritureBanque.Compta;
 
                 return _Compta;
             }
             set
             {
-                if (EstCharge && !EcritureBanque.Ventiler)
-                    value = EcritureBanque.Compta;
+                if (EditionCompta) return;
 
-                Boolean calculer = false;
+                EditionCompta = true;
 
-                if (_Compta != value) calculer = true;
+                if (Set(ref _Compta, value, this) && EstCharge)
+                {
+                    if (!EcritureBanque.Ventiler)
+                        EcritureBanque.Compta = _Compta;
 
-                Set(ref _Compta, value, this);
+                    Compte.Calculer();
+                }
 
-                if (calculer) Compte.Calculer();
+                EditionCompta = false;
             }
         }
 
@@ -193,7 +195,16 @@ namespace Compta
         [Propriete]
         public Boolean Ventiler
         {
-            get { return _Ventiler; }
+            get
+            {
+                if (EstCharge)
+                {
+                    _Ventiler = EcritureBanque.Ventiler;
+                    Set(ref _Ventiler, _Ventiler, this);
+                }
+
+                return _Ventiler;
+            }
             set { Set(ref _Ventiler, value, this); }
         }
 

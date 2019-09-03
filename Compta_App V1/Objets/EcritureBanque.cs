@@ -311,6 +311,10 @@ namespace Compta
             get { return _Compta; }
             set
             {
+                if (EditionCompta) return;
+
+                EditionCompta = true;
+
                 Set(ref _Compta, value, this);
                 if (EstCharge)
                 {
@@ -322,6 +326,8 @@ namespace Compta
                     else if (!value && !Ventiler)
                         ListeLigneBanque[0].Compta = false;
                 }
+
+                EditionCompta = false;
             }
         }
 

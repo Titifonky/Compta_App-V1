@@ -221,7 +221,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <local:Texte Grid.Row="0" Margin="5,0,10,0" MinWidth="70" Valeur="{Binding Valeur}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" FontWeight="Bold"/>
-                        <local:Texte Grid.Row="1" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" FontSize="11" VerticalAlignment="Bottom"/>
+                        <local:Texte Grid.Row="1" Visibility="Collapsed" Margin="5,0,0,0" MinWidth="90" Valeur="{Binding Solde}" Info="True" TextWrapping="NoWrap" TextAlignment="Right" FontSize="11" VerticalAlignment="Bottom"/>
                     </Grid>
                 </Grid>
             </Border>
@@ -313,8 +313,10 @@
                             <Border Grid.Column="1" BorderThickness="0,0,1,0" BorderBrush="Black" Margin="0,0,1,0">
                                 <StackPanel Margin="0,0,3,0" VerticalAlignment="Center">
                                     <local:Date Valeur="{Binding DateValeur}" Info="True" Editable="False" HorizontalContentAlignment="Left"/>
+                                    <local:Case Valeur="{Binding Compta}" Margin="2,0,2,0" Editable="True" Intitule="True" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
                             </Border>
+
                             <Grid Grid.Column="2" Margin="1,0,0,0" VerticalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
