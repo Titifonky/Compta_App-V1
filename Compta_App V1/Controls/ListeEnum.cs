@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -80,6 +78,8 @@ namespace Compta
         {
             try
             {
+                if (xValeur == null) return;
+
                 if (Editable == true)
                 {
                     xValeur.Visibility = Visibility.Visible;
@@ -90,7 +90,7 @@ namespace Compta
                 }
                 else
                 {
-                    if (String.IsNullOrWhiteSpace(Valeur.ToString()))
+                    if (Valeur != null && String.IsNullOrWhiteSpace(Valeur.ToString()))
                         xBase.Visibility = Visibility.Collapsed;
 
                     xValeur.Visibility = Visibility.Collapsed;
@@ -106,7 +106,7 @@ namespace Compta
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-                ApplyEditable();
+            ApplyEditable();
 
             if (e.Property == ValeurDP)
             {

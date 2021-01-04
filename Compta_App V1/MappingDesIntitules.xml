@@ -11,77 +11,93 @@ Attributs possibles :
 
 <Base version="1">
   <Objets>
-    <Objet name="LigneCompta">
+    <Objet name="Heure">
       <Propriete name="Id"/>
       <Propriete name="No"/>
-      <Propriete name="Societe"/>
-      <Propriete name="Pointer" intitule="P"/>
+      <Propriete name="Poste"/>
       <Propriete name="DateValeur" intitule="Date valeur"/>
-      <Propriete name="DateCompta" intitule="Date compta"/>
-      <Propriete name="Compte"/>
+      <Propriete name="Operation" defaut="1"/>
       <Propriete name="Description"/>
-      <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
-      <Propriete name="Tva_Pct" intitule="Tva" unite="%" defaut="20"/>
-      <Propriete name="Tva" unite="€" defaut="0"/>
+      <Propriete name="Qte" unite="h" defaut="0"/>
+      <Propriete name="Montant" unite="€" defaut="0"/>
     </Objet>
-    <Objet name="LigneBanque">
+    <Objet name="Achat">
       <Propriete name="Id"/>
       <Propriete name="No"/>
-      <Propriete name="EcritureBanque"/>
-      <Propriete name="Editer" intitule="E"/>
+      <Propriete name="Poste"/>
       <Propriete name="DateValeur" intitule="Date valeur"/>
-      <Propriete name="Compte"/>
+      <Propriete name="Fournisseur"/>
       <Propriete name="Description"/>
-      <Propriete name="Compta" intitule="C" info="Compta"/>
-      <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
-      <Propriete name="Tva_Pct" intitule="Tva" unite="%" defaut="20"/>
-      <Propriete name="Tva" unite="€" defaut="0"/>
+      <Propriete name="Montant" unite="€" defaut="0"/>
     </Objet>
-    <Objet name="EcritureBanque">
+    <Objet name="Poste">
       <Propriete name="Id"/>
       <Propriete name="No"/>
-      <Propriete name="Banque"/>
-      <Propriete name="Pointer" intitule="P"/>
-      <Propriete name="IdBanque"/>
-      <Propriete name="DateValeur" intitule="Date"/>
-      <Propriete name="AfficherDescription" intitule="Ajouter une description"/>
-      <Propriete name="Description"/>
-      <Propriete name="Compte"/>
-      <Propriete name="Ventiler" intitule="V" info="Ventiler"/>
-      <Propriete name="VerifVentilation" unite="€" defaut="0"/>
-      <Propriete name="Compta" intitule="C" info="Compta"/>
-      <Propriete name="Valeur" intitule="Val" unite="€" defaut="0"/>
+      <Propriete name="Chantier"/>
+      <Propriete name="Reference" defaut=""/>
+      <Propriete name="Description" defaut=""/>
+      <Propriete name="Montant" unite="€" defaut="0"/>
+      <Propriete name="MontantPct" unite="%" defaut="100" intitule="Montant"/>
+      <Propriete name="AvanceMt" unite="€" defaut="0" intitule="Avance"/>
+      <Propriete name="AvancePct" unite="%" defaut="100" intitule="Avance"/>
+      <Propriete name="Achat" unite="€" defaut="0"/>
+      <Propriete name="HeureQte" unite="h" defaut="0" intitule="Heure"/>
+      <Propriete name="HeureMt" unite="€" defaut="0" intitule="Heure"/>
+      <Propriete name="Depense" unite="€" defaut="0" intitule="TT"/>
+      <Propriete name="MargeMt" unite="€" defaut="0" intitule="Marge"/>
+      <Propriete name="MargePct" unite="%" defaut="100" intitule="Marge"/>
     </Objet>
-    <Objet name="Banque">
-      <Propriete name="Id"/>
-      <Propriete name="No"/>
-      <Propriete name="Societe"/>
-      <Propriete name="Nom"/>
-      <Propriete name="SoldeInitial" intitule="Solde initial" unite="€" defaut="0"/>
-      <Propriete name="Solde" unite="€" defaut="0"/>
-    </Objet>
-    <Objet name="Groupe">
+    <Objet name="Chantier">
       <Propriete name="Id"/>
       <Propriete name="No"/>
       <Propriete name="Societe"/>
-      <Propriete name="Nom"/>
-      <Propriete name="Description"/>
-    </Objet>
-    <Objet name="Compte">
-      <Propriete name="Id"/>
-      <Propriete name="No"/>
-      <Propriete name="Groupe"/>
-      <Propriete name="Nom"/>
-      <Propriete name="Description"/>
-      <Propriete name="Solde" defaut="0"/>
-      <Propriete name="SoldeInitial" intitule="Solde initial" defaut="0"/>
+      <Propriete name="Reference" defaut=""/>
+      <Propriete name="Description" defaut=""/>
+      <Propriete name="TauxHoraire" unite="€/h" defaut="38" intitule="Taux"/>
+      <Propriete name="Montant" unite="€" defaut="0"/>
+      <Propriete name="AvanceMt" unite="€" defaut="0"/>
+      <Propriete name="AvancePct" unite="%" defaut="100" intitule="Avance"/>
+      <Propriete name="Achat" unite="€" defaut="0"/>
+      <Propriete name="HeureQte" unite="h" defaut="0" intitule="Heure"/>
+      <Propriete name="HeureMt" unite="€" defaut="0" intitule="Heure"/>
+      <Propriete name="Depense" unite="€" defaut="0" intitule="TT"/>
+      <Propriete name="MargeMt" unite="€" defaut="0" intitule="Marge"/>
+      <Propriete name="MargePct" unite="%" defaut="100" intitule="Marge"/>
     </Objet>
     <Objet name="Societe">
       <Propriete name="Id"/>
       <Propriete name="No"/>
+      <Propriete name="Nom"/>
     </Objet>
     <Objet name="Version">
       <Propriete name="No"/>
     </Objet>
+
+    <Objet name="AnalysePoste">
+      <Propriete name="Achat" unite="€" defaut="0"/>
+      <Propriete name="HeureQte" unite="h" defaut="0" intitule="Heure"/>
+      <Propriete name="HeureMt" unite="€" defaut="0" intitule="Heure"/>
+      <Propriete name="Depense" unite="€" defaut="0" intitule="TT"/>
+    </Objet>
+    <Objet name="AnalyseChantier">
+      <Propriete name="Achat" unite="€" defaut="0"/>
+      <Propriete name="HeureQte" unite="h" defaut="0" intitule="Heure"/>
+      <Propriete name="HeureMt" unite="€" defaut="0" intitule="Heure"/>
+      <Propriete name="Depense" unite="€" defaut="0" intitule="TT"/>
+    </Objet>
+    <Objet name="AnalysePeriode">
+      <Propriete name="DateValeur" intitule="Periode"/>
+      <Propriete name="Achat" unite="€" defaut="0"/>
+      <Propriete name="HeureQte" unite="h" defaut="0" intitule="Heure"/>
+      <Propriete name="HeureMt" unite="€" defaut="0" intitule="Heure"/>
+      <Propriete name="Depense" unite="€" defaut="0" intitule="TT"/>
+    </Objet>
   </Objets>
+  <Enums>
+    <Enum name="Operation_e">
+      <Champ name="cFab" valeur="1" intitule="Fab"/>
+      <Champ name="cPose" valeur="2" intitule="Pose"/>
+      <Champ name="cEtude" valeur="3" intitule="Etude"/>
+    </Enum>
+  </Enums>
 </Base>

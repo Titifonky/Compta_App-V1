@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Compta
 {
@@ -65,7 +60,9 @@ namespace Compta
                 else
                 {
                     if (Valeur != null && String.IsNullOrWhiteSpace(Valeur.ToString()))
+                    {
                         xBase.Visibility = Visibility.Collapsed;
+                    }
                     else
                     {
                         xValeur.Visibility = Visibility.Collapsed;

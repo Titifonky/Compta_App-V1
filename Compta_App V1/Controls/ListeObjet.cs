@@ -1,10 +1,8 @@
-﻿using LogDebugging;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Compta
 {
@@ -71,7 +69,7 @@ namespace Compta
         public static readonly DependencyProperty ItemsSourceDP =
             DependencyProperty.Register("ItemsSource", typeof(object),
               typeof(ListeObjet), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        
+
         private void MajEditable()
         {
             if (xBase == null || xValeur == null) return;

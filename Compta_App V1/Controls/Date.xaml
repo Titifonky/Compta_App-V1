@@ -5,16 +5,14 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-             >
+                   x:Name="parent">
     <Grid x:Name="xBase"
           DataContext="{Binding ElementName=parent}"
-          Margin="0,2,0,2"
-          >
+          Margin="0,2,0,2">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0"
@@ -22,12 +20,11 @@
                    Margin="0,0,5,0"
                    TextWrapping="NoWrap"
                    VerticalAlignment="Center"
-                   Visibility="Collapsed"
-                   />
+                   Visibility="Collapsed" />
         <DatePicker Grid.Column="1"
                     Name="xValeur"
                     Margin="2,0,0,0"
-                    HorizontalAlignment="Left" 
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     SelectedDate="{Binding Valeur, Mode=TwoWay}"
@@ -35,17 +32,16 @@
                     BorderThickness="1"
                     BorderBrush="Black"
                     Visibility="Collapsed"
-                    />
+                    Width="100" />
         <TextBox Grid.Column="2"
                  Name="xAfficher"
-                 Text="{Binding Path=Valeur, StringFormat=dd/MM/yyyy, Mode=TwoWay}"
+                 Text="{Binding Path=Valeur, StringFormat=MM/yy, Mode=TwoWay}"
                  TextWrapping="NoWrap"
                  VerticalAlignment="Center"
                  VerticalContentAlignment="Center"
                  HorizontalAlignment="Left"
                  HorizontalContentAlignment="Left"
                  BorderBrush="Black"
-                 BorderThickness="0"
-                 />
+                 BorderThickness="0" />
     </Grid>
 </local:ControlBase>

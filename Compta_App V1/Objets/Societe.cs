@@ -1,136 +1,79 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Windows.Data;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Compta
 {
-    [ForcerAjout]
     public class Societe : ObjetGestion
     {
-        public Societe()
-        {
-            Bdd2.Ajouter(this);
-        }
-
         private String _Nom = "";
         [Propriete]
         public String Nom
         {
             get { return _Nom; }
-            set { Set(ref _Nom, value, this); }
+            set { SetPropGestion(ref _Nom, value, this); }
         }
 
-        public delegate void OnModifyBanqueEventHandler(int id);
-
-        public event OnModifyBanqueEventHandler OnModifyBanque;
-
-        private Banque _BanqueCourante = null;
-        public Banque BanqueCourante
+        private int _NbMois = 2;
+        public int NbMois
         {
-            get { return _BanqueCourante; }
+            get { return _NbMois; }
             set
             {
-                SetListe(ref _BanqueCourante, value);
-                OnModifyBanque(_BanqueCourante.Id);
-            }
-        }
-
-        private Compte _CompteBase = null;
-        public Compte CompteBase
-        {
-            get
-            {
-                if (_CompteBase == null)
+                if (SetPropGestion(ref _NbMois, value, this))
                 {
-                    var grp = ListeGroupe.Where(c => c.No == 4).First();
-                    _CompteBase = grp.ListeCompte.Where(c => c.No == 162).First();
-                }
+                    ListeAnalysePeriode.Clear();
 
-                return _CompteBase;
+                    if (_NbMois > 0)
+                        calculerListeAnalysePeriode();
+                }
             }
         }
 
-        private ListeObservable<Groupe> _ListeGroupe = null;
-        [ListeObjetGestion]
-        public ListeObservable<Groupe> ListeGroupe
+        public void calculerListeAnalysePeriode()
         {
-            get
-            {
-                if (_ListeGroupe == null)
-                    _ListeGroupe = Bdd2.Enfants<Groupe, Societe>(this);
+            ListeAnalysePeriode.Clear();
 
-                if (!_ListeGroupe.OptionsCharges)
+            if (NbMois > 0)
+            {
+                for (int i = -1; i < NbMois; i++)
                 {
-                    _ListeGroupe.ItemsNotifyPropertyChanged = true;
-                    _ListeGroupe.OptionsCharges = true;
+                    var s = DateTime.Now.AddMonths(-i);
+                    var e = s.AddMonths(1);
+                    s = new DateTime(s.Year, s.Month, 1, 0, 0, 0);
+                    e = new DateTime(e.Year, e.Month, 1, 0, 0, 0);
+
+                    var periode = new AnalysePeriode();
+                    if (periode.Analyser(s, e))
+                        ListeAnalysePeriode.Add(periode);
                 }
-
-                return _ListeGroupe;
-            }
-            set
-            {
-                SetListe(ref _ListeGroupe, value);
             }
         }
 
-        private ListeObservable<Compte> _ListeCompte = null;
-        [ListeObjetGestion]
-        public ListeObservable<Compte> ListeCompte
+        private ListeObservable<AnalysePeriode> _ListeAnalysePeriode = new ListeObservable<AnalysePeriode>();
+        public ListeObservable<AnalysePeriode> ListeAnalysePeriode
+        {
+            get { return _ListeAnalysePeriode; }
+            set { SetListeWpf(ref _ListeAnalysePeriode, value); }
+        }
+
+        private ListeObservable<Chantier> _ListeChantier = null;
+        public ListeObservable<Chantier> ListeChantier
         {
             get
             {
-                if (_ListeCompte == null)
-                    _ListeCompte = Bdd2.Liste<Compte>();
+                if (_ListeChantier == null)
+                    _ListeChantier = Bdd2.Enfants<Chantier, Societe>(this);
 
-                if (!_ListeCompte.OptionsCharges)
-                {
-                    _ListeCompte.ItemsNotifyPropertyChanged = true;
-                    _ListeCompte.OptionsCharges = true;
-                }
-
-                return _ListeCompte;
+                return _ListeChantier;
             }
+
             set
             {
-                SetListe(ref _ListeCompte, value);
+                SetListeWpf(ref _ListeChantier, value);
             }
         }
-
-        private ListeObservable<LigneCompta> _ListeLigneCompta = null;
-        [ListeObjetGestion]
-        public ListeObservable<LigneCompta> ListeLigneCompta
-        {
-            get
-            {
-                if (_ListeLigneCompta == null)
-                    _ListeLigneCompta = Bdd2.Enfants<LigneCompta, Societe>(this);
-
-                return _ListeLigneCompta;
-            }
-            set
-            {
-                SetListe(ref _ListeLigneCompta, value);
-            }
-        }
-
-        private ListeObservable<Banque> _ListeBanque = null;
-        [ListeObjetGestion]
-        public ListeObservable<Banque> ListeBanque
-        {
-            get
-            {
-                if (_ListeBanque == null)
-                    _ListeBanque = Bdd2.Enfants<Banque, Societe>(this);
-
-                return _ListeBanque;
-            }
-            set
-            {
-                SetListe(ref _ListeBanque, value);
-            }
-        }
-        
     }
 }

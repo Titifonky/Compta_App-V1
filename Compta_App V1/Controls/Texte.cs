@@ -1,5 +1,4 @@
-﻿using LogDebugging;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,7 +7,6 @@ using System.Windows.Media;
 
 namespace Compta
 {
-
     public partial class Texte : ControlBase
     {
         private void TextBox_ToucheEntreeUpdate(object sender, KeyEventArgs e)
@@ -144,20 +142,22 @@ namespace Compta
                 xValeur.Background = Brushes.White;
                 xValeur.BorderThickness = new Thickness(1);
                 xValeur.IsHitTestVisible = true;
-                if (Unite)
-                    xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
+                //if (Unite)
+                //    xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
             }
             else
             {
                 if (Valeur != null && String.IsNullOrWhiteSpace(Valeur.ToString()))
+                {
                     xBase.Visibility = Visibility.Collapsed;
+                }
                 else
                 {
                     xValeur.Background = Brushes.Transparent;
                     xValeur.BorderThickness = new Thickness(0);
                     xValeur.IsHitTestVisible = false;
-                    if (Unite)
-                        xGrille.ColumnDefinitions[0].Width = GridLength.Auto;
+                    //if (Unite)
+                    //    xGrille.ColumnDefinitions[0].Width = new GridLength(1, GridUnitType.Star);
                 }
             }
         }

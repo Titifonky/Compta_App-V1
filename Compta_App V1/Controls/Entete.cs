@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Compta
 {
@@ -31,7 +30,7 @@ namespace Compta
         {
             if (e.Property == ListeProp)
             {
-                if((Liste != null) && Liste.ContainsKey(NomPropriete))
+                if ((Liste != null) && Liste.ContainsKey(NomPropriete))
                     xEntete.Text = Liste[NomPropriete];
             }
 

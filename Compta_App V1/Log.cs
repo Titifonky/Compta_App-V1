@@ -115,7 +115,10 @@ namespace LogDebugging
             if (!_Actif)
                 return;
 
-            Write("\t\t\t\t-> " + message.ToString());
+            if(message != null)
+                Write("\t\t\t\t-> " + message.ToString());
+            else
+                Write("\t\t\t\t-> null");
         }
 
         internal static void LogMethode(this Object O, Object Message, [CallerMemberName] String methode = "")

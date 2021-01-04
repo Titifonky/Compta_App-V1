@@ -1,16 +1,14 @@
 ﻿<local:ControlBase x:Class="Compta.Texte"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-             >
-<Grid Name="xBase"
+                   x:Name="parent">
+    <Grid Name="xBase"
           DataContext="{Binding ElementName=parent}"
-          Margin="{Binding MargeInterne}"
-          >
+          Margin="{Binding MargeInterne}">
         <DockPanel LastChildFill="True">
             <TextBlock DockPanel.Dock="Left"
                        Name="xIntitule"
@@ -21,16 +19,26 @@
                        TextAlignment="Right"
                        HorizontalAlignment="Right"
                        Width="Auto"
-                       Visibility="Collapsed"
-                       />
-            <Grid Name="xGrille">
+                       Visibility="Collapsed" />
+            <!--<Grid Name="xGrille">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>-->
+            <DockPanel Name="xGrille" LastChildFill="True">
+                <TextBlock Grid.Column="1"
+                           DockPanel.Dock="Right"
+                           Name="xUnite"
+                           VerticalAlignment="Center"
+                           Margin="1,0,0,0"
+                           Foreground="Black"
+                           TextAlignment="Left"
+                           HorizontalAlignment="Left"
+                           TextWrapping="{Binding TextWrapping}"
+                           Visibility="Collapsed" />
                 <TextBox Grid.Column="0"
                          Name="xValeur"
-                         Text="{Binding Valeur, Mode=TwoWay, StringFormat=\{0:F2\}}"
+                         Text="{Binding Valeur, Mode=TwoWay, StringFormat=\{0\}}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"
                          KeyUp="TextBox_ToucheEntreeUpdate"
@@ -40,20 +48,12 @@
                          AcceptsReturn="{Binding AcceptsReturn}"
                          TextAlignment="{Binding TextAlignment}"
                          HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment="Right"
                          Background ="Transparent"
-                         IsHitTestVisible ="false"
-                         />
-                <TextBlock Grid.Column="1"
-                           Name="xUnite"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Margin="1,0,0,0"
-                           Foreground="Black"
-                           TextAlignment="Left"
-                           TextWrapping="{Binding TextWrapping}"
-                           Visibility="Collapsed"
-                           />
-            </Grid>
+                         IsHitTestVisible ="false" />
+
+                <!--</Grid>-->
+            </DockPanel>
         </DockPanel>
     </Grid>
 </local:ControlBase>

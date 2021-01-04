@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Compta
 {
-    public class ObjetGestion : INotifyPropertyChanged
+    public class ObjetWpf : INotifyPropertyChanged
     {
 
         public static readonly int DEFAULT_ID = -1;
@@ -26,6 +26,48 @@ namespace Compta
         {
             return Math.Round(Val, DEFAULT_ARRONDI_PCT);
         }
+
+        protected Boolean _Editer = false;
+        public virtual Boolean Editer
+        {
+            get { return _Editer; }
+            set { SetWpf(ref _Editer, value); }
+        }
+
+        public ObjetWpf() { }
+
+        #region Notification WPF
+
+        protected bool SetWpf<U>(ref U field, U value, [CallerMemberName] string propertyName = "")
+        {
+            if (EqualityComparer<U>.Default.Equals(field, value)) return false;
+
+            field = value;
+            OnPropertyChanged(propertyName);
+
+            return true;
+        }
+
+        protected bool SetListeWpf<U>(ref U field, U value, [CallerMemberName] string propertyName = "")
+        {
+
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
+        }
+
+        #endregion
+    }
+
+    public class ObjetGestion : ObjetWpf
+    {
 
         protected Type T = null;
 
@@ -57,14 +99,7 @@ namespace Compta
         public virtual int No
         {
             get { return _No; }
-            set { Set(ref _No, value, this); }
-        }
-
-        protected Boolean _Editer = false;
-        public virtual Boolean Editer
-        {
-            get { return _Editer; }
-            set { Set(ref _Editer, value, this); }
+            set { SetPropGestion(ref _No, value, this); }
         }
 
         public ObjetGestion()
@@ -120,48 +155,33 @@ namespace Compta
 
         #region Notification WPF
 
-        protected bool Set<U, V>(ref U field, U value, V Objet, [CallerMemberName]string propertyName = "")
+        protected bool SetPropGestion<U, V>(ref U field, U value, V Objet, [CallerMemberName]string propertyName = "")
             where V : ObjetGestion
         {
-            if (EqualityComparer<U>.Default.Equals(field, value)) return false;
+            var maj = base.SetWpf(ref field, value, propertyName);
 
-            field = value;
-            OnPropertyChanged(propertyName);
-            if (EstSvgDansLaBase)
+            if (maj && EstSvgDansLaBase)
+            {
                 Bdd2.Maj(Objet, T);
-            return true;
+                return true;
+            }
+
+            return false;
         }
 
-        protected bool SetObjetGestion<U, V>(ref U field, U value, V Objet, Boolean ForcerUpdate = false, [CallerMemberName]string propertyName = "")
+        protected bool SetObjetGestion<U, V>(ref U field, U value, V Objet, [CallerMemberName]string propertyName = "")
             where U : ObjetGestion
             where V : ObjetGestion
         {
             Boolean test = true;
             if ((value == null) || (value != null && !value.EstCharge) || !Objet.EstCharge) test = false;
 
-            if (ForcerUpdate || !EqualityComparer<U>.Default.Equals(field, value))
-            {
-                field = value;
-                OnPropertyChanged(propertyName);
-                if (EstSvgDansLaBase)
-                    Bdd2.Maj(Objet, T);
-            }
+            var maj = base.SetWpf(ref field, value, propertyName);
+
+            if (maj && EstSvgDansLaBase)
+                Bdd2.Maj(Objet, T);
 
             return test;
-        }
-
-        protected bool SetListe<U>(ref U field, U value, [CallerMemberName]string propertyName = "")
-        {
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] String NomProp = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(NomProp));
         }
 
         #endregion
@@ -340,7 +360,11 @@ namespace Compta
 
             OnSupprimer?.Invoke(Item, null);
         }
-
+        /// <summary>
+        /// Ajoute un item seulement s'il n'est pas déjà présent
+        /// et l'insert suivant la méthode de tri
+        /// </summary>
+        /// <param name="Item"></param>
         public new void Add(T Item)
         {
             if (Contains(Item)) return;

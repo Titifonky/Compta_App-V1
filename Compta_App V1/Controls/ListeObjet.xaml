@@ -5,23 +5,20 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-                   >
+                   x:Name="parent">
 
     <Grid x:Name="xBase"
           Margin="0,2,0,2"
-          DataContext="{Binding ElementName=parent}"
-        >
+          DataContext="{Binding ElementName=parent}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <TextBlock Name="xIntitule"
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"
-                   Grid.Column="0"
-                   />
+                   Grid.Column="0" />
         <ComboBox Grid.Column="1"
                   Name="xValeur"
                   ItemsSource="{Binding ItemsSource, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}"
@@ -32,8 +29,7 @@
                   VerticalAlignment="Center"
                   BorderThickness="1"
                   BorderBrush="Black"
-                  Visibility="Collapsed"
-                  />
+                  Visibility="Collapsed" />
         <TextBlock Grid.Column="1"
                    Name="xValeurTexte"
                    Text="{Binding ElementName=xValeur, Path=Text}"
@@ -41,7 +37,6 @@
                    VerticalAlignment="Center"
                    Foreground="Black"
                    TextAlignment="Left"
-                   Visibility="Visible"
-                   />
+                   Visibility="Visible" />
     </Grid>
 </local:ControlBase>

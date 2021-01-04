@@ -1,12 +1,6 @@
-﻿using LogDebugging;
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Compta
 {

@@ -1,5 +1,4 @@
-﻿using LoreSoft.MathExpressions;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,14 +18,6 @@ namespace Compta
     {
         static Outils()
         {
-            _Calculateur = new MathEvaluator();
-        }
-
-        private static MathEvaluator _Calculateur;
-
-        public static Double Evaluer(this String Expression)
-        {
-            return _Calculateur.Evaluate(Expression);
         }
 
         public static double Plafond(double value, double significance)

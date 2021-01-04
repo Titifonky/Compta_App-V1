@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
@@ -12,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Compta
@@ -20,7 +18,7 @@ namespace Compta
 
     public static class Bdd2
     {
-        private static Version VersionCourante = new Version(2);
+        private static Version VersionCourante = new Version(1);
         private static MySqlConnection _ConnexionBase = null;
 
         private static String FichierMapping = "MappingDesTables.xml";
@@ -33,6 +31,11 @@ namespace Compta
         //private static String _SvgExt = ".sql";
 
         static Bdd2() { }
+
+        public static void Version(int no)
+        {
+            VersionCourante.No = no;
+        }
 
         public static List<String> ListeBase()
         {
@@ -613,7 +616,7 @@ namespace Compta
             where T : ObjetGestion, new()
             where U : ObjetGestion
         {
-            // Si on demande les enfants d'un Objet non sauvegardé dans la base, il y a un pb
+            // Si on demande les parents d'un Objet non sauvegardé dans la base, il y a un pb
             // on renvoi la liste vide.
             if ((enfant != null) && (!enfant.EstSvgDansLaBase))
             {
@@ -625,20 +628,36 @@ namespace Compta
 
             var StructObjetT = DicProp.Dic[typeof(T)];
             var StructObjetU = DicProp.Dic[typeof(U)];
+            int pId = -1;
+            string pQuery;
 
+            // On recherche l'id du parent dans les propriétés de l'enfant
             foreach (var info in StructObjetU.ListeCleEtrangere)
             {
-                if (info.TypeObjet == typeof(U) && info.ChampId.GetValue(enfant) != null)
+                if (info.TypeObjet == typeof(T) && info.ChampId.GetValue(enfant) != null)
                 {
-                    T Objet = DicObjet.RecupererObjet<T>((int)info.ChampId.GetValue(enfant));
+                    // On récupère l'id
+                    pId = (int)info.ChampId.GetValue(enfant);
+                    // On reinitialise à null
                     info.ChampId.SetValue(enfant, null);
-                    return Objet;
+                    // On récupère le parent s'il est déjà chargé
+                    Object Objet = DicObjet.RecupererObjet<T>(pId);
+                    if (Objet != null)
+                        return (T)Objet;
+                    
+                    // Sinon on sort de la boucle
+                    break;
                 }
             }
+            
+            //// Si l'id n'a pas été retrouvé on le récupère dans la base de données
+            //if (pId == -1)
+            //{
+            //    pQuery = String.Format("SELECT {0} FROM {1} WHERE {2} = {3};", StructObjetT.NomTable, StructObjetU.NomTable, StructObjetU.ClePrimaire.NomChampSql, enfant.Id);
+            //    pId = (int)Convert.ChangeType(RecupererChamp(pQuery, typeof(int)), typeof(int));
+            //}
 
-            String pQuery = String.Format("SELECT {0} FROM {1} WHERE {2} = {3};", StructObjetT.NomTable, StructObjetU.NomTable, StructObjetU.ClePrimaire.NomChampSql, enfant.Id);
-            int pId = (int)Convert.ChangeType(RecupererChamp(pQuery, typeof(int)), typeof(int));
-
+            // On récupère le parent
             pQuery = String.Format("SELECT * FROM {0} WHERE {1} = {2};", StructObjetT.NomTable, StructObjetT.ClePrimaire.NomChampSql, pId);
             DataTable Table = RecupererTable(pQuery);
 
@@ -646,6 +665,73 @@ namespace Compta
                 return null;
 
             return ChargerObjet<T, T>(Table.Rows[0], null);
+        }
+
+        public static ListeObservable<T> Parents<T, U>(ListeObservable<U> enfants)
+            where T : ObjetGestion, new()
+            where U : ObjetGestion
+        {
+            // Si on demande les parents d'un Objet non sauvegardé dans la base, il y a un pb
+            // on renvoi la liste vide.
+            foreach (var enfant in enfants)
+            {
+                if ((enfant != null) && (!enfant.EstSvgDansLaBase))
+                {
+                    Log.Methode("Bdd");
+                    Log.Write("Erreur ID = -1");
+                    Log.Write("Id : " + enfant.Id);
+                    return null;
+                }
+            }
+
+            var liste = new ListeObservable<T>();
+
+            var StructObjetT = DicProp.Dic[typeof(T)];
+            var StructObjetU = DicProp.Dic[typeof(U)];
+            List<int> ListeId = new List<int>();
+            string pQuery;
+
+            // On recherche l'id du parent dans les propriétés de l'enfant
+            foreach (var info in StructObjetU.ListeCleEtrangere)
+            {
+                if (info.TypeObjet == typeof(T))
+                {
+                    foreach (var enfant in enfants)
+                    {
+                        if (info.ChampId.GetValue(enfant) != null)
+                        {
+                            // On récupère l'id
+                            int pId = (int)info.ChampId.GetValue(enfant);
+                            // On récupère le parent s'il est déjà chargé
+                            Object Objet = DicObjet.RecupererObjet<T>(pId);
+                            if (Objet != null)
+                                liste.Add((T)Objet);
+                            else
+                                ListeId.Add(pId);
+                        }
+                        else
+                            liste.Add((T)info.Champ.GetValue(enfant));
+                            
+                    }
+
+                    // On sort de la boucle
+                    break;
+                }
+            }
+            if (ListeId.Count > 0)
+            {
+                // On récupère le parent
+                pQuery = String.Format("SELECT * FROM {0} WHERE {1} IN ({2});", StructObjetT.NomTable, StructObjetT.ClePrimaire.NomChampSql, String.Join(",", ListeId.Distinct()));
+                DataTable Table = RecupererTable(pQuery);
+
+                if ((Table == null) || (Table.Rows.Count == 0))
+                    return liste;
+
+                foreach (DataRow Li in Table.Rows)
+                    liste.Add(ChargerObjet<T, T>(Li, null));
+            }
+
+            return liste;
         }
 
         public static ListeObservable<T> Liste<T>()
@@ -699,8 +785,42 @@ namespace Compta
 
             // Sinon, on charge les objets
             foreach (DataRow Li in Table.Rows)
+                pListe.Add(ChargerObjet<T, U>(Li, parent));
+
+
+
+            return pListe;
+        }
+
+        public static ListeObservable<T> ListeFiltre<T>(String where)
+            where T : ObjetGestion, new()
+        {
+            if (ModeChargerObjet || ModeAjouterObjet) return null;
+
+            var StructObjetT = DicProp.Dic[typeof(T)];
+
+            ListeObservable<T> pListe = new ListeObservable<T>();
+
+            String pQuery = String.Format("SELECT * FROM {0}", StructObjetT.NomTable);
+
+            // Filtre sur un objet
+            if (!String.IsNullOrWhiteSpace(where))
+                pQuery += " WHERE " + where;
+
+            // S'il y a des clef de tri, on les ajoute
+            List<String> pNomClesTri = StructObjetT.NomCleTri;
+            if (pNomClesTri.Count > 0)
+                pQuery += String.Format(" ORDER BY {0};", String.Join(", ", pNomClesTri));
+
+            DataTable Table = RecupererTable(pQuery);
+
+            // Si la requete est nulle, on renvoi une liste vide
+            if (Table == null) return pListe;
+
+            // Sinon, on charge les objets
+            foreach (DataRow Li in Table.Rows)
             {
-                T pObj = ChargerObjet<T, U>(Li, parent);
+                T pObj = ChargerObjet<T, T>(Li, null);
                 pListe.Add(pObj);
             }
 

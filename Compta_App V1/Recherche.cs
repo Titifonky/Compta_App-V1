@@ -40,14 +40,15 @@ namespace Compta
 
                         if (_Vue == null) return;
 
-                        if (_Vue.Filter != _Methode)
+                        if (String.IsNullOrWhiteSpace(_Valeur))
+                            _Vue.Filter = null;
+                        else if (_Vue.Filter != _Methode)
                             _Vue.Filter = _Methode;
 
                         _Vue.Refresh();
                         _Box.SelectedIndex = 0;
                     }
-
-                    if (_ListeBox != null)
+                    else if (_ListeBox != null)
                     {
                         _ListeVue = new List<CollectionView>();
                         foreach (Selector Box in _ListeBox)
@@ -56,7 +57,9 @@ namespace Compta
                             CollectionView Vue = (CollectionView)CollectionViewSource.GetDefaultView(Box.ItemsSource);
                             if (Vue == null) continue;
 
-                            if (Vue.Filter != _Methode)
+                            if (String.IsNullOrWhiteSpace(_Valeur))
+                                _Vue.Filter = null;
+                            else if (Vue.Filter != _Methode)
                                 Vue.Filter = _Methode;
 
                             Vue.Refresh();

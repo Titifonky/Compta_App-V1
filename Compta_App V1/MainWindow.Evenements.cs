@@ -59,18 +59,18 @@ namespace Compta
             MenuItem I = sender as MenuItem;
             if (I != null)
             {
-                Societe S = I.DataContext as Societe;
-                if (S != null)
-                {
-                    FrameworkElement F = sender as FrameworkElement;
-                    String Nom = F.Tag as String;
+                //Societe S = I.DataContext as Societe;
+                //if (S != null)
+                //{
+                //    FrameworkElement F = sender as FrameworkElement;
+                //    String Nom = F.Tag as String;
 
-                    if (Nom == "Societe")
-                    { EditerOnglet<Societe, Societe>(S); return; }
+                //    if (Nom == "Societe")
+                //    { EditerOnglet<Societe, Societe>(S); return; }
 
-                    if (Nom == "Famille")
-                    { EditerOnglet<Groupe, Societe>(S); return; }
-                }
+                //    if (Nom == "Famille")
+                //    { EditerOnglet<Groupe, Societe>(S); return; }
+                //}
 
             }
         }
@@ -110,21 +110,29 @@ namespace Compta
         {
             if (e.ClickCount >= 2)
             {
-                EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
-                if (EC != null)
-                {
-                    EC.Pointer = !EC.Pointer;
-                    return;
-                }
-
                 ObjetGestion OB = ((FrameworkElement)sender).DataContext as ObjetGestion;
                 if (OB != null)
                 {
+
                     OB.Editer = !OB.Editer;
 
-                    Compte C = OB as Compte;
-                    if (C != null)
-                        C.Groupe.Editer = !C.Groupe.Editer;
+                    Chantier c = OB as Chantier;
+                    if (c != null && OB.Editer == true)
+                    {
+                        foreach (var ch in c.Societe.ListeChantier)
+                        {
+                            if (ch != c) ch.Editer = false;
+                        }
+                    }
+
+                    Poste p = OB as Poste;
+                    if (p != null && OB.Editer == true)
+                    {
+                        foreach (var pt in p.Chantier.ListePoste)
+                        {
+                            if (pt != p) pt.Editer = false;
+                        }
+                    }
 
                     return;
                 }
@@ -133,17 +141,9 @@ namespace Compta
 
         private void Editer_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            EcritureBanque EC = ((FrameworkElement)sender).DataContext as EcritureBanque;
+            Chantier EC = ((FrameworkElement)sender).DataContext as Chantier;
             if (EC != null)
             {
-                EC.Pointer = !EC.Pointer;
-                return;
-            }
-
-            Banque B = ((FrameworkElement)sender).DataContext as Banque;
-            if (B != null)
-            {
-                B.Editer = !B.Editer;
                 return;
             }
         }
@@ -252,6 +252,16 @@ namespace Compta
             }
             else
                 xDerniereSvg.Text = "Base de donnée à jour";
+        }
+
+        private void MajAnalyse_Click(object sender, RoutedEventArgs e)
+        {
+            Button B = sender as Button;
+            if (B == null) return;
+            Societe societe = B.DataContext as Societe;
+
+            Enregistrer_Click(null, null);
+            societe.calculerListeAnalysePeriode();
         }
 
         private void EffacerTextBox_Click(object sender, RoutedEventArgs e)
@@ -575,30 +585,58 @@ namespace Compta
 
         #endregion
 
-        #region EVENEMENT LigneBanque
+        #region EVENEMENT Chantier
 
-        private void Ajouter_LigneBanque_Click(object sender, RoutedEventArgs e)
+        private void Ajouter_Chantier_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<LigneBanque, EcritureBanque>(sender, e);
+            Ajouter_List<Chantier, Societe>(sender, e);
         }
 
-        private void Supprimer_LigneBanque_Click(object sender, RoutedEventArgs e)
+        private void Supprimer_Chantier_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<LigneBanque>(sender, e, false, true);
+            Supprimer_List<Chantier>(sender, e, false, false);
         }
 
         #endregion
 
-        #region EVENEMENT LigneCompta
+        #region EVENEMENT Poste
 
-        private void Ajouter_LigneCompta_Click(object sender, RoutedEventArgs e)
+        private void Ajouter_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<LigneCompta, Societe>(sender, e);
+            Ajouter_List<Poste, Chantier>(sender, e);
         }
 
-        private void Supprimer_LigneCompta_Click(object sender, RoutedEventArgs e)
+        private void Supprimer_Poste_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<LigneCompta>(sender, e, false, false);
+            Supprimer_List<Poste>(sender, e, false, false);
+        }
+
+        #endregion
+
+        #region EVENEMENT Achat
+
+        private void Ajouter_Achat_Click(object sender, RoutedEventArgs e)
+        {
+            Ajouter_List<Achat, Poste>(sender, e);
+        }
+
+        private void Supprimer_Achat_Click(object sender, RoutedEventArgs e)
+        {
+            Supprimer_List<Achat>(sender, e, false, false);
+        }
+
+        #endregion
+
+        #region EVENEMENT Heure
+
+        private void Ajouter_Heure_Click(object sender, RoutedEventArgs e)
+        {
+            Ajouter_List<Heure, Poste>(sender, e);
+        }
+
+        private void Supprimer_Heure_Click(object sender, RoutedEventArgs e)
+        {
+            Supprimer_List<Heure>(sender, e, false, false);
         }
 
         #endregion
@@ -607,12 +645,12 @@ namespace Compta
 
         private void Ajouter_Banque_Click(object sender, RoutedEventArgs e)
         {
-            Ajouter_List<Banque, Societe>(sender, e);
+            //Ajouter_List<Banque, Societe>(sender, e);
         }
 
         private void Supprimer_Banque_Click(object sender, RoutedEventArgs e)
         {
-            Supprimer_List<Banque>(sender, e, false, false);
+            //Supprimer_List<Banque>(sender, e, false, false);
         }
 
         #endregion
@@ -622,48 +660,25 @@ namespace Compta
         private void Ajouter_Compte_Click(object sender, RoutedEventArgs e)
         {
             ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
-            Compte L = (Compte)V.SelectedItem;
+            //Compte L = (Compte)V.SelectedItem;
 
-            if (L != null)
-            {
-                var obj = new Compte(L.Groupe);
+            //if (L != null)
+            //{
+            //    var obj = new Compte(L.Groupe);
 
-                V.ScrollIntoView(obj);
-                V.SelectedItem = obj;
-            }
+            //    V.ScrollIntoView(obj);
+            //    V.SelectedItem = obj;
+            //}
         }
 
         private void Supprimer_Compte_Click(object sender, RoutedEventArgs e)
         {
             ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
-            Compte L = (Compte)V.SelectedItem;
+            //Compte L = (Compte)V.SelectedItem;
 
-            if (L != null)
-                if (MessageBox.Show("Voulez vous vraiement supprimer ce compte", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                    L.Supprimer();
-        }
-
-        private void Ajouter_Groupe_Click(object sender, RoutedEventArgs e)
-        {
-            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
-            Compte L = (Compte)V.SelectedItem;
-
-            if (L != null)
-                new Groupe(L.Societe);
-        }
-
-        private void Supprimer_Groupe_Click(object sender, RoutedEventArgs e)
-        {
-            ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
-            Compte L = (Compte)V.SelectedItem;
-
-            if (L != null)
-            {
-                Groupe G = L.Groupe;
-
-                if (MessageBox.Show("Voulez vous vraiement supprimer ce groupe", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                    G.Supprimer();
-            }
+            //if (L != null)
+            //    if (MessageBox.Show("Voulez vous vraiement supprimer ce compte", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            //        L.Supprimer();
         }
 
         #endregion
@@ -671,13 +686,13 @@ namespace Compta
         private void Atteindre_Click(object sender, RoutedEventArgs e)
         {
             ListBox V = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as ListBox;
-            LigneBanque L = (LigneBanque)V.SelectedItem;
+            Poste L = (Poste)V.SelectedItem;
             if (L != null)
             {
                 xComptabilite.Focus();
 
-                xListeEcritureBanque.ScrollIntoView(L.EcritureBanque);
-                xListeEcritureBanque.SelectedItem = L.EcritureBanque;
+                xListeChantier.ScrollIntoView(L.Chantier);
+                xListeChantier.SelectedItem = L.Chantier;
 
             }
         }

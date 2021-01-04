@@ -5,12 +5,10 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-             >
+                   x:Name="parent">
     <Grid Name="xBase"
           DataContext="{Binding ElementName=parent}"
-          Margin="0,2,0,2"
-          >
+          Margin="0,2,0,2">
         <DockPanel LastChildFill="True">
             <TextBlock DockPanel.Dock="Left"
                        Name="xIntitule"
@@ -19,8 +17,7 @@
                        VerticalAlignment="Center"
                        Foreground="Black"
                        TextAlignment="Right"
-                       Width="Auto"
-                       />
+                       Width="Auto" />
             <TextBox Name="xValeur"
                      Text="{Binding Valeur, Mode=TwoWay}"
                      VerticalAlignment="Center"
@@ -29,8 +26,7 @@
                      BorderThickness="1"
                      TextWrapping="NoWrap"
                      TextAlignment="{Binding TextAlignment}"
-                     MouseDoubleClick="ChercherDossier"
-                     />
+                     MouseDoubleClick="ChercherDossier" />
         </DockPanel>
     </Grid>
 </local:ControlBase>

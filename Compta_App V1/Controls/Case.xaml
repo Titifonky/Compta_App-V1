@@ -5,14 +5,12 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-                   >
+                   x:Name="parent">
     <Grid x:Name="xBase"
           DataContext="{Binding ElementName=parent}"
-          Margin="0,2,0,2"
-          >
+          Margin="0,2,0,2">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -20,15 +18,13 @@
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"
                    Grid.Column="0"
-                   Foreground="Black"
-                   />
+                   Foreground="Black" />
         <CheckBox Name="xValeur"
                   IsChecked="{Binding Path=Valeur, Mode=TwoWay}"
                   VerticalAlignment="Center"
                   VerticalContentAlignment="Center"
                   HorizontalAlignment="Left"
                   Grid.Column="1"
-                  IsHitTestVisible ="False"
-                  />
+                  IsHitTestVisible ="False" />
     </Grid>
 </local:ControlBase>

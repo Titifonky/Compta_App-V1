@@ -5,18 +5,16 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-             >
+                   x:Name="parent">
     <Grid Name="xBase"
           DataContext="{Binding ElementName=parent}"
-          Margin="0,2,0,2"
-          >
+          Margin="0,2,0,2">
         <!--<Grid.Resources>
             <Style TargetType="ToggleButton">
                 <Style.Triggers>
                     <Trigger Property="IsChecked" Value="True">
-                        <Setter Property="Background" Value="White"/>
-                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="Foreground" Value="Black" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -27,6 +25,7 @@
                       BorderBrush="Black"
                       BorderThickness="1"
                       Background="Transparent"
-            />
+                      Padding="4,0,4,0"
+                      />
     </Grid>
 </local:ControlBase>

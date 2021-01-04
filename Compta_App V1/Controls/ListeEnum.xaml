@@ -5,26 +5,23 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-             >
+                   x:Name="parent">
     <UserControl.Resources>
         <local:EnumToIntConverter x:Key="EnumToInt" />
     </UserControl.Resources>
-    
+
     <Grid x:Name="xBase"
           Margin="0,2,0,2"
-          DataContext="{Binding ElementName=parent}"
-        >
+          DataContext="{Binding ElementName=parent}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
+
         <TextBlock Name="xIntitule"
                    Margin="0,0,5,0"
                    VerticalAlignment="Center"
-                   Grid.Column="0"
-                   />
+                   Grid.Column="0" />
         <ComboBox Grid.Column="1"
                   Name="xValeur"
                   DisplayMemberPath="Value"
@@ -33,8 +30,7 @@
                   VerticalAlignment="Center"
                   HorizontalAlignment="Stretch"
                   BorderThickness="1"
-                  BorderBrush="Black"
-                  />
+                  BorderBrush="Black" />
         <TextBlock Grid.Column="1"
                    Name="xValeurTexte"
                    Text="{Binding ElementName=xValeur, Path=Text}"
@@ -42,7 +38,6 @@
                    VerticalAlignment="Center"
                    Foreground="Black"
                    TextAlignment="Left"
-                   Visibility="Collapsed"
-                   />
+                   Visibility="Collapsed" />
     </Grid>
 </local:ControlBase>

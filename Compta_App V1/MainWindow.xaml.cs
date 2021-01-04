@@ -19,11 +19,8 @@ namespace Compta
     {
         public static TabItem DernierOngletActif = null;
 
-        private RechercheTexte<EcritureBanque> _RechercherEcritureBanque;
-        private RechercheTexte<LigneCompta> _RechercherLigneCompta;
-        private RechercheTexte<Compte> _RechercherCompte;
-
-        public Societe pSociete;
+        private RechercheTexte<Chantier> _RechercherChantier;
+        private Societe pSociete;
 
         public MainWindow()
         {
@@ -51,7 +48,9 @@ namespace Compta
         {
             Log.Entete();
 
-            String BaseSelectionnee = "";
+            Bdd2.Version(3);
+
+            String BaseSelectionnee;
             List<String> ListeBase = Bdd2.ListeBase();
             if (ListeBase.Count == 1)
                 BaseSelectionnee = ListeBase[0];
@@ -73,57 +72,12 @@ namespace Compta
 
             pSociete = Bdd2.Liste<Societe>()[0];
 
-            Log.Message("Precharger Societe");
-            var result1 = Bdd2.PreCharger(typeof(Societe), new List<ObjetGestion>() { pSociete });
-
-            Log.Message("Precharger Banque");
-            var result2 = Bdd2.PreCharger(typeof(Banque), result1[typeof(Banque)]);
-
-            Log.Message("Precharger EcritureBanque");
-            var result3 = Bdd2.PreCharger(typeof(EcritureBanque), result2[typeof(EcritureBanque)]);
-
-            Log.Message("Precharger Groupe");
-            var result4 = Bdd2.PreCharger(typeof(Groupe), result1[typeof(Groupe)]);
-
-            Log.Message("Precharger Compte");
-            var result5 = Bdd2.PreCharger(typeof(Compte), result4[typeof(Compte)]);
-
-            Log.Message("Precharger Fin");
-
-            //foreach (Compte cp in result4[typeof(Compte)])
-            //{
-            //    Log.Message(cp.Nom);
-            //    Log.Message(cp.ListeLigneBanque.Count);
-            //    Log.Message(cp.ListeLigneCompta.Count);
-            //}
-
-            Log.Message("test chargement");
-
-            foreach(var cpte in pSociete.ListeCompte)
-            {
-                cpte.Calculer();
-            }
-
             this.DataContext = pSociete;
 
-            pSociete.OnModifyBanque += new Societe.OnModifyBanqueEventHandler(id => { Properties.Settings.Default.IdBanque = id; Properties.Settings.Default.Save(); });
+            TrierListe<Chantier>(xListeChantier);
 
-            pSociete.BanqueCourante = pSociete.ListeBanque.FirstOrDefault(b => { return b.Id == Properties.Settings.Default.IdBanque; }) ?? pSociete.ListeBanque[0];
-
-            //TrierListe<EcritureBanque>(xListeEcritureBanque);
-            //TrierListe<LigneCompta>(xListeLigneCompta);
-
-            _RechercherEcritureBanque = new RechercheTexte<EcritureBanque>(xListeEcritureBanque, true);
-            xRechercherEcritureBanque.DataContext = _RechercherEcritureBanque;
-
-            _RechercherLigneCompta = new RechercheTexte<LigneCompta>(xListeLigneCompta);
-            xRechercherLigneCompta.DataContext = _RechercherLigneCompta;
-
-            _RechercherCompte = new RechercheTexte<Compte>(xListeCompte);
-            xRechercherCompte.DataContext = _RechercherCompte;
-
-            //foreach (var cp in pSociete.ListeBanque[0].ListeEcritureBanque)
-            //    cp.Pointer = false;
+            _RechercherChantier = new RechercheTexte<Chantier>(xListeChantier, false);
+            xRechercherChantier.DataContext = _RechercherChantier;
 
             return true;
         }

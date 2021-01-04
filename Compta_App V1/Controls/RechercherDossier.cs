@@ -7,7 +7,6 @@ namespace Compta
 {
     public partial class RechercherDossier : ControlBase
     {
-
         private void ChercherDossier(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();

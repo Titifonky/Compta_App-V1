@@ -106,6 +106,42 @@ namespace Compta
         }
     }
 
+    [ValueConversion(typeof(Double), typeof(Visibility))]
+    public class Pct100ToCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Double)value == 100)
+                return Visibility.Collapsed;
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
+    public class MultiValueEditerPct100CollapsedConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Boolean editer = (Boolean)values[0];
+            Double avancePct = (Double)values[1];
+
+            if (editer || avancePct < 100)
+                return Visibility.Visible;
+
+            return Visibility.Collapsed;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException("Going back to what you had isn't supported.");
+        }
+    }
+
     [ValueConversion(typeof(String), typeof(Visibility))]
     public class NullStringToVisibilityConverter : IValueConverter
     {

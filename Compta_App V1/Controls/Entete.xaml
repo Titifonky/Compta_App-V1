@@ -5,16 +5,13 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:Compta"
                    mc:Ignorable="d"
-                   x:Name="parent"
-                   >
-    
+                   x:Name="parent">
+
     <Grid x:Name="xBase"
-          DataContext="{Binding ElementName=parent, Mode=OneWay}"
-          >
+          DataContext="{Binding ElementName=parent, Mode=OneWay}">
         <TextBlock Name="xEntete"
                    TextWrapping="NoWrap"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   />
+                   HorizontalAlignment="Center" />
     </Grid>
 </local:ControlBase>
