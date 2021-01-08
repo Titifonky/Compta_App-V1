@@ -27,14 +27,31 @@ namespace Compta
             return Math.Round(Val, DEFAULT_ARRONDI_PCT);
         }
 
+        public ObjetWpf() { }
+
+        private Boolean _EstCharge = false;
+        public Boolean EstCharge
+        {
+            get { return _EstCharge; }
+            set { _EstCharge = value; }
+        }
+
+        public delegate void OnEditerHandler(ObjetWpf obj);
+
+        public event OnEditerHandler OnEditer;
+
         protected Boolean _Editer = false;
         public virtual Boolean Editer
         {
             get { return _Editer; }
-            set { SetWpf(ref _Editer, value); }
+            set
+            {
+                if (SetWpf(ref _Editer, value) && EstCharge && value)
+                {
+                    OnEditer(this);
+                }
+            }
         }
-
-        public ObjetWpf() { }
 
         #region Notification WPF
 
@@ -72,7 +89,6 @@ namespace Compta
         protected Type T = null;
 
         protected int _Id = DEFAULT_ID;
-        private Boolean _EstCharge = false;
 
         public Boolean EstSvgDansLaBase
         {
@@ -84,12 +100,6 @@ namespace Compta
         {
             get { return _Id; }
             set { _Id = value; }
-        }
-
-        public Boolean EstCharge
-        {
-            get { return _EstCharge; }
-            set { _EstCharge = value; }
         }
 
         public Boolean EstPreCharge { get; set; } = false;
@@ -166,7 +176,7 @@ namespace Compta
                 return true;
             }
 
-            return false;
+            return maj;
         }
 
         protected bool SetObjetGestion<U, V>(ref U field, U value, V Objet, [CallerMemberName]string propertyName = "")
@@ -188,6 +198,7 @@ namespace Compta
     }
 
     public class ListeObservable<T> : ObservableCollection<T>
+        where T : ObjetWpf
     {
         private String _Intitule = null;
         private Dictionary<String, String> _ListeEntete = null;
@@ -213,7 +224,7 @@ namespace Compta
             }
         }
 
-        public Boolean OptionsCharges { get; set; } = false;
+        public Boolean EstCharge { get; set; } = false;
 
         public void Numeroter()
         {
@@ -286,8 +297,7 @@ namespace Compta
 
         public ListeObservable()
             : base()
-        {
-        }
+        { }
 
         public ListeObservable(ListeObservable<T> Liste)
         {
@@ -352,6 +362,7 @@ namespace Compta
             }
 
             OnAjouter?.Invoke(Item, null);
+            Item.OnEditer += MajEdition;
         }
 
         public void Supprimer(T Item)
@@ -359,6 +370,7 @@ namespace Compta
             base.Remove(Item);
 
             OnSupprimer?.Invoke(Item, null);
+            Item.OnEditer -= MajEdition;
         }
         /// <summary>
         /// Ajoute un item seulement s'il n'est pas déjà présent
@@ -375,6 +387,16 @@ namespace Compta
                 base.Add(Item);
 
             OnAjouter?.Invoke(Item, null);
+            Item.OnEditer += MajEdition;
+        }
+        
+        public void MajEdition(ObjetWpf o)
+        {
+            foreach (var item in this)
+            {
+                if (item != o && item.Editer != false)
+                    item.Editer = false;
+            }
         }
 
         public new void Insert(int Index, T Item)
@@ -387,6 +409,7 @@ namespace Compta
                 base.Insert(Index, Item);
 
             OnAjouter?.Invoke(Item, Index);
+            Item.OnEditer += MajEdition;
         }
 
         public new void InsertItem(int Index, T Item)
@@ -399,30 +422,29 @@ namespace Compta
                 base.InsertItem(Index, Item);
 
             OnAjouter?.Invoke(Item, Index);
+            Item.OnEditer += MajEdition;
         }
 
         public new void Remove(T Item)
         {
             base.Remove(Item);
-
+            Item.OnEditer -= MajEdition;
             OnSupprimer?.Invoke(Item, null);
         }
 
         public new void RemoveAt(int Index)
         {
             var Item = base[Index];
-
+            Item.OnEditer -= MajEdition;
             base.RemoveAt(Index);
-
             OnSupprimer?.Invoke(Item, Index);
         }
 
         public new void RemoveItem(int Index)
         {
             var Item = base[Index];
-
+            Item.OnEditer -= MajEdition;
             base.RemoveItem(Index);
-
             OnSupprimer?.Invoke(Item, Index);
         }
 

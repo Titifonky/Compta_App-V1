@@ -112,6 +112,8 @@ namespace Compta
 
             Bdd2.Supprimer(this);
 
+            Poste.CalculerHeure();
+
             return true;
         }
     }

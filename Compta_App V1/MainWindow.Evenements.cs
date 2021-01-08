@@ -111,31 +111,7 @@ namespace Compta
             if (e.ClickCount >= 2)
             {
                 ObjetGestion OB = ((FrameworkElement)sender).DataContext as ObjetGestion;
-                if (OB != null)
-                {
-
-                    OB.Editer = !OB.Editer;
-
-                    Chantier c = OB as Chantier;
-                    if (c != null && OB.Editer == true)
-                    {
-                        foreach (var ch in c.Societe.ListeChantier)
-                        {
-                            if (ch != c) ch.Editer = false;
-                        }
-                    }
-
-                    Poste p = OB as Poste;
-                    if (p != null && OB.Editer == true)
-                    {
-                        foreach (var pt in p.Chantier.ListePoste)
-                        {
-                            if (pt != p) pt.Editer = false;
-                        }
-                    }
-
-                    return;
-                }
+                if (OB != null) { OB.Editer = !OB.Editer; }
             }
         }
 
@@ -269,7 +245,7 @@ namespace Compta
             Button B = sender as Button;
             if (B == null) return;
             TextBox T = B.DataContext as TextBox;
-            if (B == null) return;
+            if (T == null) return;
 
             T.Text = "";
 
@@ -295,7 +271,7 @@ namespace Compta
         Object _Copie_Liste;
 
         private Boolean Info<T>(MenuItem I, out ListBox V, out ListeObservable<T> Liste, out List<T> Ls, out T L)
-            where T : INotifyPropertyChanged
+            where T : ObjetWpf, INotifyPropertyChanged
         {
             V = null; Liste = null; Ls = null; L = default(T);
             if (I != null)
@@ -323,7 +299,9 @@ namespace Compta
         {
             Type classType = typeof(T);
             ConstructorInfo classConstructor = classType.GetConstructor(new Type[] { typeof(U) });
-            return (T)classConstructor.Invoke(new object[] { Parent });
+            T objet = (T)classConstructor.Invoke(new object[] { Parent });
+            objet.Editer = true;
+            return objet;
         }
 
         private ListeObservable<T> Ajouter_List<T>(object sender, RoutedEventArgs e, Boolean UnSeul = false)
@@ -703,6 +681,23 @@ namespace Compta
             //view.SortDescriptions.Add(new SortDescription("Groupe", ListSortDirection.Ascending));
 
             //xListeCompte.ItemsSource = view;
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //var lb = (sender as ListBox);
+            //var l = lb.ItemsSource as ListeObservable<ObjetGestion>;
+            //l.MajEdition(null);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button B = sender as Button;
+            if (B == null) return;
+            ObjetGestion T = B.DataContext as ObjetGestion;
+            if (T == null) return;
+
+            T.Editer = false;
         }
 
         #region LISTVIEW

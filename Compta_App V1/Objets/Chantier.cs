@@ -131,7 +131,11 @@ namespace Compta
         public Double Achat
         {
             get { return _Achat; }
-            set { SetPropGestion(ref _Achat, value, this); }
+            set
+            {
+                if (SetPropGestion(ref _Achat, value, this))
+                    CalculerDepense();
+            }
         }
 
         private Double _HeureQte = 0;

@@ -684,7 +684,7 @@ namespace Compta
                 }
             }
 
-            var liste = new ListeObservable<T>();
+            var pListe = new ListeObservable<T>();
 
             var StructObjetT = DicProp.Dic[typeof(T)];
             var StructObjetU = DicProp.Dic[typeof(U)];
@@ -705,12 +705,12 @@ namespace Compta
                             // On récupère le parent s'il est déjà chargé
                             Object Objet = DicObjet.RecupererObjet<T>(pId);
                             if (Objet != null)
-                                liste.Add((T)Objet);
+                                pListe.Add((T)Objet);
                             else
                                 ListeId.Add(pId);
                         }
                         else
-                            liste.Add((T)info.Champ.GetValue(enfant));
+                            pListe.Add((T)info.Champ.GetValue(enfant));
                             
                     }
 
@@ -725,13 +725,14 @@ namespace Compta
                 DataTable Table = RecupererTable(pQuery);
 
                 if ((Table == null) || (Table.Rows.Count == 0))
-                    return liste;
+                    return pListe;
 
                 foreach (DataRow Li in Table.Rows)
-                    liste.Add(ChargerObjet<T, T>(Li, null));
+                    pListe.Add(ChargerObjet<T, T>(Li, null));
             }
 
-            return liste;
+            pListe.EstCharge = true;
+            return pListe;
         }
 
         public static ListeObservable<T> Liste<T>()
@@ -747,6 +748,7 @@ namespace Compta
                 DicObjet.ReferencerListeObservable(pListe, typeof(T));
             }
 
+            pListe.EstCharge = true;
             return pListe;
         }
 
@@ -781,14 +783,14 @@ namespace Compta
             DataTable Table = RecupererTable(pQuery);
 
             // Si la requete est nulle, on renvoi une liste vide
-            if (Table == null) return pListe;
+            if (Table != null)
+            {
+                // Sinon, on charge les objets
+                foreach (DataRow Li in Table.Rows)
+                    pListe.Add(ChargerObjet<T, U>(Li, parent));
+            }
 
-            // Sinon, on charge les objets
-            foreach (DataRow Li in Table.Rows)
-                pListe.Add(ChargerObjet<T, U>(Li, parent));
-
-
-
+            pListe.EstCharge = true;
             return pListe;
         }
 
@@ -815,15 +817,18 @@ namespace Compta
             DataTable Table = RecupererTable(pQuery);
 
             // Si la requete est nulle, on renvoi une liste vide
-            if (Table == null) return pListe;
-
-            // Sinon, on charge les objets
-            foreach (DataRow Li in Table.Rows)
+            if (Table != null)
             {
-                T pObj = ChargerObjet<T, T>(Li, null);
-                pListe.Add(pObj);
+
+                // Sinon, on charge les objets
+                foreach (DataRow Li in Table.Rows)
+                {
+                    T pObj = ChargerObjet<T, T>(Li, null);
+                    pListe.Add(pObj);
+                }
             }
 
+            pListe.EstCharge = true;
             return pListe;
         }
 

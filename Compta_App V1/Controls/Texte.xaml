@@ -38,7 +38,7 @@
                            Visibility="Collapsed" />
                 <TextBox Grid.Column="0"
                          Name="xValeur"
-                         Text="{Binding Valeur, Mode=TwoWay, StringFormat=\{0\}}"
+                         Text="{Binding Valeur, Mode=TwoWay, StringFormat=\{0\}, Delay=2000, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"
                          KeyUp="TextBox_ToucheEntreeUpdate"

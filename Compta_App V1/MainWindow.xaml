@@ -18,7 +18,8 @@
         <local:BooleanToCollapsedConverter x:Key="BoolToCollapsed"/>
         <local:NotBooleanToCollapsedConverter x:Key="NotBoolToCollapsed"/>
         <local:NotBooleanConverter x:Key="NotBoolean"/>
-        <local:Pct100ToCollapsedConverter x:Key="Pct100ToCollapsed"/>
+        <local:Val100ToCollapsedConverter x:Key="Val100ToCollapsed"/>
+        <local:Val0ToCollapsedConverter x:Key="Val0ToCollapsed"/>
         <local:MultiValueEditerPct100CollapsedConverter x:Key="MultiValueEditerPct100Collapsed"/>
         <local:NullStringToVisibilityConverter x:Key="NullStringToVisible"/>
         <local:NullToCollapsedConverter x:Key="NullToCollapsed"/>
@@ -26,14 +27,23 @@
         <local:FlatStringConverter x:Key="FlatString"/>
         <local:AddPreffixConverter x:Key="AddPreffix"/>
         <local:AddSuffixConverter x:Key="AddSuffix"/>
+        <local:DateToStringConverter x:Key="DateToString"/>
 
         <Style  TargetType="{x:Type ListBoxItem}">
+            <Style.Setters>
+                <Setter Property="Margin" Value="0,0,13,0"/>
+            </Style.Setters>
             <Style.Triggers>
+
                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                    <Setter Property="Background" Value="LightGray"></Setter>
+                    <Setter Property="Background" Value="LightGray"/>
                 </Trigger>
                 <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="Gray"></Setter>
+                    <Setter Property="Background" Value="Gray"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Margin" Value="0,8,0,8"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -60,8 +70,6 @@
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0">
@@ -73,38 +81,48 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <local:ToggleBouton Grid.Column="0" Valeur="{Binding Reference}" Selection="{Binding Favori}" Visibility="{Binding Editer, Converter={StaticResource BoolToCollapsed}}" MinWidth="25" Margin="0,0,2,0"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding Reference}" Editable="{Binding Editer}" Visibility="{Binding Editer, Converter={StaticResource NotBoolToCollapsed}}" Info="True" TextWrapping="Wrap"  MinWidth="20"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                        <local:Texte Grid.Column="3" Valeur="{Binding TauxHoraire}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="{Binding Editer, Converter={StaticResource NotBoolToCollapsed}}" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40" HorizontalAlignment="Right"/>
-                        <local:Texte Grid.Column="4" Valeur="{Binding Montant}" Margin="5,0,0,0" Editable="False" Unite="True" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40" TextAlignment="Right" HorizontalAlignment="Right"/>
+                        <local:Texte Grid.Column="1" Valeur="{Binding Reference}" Editable="{Binding Editer}" Visibility="{Binding Editer, Converter={StaticResource NotBoolToCollapsed}}" Info="True"   MinWidth="20"/>
+                        <local:Texte Grid.Column="2" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True"   MinWidth="40"/>
+                        <local:Texte Grid.Column="3" Valeur="{Binding TauxHoraire}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="{Binding Editer, Converter={StaticResource NotBoolToCollapsed}}" Unite="True" Info="True"   MinWidth="40" HorizontalAlignment="Right"/>
+                        <local:Texte Grid.Column="4" Valeur="{Binding Montant}" Margin="5,0,0,0" Editable="False" Unite="True" Visibility="Visible" Info="True"   MinWidth="40" TextAlignment="Right" HorizontalAlignment="Right"/>
                     </Grid>
-                    <Grid Grid.Row="1" Margin="0" Visibility="{Binding AvancePct, Converter={StaticResource Pct100ToCollapsed}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding AvancePct}" Intitule="True" Editable="False" Unite="True" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding AvanceMt}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                    </Grid>
-                    <Grid Grid.Row="2" Margin="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                        <local:Texte Grid.Column="3" Valeur="{Binding Depense}" TextAlignment="Right" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                    </Grid>
-                    <Grid Grid.Row="3" Margin="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding MargeMt}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding MargePct}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  TextAlignment="Right"/>
+
+                    <Grid Grid.Row="1" Margin="12,0,0,0"
+                          Visibility="{Binding Depense, Mode=OneWay, Converter={StaticResource Val0ToCollapsed}}"
+                          >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="0" Visibility="{Binding AvancePct, Converter={StaticResource Val100ToCollapsed}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding AvancePct}" Intitule="True" Editable="False" Unite="True" Visibility="Visible" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding AvanceMt}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
+                            <local:Texte Grid.Column="3" Valeur="{Binding Depense}" TextAlignment="Right" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding MargeMt}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding MargePct}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   TextAlignment="Right"/>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Border>
@@ -123,8 +141,6 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0">
@@ -134,44 +150,54 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding Reference}" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="20"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" Unite="True" TextWrapping="Wrap"  MinWidth="40" TextAlignment="Right" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
-                        <local:Texte Grid.Column="3" Valeur="{Binding MontantPct}" Editable="False" Visibility="Visible" Info="True" Unite="True" TextWrapping="Wrap" MinWidth="40" TextAlignment="Right"/>
+                        <local:Texte Grid.Column="0" Valeur="{Binding Reference}" Editable="{Binding Editer}" Visibility="Visible" Info="True"   MinWidth="20"/>
+                        <local:Texte Grid.Column="1" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True"   MinWidth="40"/>
+                        <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" Unite="True"   MinWidth="40" TextAlignment="Right" HorizontalAlignment="Stretch" HorizontalContentAlignment="Right" />
+                        <local:Texte Grid.Column="3" Valeur="{Binding MontantPct}" Editable="False" Visibility="Visible" Info="True" Unite="True"  MinWidth="40" TextAlignment="Right"/>
                     </Grid>
-                    <Grid Grid.Row="1" Margin="0">
-                        <Grid.Visibility>
-                            <MultiBinding Converter="{StaticResource MultiValueEditerPct100Collapsed}" >
-                                <Binding Path="Editer" />
-                                <Binding Path="AvancePct" />
-                            </MultiBinding>
-                        </Grid.Visibility>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding AvancePct}" Intitule="True" Editable="{Binding Editer}" Unite="True" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding AvanceMt}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                    </Grid>
-                    <Grid Grid.Row="2" Margin="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                        <local:Texte Grid.Column="3" Valeur="{Binding Depense}" Intitule="True" Margin="5,0,0,0" HorizontalAlignment="Right" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                    </Grid>
-                    <Grid Grid.Row="3" Margin="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding MargeMt}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding MargePct}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  TextAlignment="Right"/>
+                    <Grid Grid.Row="1"
+                          Visibility="{Binding Depense, Mode=OneWay, Converter={StaticResource Val0ToCollapsed}}"
+                          Margin="12,0,0,0"
+                          >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="0">
+                            <Grid.Visibility>
+                                <MultiBinding Converter="{StaticResource MultiValueEditerPct100Collapsed}" >
+                                    <Binding Path="Editer" />
+                                    <Binding Path="AvancePct" />
+                                </MultiBinding>
+                            </Grid.Visibility>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding AvancePct}" Intitule="True" Editable="{Binding Editer}" Unite="True" Visibility="Visible" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding AvanceMt}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
+                            <local:Texte Grid.Column="3" Valeur="{Binding Depense}" Intitule="True" Margin="5,0,0,0" HorizontalAlignment="Right" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <local:Texte Grid.Column="0" Valeur="{Binding MargeMt}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                            <local:Texte Grid.Column="1" Valeur="{Binding MargePct}" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   TextAlignment="Right"/>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Border>
@@ -192,12 +218,20 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:Date Grid.Column="0" Valeur="{Binding DateValeur}" Editable="{Binding Editer}" Visibility="Visible" Info="True" MinWidth="20"/>
-                    <local:Texte Grid.Column="1" Valeur="{Binding Fournisseur}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                    <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="5,0,0,0" Editable="{Binding Editer}" Unite="True" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40" HorizontalContentAlignment="Right"/>
-                    <local:Texte Grid.Column="3" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
+                    <local:Texte Grid.Column="0" Valeur="{Binding DateValeur, Converter={StaticResource DateToString}}" Editable="{Binding Editer}" Visibility="Visible" Info="True" MinWidth="20"/>
+                    <local:Texte Grid.Column="1" Valeur="{Binding Fournisseur}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True"   MinWidth="40"/>
+                    <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="10,0,0,0" Editable="{Binding Editer}" Unite="True" Visibility="Visible" Info="True"   MinWidth="40" HorizontalContentAlignment="Right"/>
+                    <local:Texte Grid.Column="3" Valeur="{Binding Description}" HorizontalAlignment="Stretch" TextAlignment="Right" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" MinWidth="40"/>
+                    <Button Grid.Column="4" Content="V" Foreground="Green" Width="20" Margin="4,4,2,4" Click="Button_Click" Visibility="{Binding Editer, Mode=OneWay, Converter={StaticResource NotBoolToCollapsed}}" Background="Transparent">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -217,12 +251,20 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:Date Grid.Column="0" Valeur="{Binding DateValeur}" Editable="{Binding Editer}" Visibility="Visible" Info="True"/>
-                    <local:ListeEnum Grid.Column="1" Valeur="{Binding Operation}" Intitule="False" Editable="{Binding Editer}"/>
-                    <local:Texte Grid.Column="2" Valeur="{Binding Qte}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40" HorizontalContentAlignment="Right"/>
-                    <local:Texte Grid.Column="3" Valeur="{Binding Description}" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
+                    <local:Texte Grid.Column="0" Valeur="{Binding DateValeur, Converter={StaticResource DateToString}}" Editable="{Binding Editer}" Visibility="Visible" Info="True"/>
+                    <local:ListeEnum Grid.Column="1" Valeur="{Binding Operation}" Margin="3,0,0,0" Intitule="False" Editable="{Binding Editer}"/>
+                    <local:Texte Grid.Column="2" Valeur="{Binding Qte}" Editable="{Binding Editer}" Visibility="Visible" Unite="True" Info="True" MinWidth="50" HorizontalContentAlignment="Right"/>
+                    <local:Texte Grid.Column="3" Valeur="{Binding Description}" HorizontalAlignment="Stretch" TextAlignment="Right" Margin="5,0,0,0" Editable="{Binding Editer}" Visibility="Visible" Info="True" MinWidth="40"/>
+                    <Button Grid.Column="4" Content="V" Foreground="Green" Width="20" Margin="4,4,2,4" Click="Button_Click" Visibility="{Binding Editer, Mode=OneWay, Converter={StaticResource NotBoolToCollapsed}}" Background="Transparent">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="10"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -257,9 +299,9 @@
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <local:Texte Grid.Column="0" Valeur="{Binding Fournisseur}" Margin="5,0,0,0" Info="True" TextWrapping="Wrap"/>
-                                            <local:Texte Grid.Column="1" Valeur="{Binding Montant}" Margin="5,0,0,0" Unite="True" Info="True" TextWrapping="Wrap"  HorizontalContentAlignment="Right"/>
-                                            <local:Texte Grid.Column="2" Valeur="{Binding Description}" Margin="5,0,0,0" Info="True" TextWrapping="Wrap"/>
+                                            <local:Texte Grid.Column="0" Valeur="{Binding Fournisseur}" Margin="5,0,0,0" Info="True" />
+                                            <local:Texte Grid.Column="1" Valeur="{Binding Montant}" Margin="5,0,0,0" Unite="True" Info="True"   HorizontalContentAlignment="Right"/>
+                                            <local:Texte Grid.Column="2" Valeur="{Binding Description}" Margin="5,0,0,0" Info="True" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -281,9 +323,9 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <local:ListeEnum Grid.Column="0" Valeur="{Binding Operation}" Intitule="False"/>
-                                            <local:Texte Grid.Column="1" Valeur="{Binding Qte}" Margin="5,0,0,0" Unite="True" Info="True" TextWrapping="Wrap" HorizontalContentAlignment="Right"/>
-                                            <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="5,0,0,0" Unite="True" Info="True" TextWrapping="Wrap" HorizontalContentAlignment="Right"/>
-                                            <local:Texte Grid.Column="3" Valeur="{Binding Description}" Margin="5,0,0,0" Info="True" TextWrapping="Wrap"/>
+                                            <local:Texte Grid.Column="1" Valeur="{Binding Qte}" Margin="5,0,0,0" Unite="True" Info="True"  HorizontalContentAlignment="Right"/>
+                                            <local:Texte Grid.Column="2" Valeur="{Binding Montant}" Margin="5,0,0,0" Unite="True" Info="True"  HorizontalContentAlignment="Right"/>
+                                            <local:Texte Grid.Column="3" Valeur="{Binding Description}" Margin="5,0,0,0" Info="True" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -303,9 +345,9 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <local:Texte Grid.Column="0" Valeur="{Binding Path=Poste.Reference}" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                                        <local:Texte Grid.Column="1" Valeur="{Binding Path=Poste.Description}" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                                        <local:Texte Grid.Column="2" Valeur="{Binding Depense}" Margin="15,0,0,0" Visibility="Visible" Intitule="True" Unite="True" Info="True" TextWrapping="Wrap" TextAlignment="Right"  HorizontalAlignment="Right"/>
+                                        <local:Texte Grid.Column="0" Valeur="{Binding Path=Poste.Reference}" Visibility="Visible" Info="True" />
+                                        <local:Texte Grid.Column="1" Valeur="{Binding Path=Poste.Description}" Visibility="Visible" Info="True" />
+                                        <local:Texte Grid.Column="2" Valeur="{Binding Depense}" Margin="15,0,0,0" Visibility="Visible" Intitule="True" Unite="True" Info="True"  TextAlignment="Right"  HorizontalAlignment="Right"/>
                                     </Grid>
                                     <Expander Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                         <Expander.Header>
@@ -315,9 +357,9 @@
                                                     <ColumnDefinition />
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                                                <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                                                <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
+                                                <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                                                <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                                                <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
                                             </Grid>
                                         </Expander.Header>
                                         <Grid>
@@ -334,7 +376,6 @@
                                                      IsSynchronizedWithCurrentItem="False"
                                                      Margin="0,2.5,0,2.5"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                     ScrollViewer.CanContentScroll="False"
                                                      SelectionMode="Single"
                                                      >
                                             </ListBox>
@@ -347,7 +388,6 @@
                                                      IsSynchronizedWithCurrentItem="False"
                                                      Margin="0,2.5,0,2.5"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                     ScrollViewer.CanContentScroll="False"
                                                      SelectionMode="Single"
                                                      >
                                             </ListBox>
@@ -364,7 +404,6 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0" Margin="0">
@@ -373,42 +412,45 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <local:Texte Grid.Column="0" Valeur="{Binding Path=Chantier.Reference}" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                                <local:Texte Grid.Column="1" Valeur="{Binding Path=Chantier.Description}" Visibility="Visible" Info="True" TextWrapping="Wrap"/>
-                                <local:Texte Grid.Column="2" Valeur="{Binding Depense}" Margin="15,0,0,0" Visibility="Visible" Intitule="True" Unite="True" Info="True" TextWrapping="Wrap" TextAlignment="Right"  HorizontalAlignment="Right"/>
+                                <local:Texte Grid.Column="0" Valeur="{Binding Path=Chantier.Reference}" Info="True" FontWeight="Bold" />
+                                <local:Texte Grid.Column="1" Valeur="{Binding Path=Chantier.Description}" Info="True" FontWeight="Bold" />
+                                <local:Texte Grid.Column="2" Valeur="{Binding Depense}" Margin="15,0,0,0" Intitule="True" FontWeight="Bold" Unite="True" Info="True"  TextAlignment="Right"  HorizontalAlignment="Right"/>
                             </Grid>
-                            <Grid Grid.Row="1" Margin="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                                <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                                <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
-                            </Grid>
-                            <ListBox Grid.Row="2"
+                            <Expander Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <Expander.Header>
+                                    <Grid Margin="0" HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                                        <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                                        <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
+                                    </Grid>
+                                </Expander.Header>
+                                <ListBox
                                      AlternationCount="2"
                                      ItemsSource="{Binding ListeAnalysePoste, Mode=TwoWay}"
                                      ItemTemplate="{StaticResource xListeAnalysePosteTemplate}"
                                      IsSynchronizedWithCurrentItem="False"
                                      Margin="0,3"
-                                     ScrollViewer.CanContentScroll="False"
                                      SelectionMode="Single"
                                      VerticalContentAlignment="Top"
                                      HorizontalContentAlignment="Stretch"
                                     >
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical"/>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ListBoxItem}">
-                                        <Setter Property="Focusable" Value="False"/>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
-                            </ListBox>
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListBoxItem}">
+                                            <Setter Property="Focusable" Value="False"/>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </Expander>
                         </Grid>
                     </Border>
                 </DataTemplate>
@@ -428,8 +470,8 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding DateValeur}" Visibility="Visible" Info="True" TextWrapping="Wrap"  MinWidth="20"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding Depense}" Margin="15,0,0,0" Visibility="Visible" Intitule="True" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
+                        <local:Texte Grid.Column="0" Valeur="{Binding DateValeur}" FontWeight="Bold" Info="True"   MinWidth="20"/>
+                        <local:Texte Grid.Column="1" Valeur="{Binding Depense}" Margin="15,0,0,0" FontWeight="Bold" Intitule="True" Unite="True" Info="True"   MinWidth="40"/>
                     </Grid>
                     <Grid Grid.Row="1" Margin="0">
                         <Grid.ColumnDefinitions>
@@ -437,9 +479,9 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"/>
-                        <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" TextWrapping="Wrap"  MinWidth="40"/>
+                        <local:Texte Grid.Column="0" Valeur="{Binding Achat}" Intitule="True" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                        <local:Texte Grid.Column="1" Valeur="{Binding HeureQte}" HorizontalAlignment="Right" Intitule="True" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True" />
+                        <local:Texte Grid.Column="2" Valeur="{Binding HeureMt}" TextAlignment="Right" Margin="5,0,0,0" Editable="False" Visibility="Visible" Unite="True" Info="True"   MinWidth="40"/>
                     </Grid>
                     <ListBox Grid.Row="2"
                              AlternationCount="2"
@@ -447,7 +489,6 @@
                              ItemTemplate="{StaticResource xListeAnalyseChantierTemplate}"
                              IsSynchronizedWithCurrentItem="False"
                              Margin="0,3"
-                             ScrollViewer.CanContentScroll="False"
                              SelectionMode="Single"
                              VerticalContentAlignment="Top"
                              HorizontalContentAlignment="Stretch"
@@ -498,12 +539,11 @@
             <TabItem Header="Comptabilité" Name="xComptabilite">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="137*"/>
-                        <ColumnDefinition Width="224*"/>
+                        <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="359*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="539*"/>
+                        <ColumnDefinition Width="6*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -513,138 +553,127 @@
                         </Style>
                     </Grid.Resources>
 
-                    <Grid Grid.Column="0" Grid.ColumnSpan="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0"
+                    <Border Grid.Column="0"
                                 Padding="5"
                                 >
-                            <Grid Name="xChantier" Width="Auto">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="0,0,0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Recherche :"/>
-                                    <TextBox Grid.Column="1"
+                        <Grid Name="xChantier" Width="Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Recherche :"/>
+                                <TextBox Grid.Column="1"
                                              Name="xRechercherChantier"
                                              Text="{Binding Path=Valeur, Mode=OneWayToSource}"
                                              HorizontalAlignment="Stretch"
                                              VerticalAlignment="Center"
                                              Margin="5,0,0,0"
                                              KeyUp="TextBox_KeyEnterUpdate"/>
-                                    <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherChantier}" Click="EffacerTextBox_Click" HorizontalContentAlignment="Center"/>
-                                </Grid>
-                                <ListBox Name="xListeChantier"
-                                         Grid.Row="1"
-                                         AlternationCount="2"
-                                         VerticalContentAlignment="Stretch"
-                                         ItemsSource="{Binding ListeChantier, Mode=TwoWay}"
-                                         ItemTemplate="{StaticResource xListeChantierTemplate}"
-                                         SelectedIndex="0"
-                                         HorizontalContentAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
-                                         IsSynchronizedWithCurrentItem="True"
-                                         Margin="0,3"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.CanContentScroll="False"
-                                         SelectionMode="Extended"
-                                    >
-                                    <ListBox.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Ajouter" Click="Ajouter_Chantier_Click"/>
-                                            <MenuItem Header="Supprimer" Click="Supprimer_Chantier_Click"/>
-                                        </ContextMenu>
-                                    </ListBox.ContextMenu>
-                                </ListBox>
+                                <Button Grid.Column="2" Content="X" Margin="2,0,0,0" Width="25" FontWeight="Bold" DataContext="{Binding ElementName=xRechercherChantier}" Click="EffacerTextBox_Click" HorizontalContentAlignment="Center"/>
                             </Grid>
-                        </Border>
-                    </Grid>
+                            <ListBox Name="xListeChantier"
+                                     Grid.Row="1"
+                                     AlternationCount="2"
+                                     VerticalContentAlignment="Stretch"
+                                     ItemsSource="{Binding ListeChantier, Mode=TwoWay}"
+                                     ItemTemplate="{StaticResource xListeChantierTemplate}"
+                                     SelectedIndex="0"
+                                     HorizontalContentAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     IsSynchronizedWithCurrentItem="True"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.CanContentScroll="False"
+                                     SelectionMode="Extended"
+                                     SelectionChanged="ListBox_SelectionChanged"
+                                    >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Ajouter" Click="Ajouter_Chantier_Click"/>
+                                        <MenuItem Header="Supprimer" Click="Supprimer_Chantier_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                        </Grid>
+                    </Border>
 
-                    <GridSplitter Grid.Column="2" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+                    <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
 
-                    <Grid Grid.Column="3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="1"
+                    <Border Grid.Column="2"
                                 Padding="5"
                                 DataContext="{Binding ElementName=xListeChantier, Path=SelectedItem}"
                                 >
-                            <Grid Name="xPoste">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
+                        <Grid Name="xPoste">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
 
-                                <ListBox Name="xListePoste"
-                                         Grid.Row="0"
-                                         AlternationCount="2"
-                                         VerticalContentAlignment="Stretch"
-                                         ItemsSource="{Binding ListePoste}"
-                                         ItemTemplate="{StaticResource xListePosteTemplate}"
-                                         SelectedIndex="0"
-                                         HorizontalContentAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
-                                         IsSynchronizedWithCurrentItem="True"
-                                         Margin="0,2.5,0,2.5"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ScrollViewer.CanContentScroll="False"
-                                         SelectionMode="Extended"
-                                    >
-                                    <ListBox.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Ajouter" Click="Ajouter_Poste_Click"/>
-                                            <MenuItem Header="Supprimer" Click="Supprimer_Poste_Click"/>
-                                        </ContextMenu>
-                                    </ListBox.ContextMenu>
-                                </ListBox>
+                            <Grid Grid.Row="0" Margin="5,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <local:Texte Grid.Column="0" Valeur="{Binding Reference}" Info="True"   MinWidth="20"  FontWeight="Bold"/>
+                                <local:Texte Grid.Column="1" Valeur="{Binding Description}" Margin="5,0,0,0" Visibility="Visible" Info="True"   MinWidth="40" FontWeight="Bold"/>
                             </Grid>
-                        </Border>
-                    </Grid>
 
-                    <GridSplitter Grid.Column="4" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+                            <ListBox Name="xListePoste"
+                                     Grid.Row="1"
+                                     AlternationCount="2"
+                                     VerticalContentAlignment="Stretch"
+                                     ItemsSource="{Binding ListePoste}"
+                                     ItemTemplate="{StaticResource xListePosteTemplate}"
+                                     SelectedIndex="0"
+                                     HorizontalContentAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     IsSynchronizedWithCurrentItem="True"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.CanContentScroll="False"
+                                     SelectionMode="Extended"
+                                     SelectionChanged="ListBox_SelectionChanged"
+                                    >
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Ajouter" Click="Ajouter_Poste_Click"/>
+                                        <MenuItem Header="Supprimer" Click="Supprimer_Poste_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                            </ListBox>
+                        </Grid>
+                    </Border>
 
-                    <Grid Grid.Column="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0"
+                    <GridSplitter Grid.Column="3" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+
+                    <Border Grid.Column="4"
                                 Padding="5"
                                 DataContext="{Binding ElementName=xListePoste, Path=SelectedItem}"
                                 >
-                            <Grid Name="xAchatHeure" Width="Auto">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="0,0,0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="2*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ListBox Name="xListeAchat"
+                        <Grid Name="xAchatHeure" Width="Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <local:Texte Grid.Column="0" Valeur="{Binding Reference}" Info="True"   MinWidth="20"  FontWeight="Bold"/>
+                                <local:Texte Grid.Column="1" Valeur="{Binding Description}" Margin="5,0,0,0" Visibility="Visible" Info="True"   MinWidth="40"  FontWeight="Bold"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <ListBox Name="xListeAchat"
                                          Grid.Column="0"
                                          AlternationCount="2"
                                          VerticalContentAlignment="Stretch"
@@ -654,20 +683,20 @@
                                          HorizontalContentAlignment="Stretch"
                                          VerticalAlignment="Stretch"
                                          IsSynchronizedWithCurrentItem="True"
-                                         Margin="0,2.5,0,2.5"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.CanContentScroll="False"
-                                         SelectionMode="Extended"
+                                         SelectionMode="Single"
+                                         SelectionChanged="ListBox_SelectionChanged"
                                     >
-                                        <ListBox.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Ajouter" Click="Ajouter_Achat_Click"/>
-                                                <MenuItem Header="Supprimer" Click="Supprimer_Achat_Click"/>
-                                            </ContextMenu>
-                                        </ListBox.ContextMenu>
-                                    </ListBox>
-                                    <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
-                                    <ListBox Name="xListeHeure"
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Ajouter" Click="Ajouter_Achat_Click"/>
+                                            <MenuItem Header="Supprimer" Click="Supprimer_Achat_Click"/>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+                                </ListBox>
+                                <GridSplitter Grid.Column="1" Width="3" Margin="3" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+                                <ListBox Name="xListeHeure"
                                          Grid.Column="2"
                                          AlternationCount="2"
                                          VerticalContentAlignment="Stretch"
@@ -677,22 +706,21 @@
                                          HorizontalContentAlignment="Stretch"
                                          VerticalAlignment="Stretch"
                                          IsSynchronizedWithCurrentItem="True"
-                                         Margin="0,2.5,0,2.5"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.CanContentScroll="False"
-                                         SelectionMode="Extended"
-                                    >
-                                        <ListBox.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Ajouter" Click="Ajouter_Heure_Click"/>
-                                                <MenuItem Header="Supprimer" Click="Supprimer_Heure_Click"/>
-                                            </ContextMenu>
-                                        </ListBox.ContextMenu>
-                                    </ListBox>
-                                </Grid>
+                                         SelectionMode="Single"
+                                         SelectionChanged="ListBox_SelectionChanged"
+                                         >
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Ajouter" Click="Ajouter_Heure_Click"/>
+                                            <MenuItem Header="Supprimer" Click="Supprimer_Heure_Click"/>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+                                </ListBox>
                             </Grid>
-                        </Border>
-                    </Grid>
+                        </Grid>
+                    </Border>
                 </Grid>
             </TabItem>
             <TabItem Header="Analyse Mois" Name="xAnalyseMois">
@@ -726,7 +754,6 @@
                                     ItemTemplate="{StaticResource xListeAnalysePeriodeTemplate}"
                                     IsSynchronizedWithCurrentItem="False"
                                     Margin="0,3"
-                                    ScrollViewer.CanContentScroll="False"
                                     SelectionMode="Single"
                                     VerticalContentAlignment="Top"
                                     >

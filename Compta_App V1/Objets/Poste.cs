@@ -23,6 +23,18 @@ namespace Compta
             set { base.No = value; }
         }
 
+        //public override Boolean Editer
+        //{
+        //    get { return _Editer; }
+        //    set
+        //    {
+        //        if(SetWpf(ref _Editer, value))
+        //        {
+        //            MajMontant();
+        //        }
+        //    }
+        //}
+
         private int? _Id_Chantier = null;
         private Chantier _Chantier = null;
         [CleEtrangere]
@@ -75,13 +87,16 @@ namespace Compta
             set
             {
                 if (SetPropGestion(ref _Montant, value, this))
-                {
-                    CalculerMontant();
-                    CalculerAvanceMt();
-                    CalculerMarge();
-                    Chantier.CalculerMontant();
-                }
+                    MajMontant();
             }
+        }
+
+        private void MajMontant()
+        {
+            CalculerMontant();
+            CalculerAvanceMt();
+            CalculerMarge();
+            Chantier.CalculerMontant();
         }
 
         private Double _MontantPct = 0;
@@ -285,6 +300,8 @@ namespace Compta
             Chantier.ListePoste.Remove(this);
 
             Bdd2.Supprimer(this);
+
+            Chantier.CalculerMontant();
 
             return true;
         }

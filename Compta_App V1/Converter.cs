@@ -107,7 +107,7 @@ namespace Compta
     }
 
     [ValueConversion(typeof(Double), typeof(Visibility))]
-    public class Pct100ToCollapsedConverter : IValueConverter
+    public class Val100ToCollapsedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -120,6 +120,56 @@ namespace Compta
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
+        }
+    }
+
+    [ValueConversion(typeof(Double), typeof(Visibility))]
+    public class Val0ToCollapsedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((Double)value == 0)
+                return Visibility.Collapsed;
+
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
+
+    [ValueConversion(typeof(DateTime), typeof(String))]
+    public class DateToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var d = (DateTime)value;
+
+
+            return d.ToString("MM/yy");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var s = (String)value;
+            var t = s.Split(new char[] { '/' });
+
+            if(t.Length == 2)
+            {
+                if (Int32.TryParse(t[0], out int m) && Int32.TryParse(t[1], out int y))
+                {
+                    // Si on a tapé un date au format MM/yy on rajoute 2000 à l'année
+                    // sinon on se retrouve en l'an 21 et non 2021
+                    if (y < 2000)
+                        y += 2000;
+
+                    return new DateTime(y, m, 1);
+                }
+            }
+
+            return DateTime.Now;
         }
     }
 

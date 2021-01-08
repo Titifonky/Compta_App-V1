@@ -90,6 +90,8 @@ namespace Compta
 
             Bdd2.Supprimer(this);
 
+            Poste.CalculerAchat();
+
             return true;
         }
     }
