@@ -709,6 +709,7 @@ namespace Compta
 
             System.Windows.Forms.OpenFileDialog pDialogue = new System.Windows.Forms.OpenFileDialog
             {
+                Title = "Format du fichier .csv : " + "Reference;Description;Montant",
                 Filter = "Fichier csv (*.csv)|*.csv",
                 Multiselect = false,
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
