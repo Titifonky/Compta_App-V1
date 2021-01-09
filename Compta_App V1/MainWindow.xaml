@@ -618,9 +618,11 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <local:Texte Grid.Column="0" Valeur="{Binding Reference}" Info="True"   MinWidth="20"  FontWeight="Bold"/>
                                 <local:Texte Grid.Column="1" Valeur="{Binding Description}" Margin="5,0,0,0" Visibility="Visible" Info="True"   MinWidth="40" FontWeight="Bold"/>
+                                <Button Grid.Column="2" Content="Importer postes" Margin="10,0,0,0" VerticalAlignment="Center" Click="ButtonImporter_Click"/>
                             </Grid>
 
                             <ListBox Name="xListePoste"

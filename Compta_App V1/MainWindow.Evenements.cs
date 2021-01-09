@@ -700,6 +700,57 @@ namespace Compta
             T.Editer = false;
         }
 
+        private void ButtonImporter_Click(object sender, RoutedEventArgs e)
+        {
+            Button B = sender as Button;
+            if (B == null) return;
+            Chantier chantier = B.DataContext as Chantier;
+            if (chantier == null) return;
+
+            System.Windows.Forms.OpenFileDialog pDialogue = new System.Windows.Forms.OpenFileDialog
+            {
+                Filter = "Fichier csv (*.csv)|*.csv",
+                Multiselect = false,
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                RestoreDirectory = true
+            };
+
+            String pChemin = "";
+
+            if (pDialogue.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                pChemin = pDialogue.FileName;
+
+            if(pChemin != "" && File.Exists(pChemin))
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(pChemin, System.Text.Encoding.GetEncoding(1252)))
+                    {
+                        while (sr.Peek() > -1)
+                        {
+                            var l = sr.ReadLine();
+                            var t = l.Split(new char[] { ';' }, StringSplitOptions.None);
+
+                            var p = new Poste(chantier);
+
+                            if(t.Length > 0)
+                                p.Reference = t[0];
+
+                            if (t.Length > 1)
+                                p.Description = t[1];
+
+                            if(t.Length > 2 && Double.TryParse(t[2].Trim(), out double r))
+                                p.Montant = r;
+
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                { this.LogMethode(new Object[] { ex }); }
+            }
+        }
+
         #region LISTVIEW
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)

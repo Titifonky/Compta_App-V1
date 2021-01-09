@@ -121,14 +121,14 @@ namespace Compta
             DependencyProperty.Register("MargeInterne", typeof(Thickness),
               typeof(Texte), new FrameworkPropertyMetadata(new Thickness(0, 2, 0, 2)));
 
-        public object Valeur
+        public String Valeur
         {
-            get { return (object)GetValue(ValeurDP); }
+            get { return (String)GetValue(ValeurDP); }
             set { SetValue(ValeurDP, value); }
         }
 
         public static readonly DependencyProperty ValeurDP =
-            DependencyProperty.Register("Valeur", typeof(object),
+            DependencyProperty.Register("Valeur", typeof(String),
               typeof(Texte), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         private void MajEditable()

@@ -35,9 +35,9 @@ namespace Compta
             DependencyProperty.Register("Info", typeof(Boolean),
               typeof(Date), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public object Valeur
+        public DateTime Valeur
         {
-            get { return (object)GetValue(ValeurDP); }
+            get { return (DateTime)GetValue(ValeurDP); }
             set { SetValue(ValeurDP, value); }
         }
 
